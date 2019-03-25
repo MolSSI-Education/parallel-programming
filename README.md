@@ -31,5 +31,5 @@ To cite this lesson, please consult with [CITATION](CITATION)
 
 [lesson-example]: https://carpentries.github.io/lesson-example
 [instructions]: https://carpentries.github.io/lesson-example/setup.html
-[rest_of_the_lessons]: https://carpentries.github.io/lesson-example/index.html
+[rest of the lessons]: https://carpentries.github.io/lesson-example/index.html
 
