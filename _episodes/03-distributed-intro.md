@@ -1,6 +1,6 @@
 ---
 title: "Introduction to Distributed-Memory Parallelization"
-teaching: 0
+teaching: 20
 exercises: 0
 questions:
 - "Key question (FIXME)"
