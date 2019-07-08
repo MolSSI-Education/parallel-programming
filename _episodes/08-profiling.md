@@ -1,7 +1,7 @@
 ---
 title: "Profiling"
 teaching: 0
-exercises: 0
+exercises: 15
 questions:
 - "Key question (FIXME)"
 objectives:

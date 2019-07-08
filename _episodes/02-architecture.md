@@ -1,6 +1,6 @@
 ---
 title: "HPC Architecture"
-teaching: 0
+teaching: 30
 exercises: 0
 questions:
 - "Key question (FIXME)"

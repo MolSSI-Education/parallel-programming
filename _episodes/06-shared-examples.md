@@ -1,7 +1,7 @@
 ---
 title: "OpenMP Hands-On"
 teaching: 0
-exercises: 0
+exercises: 90
 questions:
 - "Key question (FIXME)"
 objectives:

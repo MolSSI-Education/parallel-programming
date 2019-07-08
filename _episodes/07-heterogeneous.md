@@ -1,6 +1,6 @@
 ---
 title: "Heterogeneous Computing"
-teaching: 0
+teaching: 20
 exercises: 0
 questions:
 - "Key question (FIXME)"
