@@ -4,7 +4,7 @@ All of the MPI examples will use [`mpi4py`](https://mpi4py.readthedocs.io/en/sta
 
 **$ conda create --name sss_parallel
 source activate sss_parallel
-conda install -c conda-forge Python=3.7 mpi4py**
+conda install -c conda-forge Python=3.7 mpi4py numpy**
 
 If you are using `Windows`, you will also need to install [`MS-MPI`](https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi).
 Click the link [`here`](https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi), download an MS-MPI install binary from the website, and use it to install MS-MPI onto your machine.
@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
 Acquire a copy of the example files for this lesson, and then run MPI Example 1:
 
-**$ git@github.com:MolSSI-Education/parallel-programming.git
+**$ git clone git@github.com:MolSSI-Education/parallel-programming.git
 cd parallel-programming/examples/mpi/example1
 python example1.py**
 
@@ -127,16 +127,21 @@ For example:
 >World Size: 2   Rank: 0\
 World Size: 2   Rank: 1
 
+## Example 2
 
 
 
-At the beginning of `example1.py`, import mpi4py:
 
-```Python
-from mpi4py import MPI
-```
 
-Before the `print` statement, 
+
+
+
+
+
+
+
+
+
 
 
 
