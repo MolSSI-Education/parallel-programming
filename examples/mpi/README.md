@@ -170,7 +170,297 @@ World Size: 2   Rank: 1
 
 ## Example 3
 
+Switch to the third MPI example directory, `parallel-programming/examples/mdi/examples3`.
+Here you will find `example3.py`, which is a simple Monte-Carlo simulation.
+Running the code now.
+
+**$ python example3.py **
+
+> 1000 248.52688099543923\
+2000 10.588491394826892\
+3000 -0.9309007491547571\
+4000 -3.8247648102916196\
+5000 -4.715929587912762\
+6000 -5.362217832200815\
+7000 -5.570585267104749\
+8000 -5.649439720181915\
+9000 -5.65428738463388\
+10000 -5.73417919011543\
+Total simulation time: 21.389078855514526\
+    Energy time:       21.013432502746582\
+    Decision time:     0.09333038330078125
+
+As you can see, the code already has some timings, and the vast majority of time is spent in the calls to 'get_particle_energy'.
+That is where we will focus our parallelization efforts.
+
+The function in question is:
+
+```Python
+def get_particle_energy(coordinates, box_length, i_particle, cutoff2):
+
+    """
+    This function computes the minimum image distance between two particles
+
+    Parameters
+    ----------
+    r_i: list/array
+        the potitional vection of the particle i
+    r_j: list/array
+        the potitional vection of the particle j
+    box_length : float/int
+        length of simulation box
+
+    Return
+    ------
+    rij2: float
+        the square of the shortest distance between the two particles and their images
+    """
+
+
+    e_total = 0.0
+
+    i_position = coordinates[i_particle]
+
+    particle_count = len(coordinates)
+
+    for j_particle in range(particle_count):
+
+        if i_particle != j_particle:
+
+            j_position = coordinates[j_particle]
+
+            rij2 = minimum_image_distance(i_position, j_position, box_length)
+
+            if rij2 < cutoff2:
+                e_pair = lennard_jones_potential(rij2)
+                e_total += e_pair
+
+    return e_total
+```
+
+This looks like it should be fairly straightforward to parallelize: it consists of a single `for` loop which just sums the interaction energies of particle pairs.
+To parallelize this loop, we need each rank to compute the interaction energies of a subset of these pairs, and then sum the energy across all ranks.
+
+The `get_particle_energy` function is going to need to know some basic information about the MPI communicator, so add the MPI communicator to its parameters:
+
+```Python
+def get_particle_energy(coordinates, box_length, i_particle, cutoff2, comm):
+```
+
+Now update the two times `get_particle_energy` is called by `main`:
+
+```Python
+        current_energy = get_particle_energy(coordinates, box_length, i_particle, simulation_cutoff2, world_comm)
+        ...
+        current_energy = get_particle_energy(coordinates, box_length, i_particle, simulation_cutoff2, world_comm)
+```
+
+Place the following at the beginning of `get_particle_energy`:
+
+```Python
+    # Get information about the MPI communicator
+    my_rank = comm.Get_rank()
+    world_size = comm.Get_size()
+```
+
+Change the `for` loop in `get_particle_energy` to the following:
+
+```Python
+    for j_particle in range(my_rank, particle_count, world_size):
+```
+
+The above code will cause each rank to iterate over particles with a stride of `world_size` and an initial offset of `my_rank`.
+For example, if you run on 4 ranks, rank 0 will iterate over particles 0, 4, 8, 12, etc., while rank 1 will iterate over particles 1, 5, 9, 13, etc.
+
+We then need to sum the energies across all ranks.
+Replace the line `return e_total` with the following:
+
+```Python
+    # Sum the energy across all ranks
+    e_single = np.array( [e_total] )
+    e_summed = np.zeros( 1 )
+    comm.Reduce( [e_single, MPI.DOUBLE], [e_summed, MPI.DOUBLE], op = MPI.SUM, root = 0 )
+
+    return e_summed[0]
+```
+
+Try to run it now:
+
+**$ mpiexec -n 4 python example3.py **
+
+>1000 -35480909996.566864\
+2000 -66252436255523.72\
+3000 -86936127660856.08\
+4000 -93141042416342.66\
+5000 -256171999678073.88\
+6000 -3.162015453630529e+21\
+7000 -3.1620181302289283e+21\
+8000 -3.162018130377518e+21\
+9000 -3.1620181324457333e+21\
+10000 -3.1620182854716e+21\
+Total simulation time: 31.748733043670654\
+    Energy time:       31.112581253051758\
+    Decision time:     0.21792912483215332
+
+That doesn't seem right at all.
+What went wrong?
+
+Our call to `Reduce` causes the energies to be summed onto rank 0, but none of the other ranks have the summed energies.
+To have the energies reduced to all of the ranks, replace the `Reduce` call with a call to `Allreduce`:
+
+```Python
+    comm.Allreduce( [e_single, MPI.DOUBLE], [e_summed, MPI.DOUBLE], op = MPI.SUM )
+```
+
+**$ mpiexec -n 4 python example3.py **
+
+> 1000 -5402881.246788438\
+2000 -5403807.559181325\
+3000 -5403898.801044374\
+4000 -5403916.261693102\
+5000 -5403921.433225453\
+6000 -5403923.534017933\
+7000 -5403924.646963553\
+8000 -5403925.292483066\
+9000 -5403925.63053995\
+10000 -5403926.272461226\
+Total simulation time: 43.26621890068054\
+    Energy time:       42.664116621017456\
+    Decision time:     0.16298675537109375
+
+This still isn't consistent with our previous results.
+The problem is that each iteration, the coordinates are updated by randomly displacing one of the particles.
+Each rank randomly selects a particle to displace and the displacement vector.
+Instead of contributing to the calculation of the same particle's interaction energies for the same nuclear configuration, each rank ends up calculating some of the interaction energies for different atoms and different coordinates.
+
+To fix this, we will have rank 0 be the only rank that randomly selects a particle or a displacement vector.
+Rank 0 will then broadcast all necessary information to the other ranks, so that they keep in sync.
+
+Replace the line where the coordinates are intially generated (where `generate_initial_state` is called) with this:
+
+```Python
+    if my_rank == 0:
+        coordinates = generate_initial_state(method=build_method, num_particles=num_particles, box_length=box_length)
+    else:
+        coordinates = np.empty([num_particles, 3])
+    world_comm.Bcast( [coordinates, MPI.DOUBLE], root = 0 )
+```
+
+At the beginning of the `for` loop in `main` you will see the following code:
+
+```Python
+    for i_step in range(n_steps):
+
+        n_trials += 1
+
+        i_particle = np.random.randint(num_particles)
+
+        random_displacement = (2.0 * np.random.rand(3) - 1.0) * max_displacement
+```
+
+Replace the above with the following:
+
+```Python
+    for i_step in range(n_steps):
+
+    if my_rank == 0:
+            n_trials += 1
+
+            i_particle = np.random.randint(num_particles)
+            i_particle_buf = np.array( [i_particle], 'i' )
+
+            random_displacement = (2.0 * np.random.rand(3) - 1.0) * max_displacement
+        else:
+            i_particle_buf = np.empty( 1, 'i' )
+            random_displacement = np.empty( 3 )
+        world_comm.Bcast( [i_particle_buf, MPI.INT], root = 0 )
+        i_particle = i_particle_buf[0]
+        world_comm.Bcast( [random_displacement, MPI.DOUBLE], root = 0 )
+        world_comm.Bcast( [coordinates, MPI.DOUBLE], root = 0 )
+```
+
+At the end of the `for` loop in `main` is the following code:
+
+```Python
+        start_decision_time = MPI.Wtime()
+
+        delta_e = proposed_energy - current_energy
+
+        accept = accept_or_reject(delta_e, beta)
+
+        if accept:
+
+            total_pair_energy += delta_e
+            n_accept += 1
+            coordinates[i_particle] += random_displacement
+
+        total_energy = (total_pair_energy + tail_correction) / num_particles
+
+        energy_array[i_step] = total_energy
+
+	if np.mod(i_step + 1, freq) == 0:
+            if my_rank == 0:
+	       print(i_step + 1, energy_array[i_step])
+
+            if tune_displacement:
+                max_displacement, n_trials, n_accept = adjust_displacement(n_trials, n_accept, max_displacement)
+
+        total_decision_time += MPI.Wtime() - start_decision_time
+```
+
+Replace the above with the following:
+
+```Python
+        if my_rank == 0:
+            start_decision_time = MPI.Wtime()
+
+            delta_e = proposed_energy - current_energy
+
+            accept = accept_or_reject(delta_e, beta)
+
+            if accept:
+
+                total_pair_energy += delta_e
+                n_accept += 1
+                coordinates[i_particle] += random_displacement
+
+            total_energy = (total_pair_energy + tail_correction) / num_particles
+
+            energy_array[i_step] = total_energy
+
+            if np.mod(i_step + 1, freq) == 0:
+
+                print(i_step + 1, energy_array[i_step])
+
+                if tune_displacement:
+                    max_displacement, n_trials, n_accept = adjust_displacement(n_trials, n_accept, max_displacement)
+
+            total_decision_time += MPI.Wtime() - start_decision_time
+```
+
+Try running the code again:
+
+**$ mpiexec -n 4 python example3.py **
+
+> 1000 248.52688099525105\
+2000 10.588491394638726\
+3000 -0.9309007493429244\
+4000 -3.824764810479789\
+5000 -4.715929588100931\
+6000 -5.3622178323889855\
+7000 -5.570585267292914\
+8000 -5.649439720370088\
+9000 -5.65428738482205\
+10000 -5.734179190303595\
+Total simulation time: 13.671964883804321\
+    Energy time:       12.892877340316772\
+    Decision time:     0.15127253532409668
+
+This time the results are much more consistent with what we expect.
+
 ## Additional Considerations
+
+
 
 ### Asynchronous Communication
 
@@ -194,10 +484,9 @@ World Size: 2   Rank: 1
 * `status` --- a pointer to the structure in which status will be stored if the operation has completed
 * See also `MPI_Waitall`, `MPI_Waitany` and `MPI_Waitsome` for waiting on multiple requests
 
-### MPI vs MPI4Py
+
 
 ### MPI Batch Scripts
-
 
 Here's an example batch job ([`exercises/mpihello.pbs`](https://github.com/wadejong/Summer-School-Materials/blob/master/Tuesday-afternoon/exercises/mpihello.pbs)) for SeaWulf annotated so show what is going on:
 ~~~
@@ -240,8 +529,6 @@ Submit the job from the directory holding your executable (or modify the batch s
     qsub mpihello.pbs
 ~~~
 
-
-### Weak Scaling and Strong Scaling
 
 ### Load Balancing
 
