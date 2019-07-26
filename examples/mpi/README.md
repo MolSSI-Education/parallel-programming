@@ -2,8 +2,8 @@
 
 All of the MPI examples will use [`mpi4py`](https://mpi4py.readthedocs.io/en/stable/) in Python.
 
-**$ conda create --name sss_parallel
-source activate sss_parallel
+**$ conda create --name sss_parallel\
+source activate sss_parallel\
 conda install -c conda-forge Python=3.7 mpi4py numpy**
 
 If you are using `Windows`, you will also need to install [`MS-MPI`](https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi).
@@ -43,8 +43,8 @@ if __name__ == "__main__":
 
 Acquire a copy of the example files for this lesson, and then run MPI Example 1:
 
-**$ git clone git@github.com:MolSSI-Education/parallel-programming.git
-cd parallel-programming/examples/mpi/example1
+**$ git clone git@github.com:MolSSI-Education/parallel-programming.git\
+cd parallel-programming/examples/mpi/example1\
 python example1.py**
 
 > Hello World!
@@ -57,7 +57,7 @@ Many environments also provide an `mpirun` command, which usually - but not alwa
 Whenever possible, you should use `mpiexec` and not `mpirun`, in order to guarantee more consistent results.
 The general format for lanching a code on multiple processes is:
 
-**$ mpiexec -n <number_of_processes> <command_to_launch_code>
+**$ mpiexec -n <number_of_processes> <command_to_launch_code> **
 
 For example, to launch `example1.py` on 4 processes, do:
 
@@ -97,7 +97,7 @@ The communicator's `Get_size()` function tells us the total number of processes 
 Each of these processes is assigned a uniqe rank, which is an integer that ranges from `0` to `world_size - 1`.
 The rank of a process allows it to be identified whenever processes communicate with one another.
 For example, in some cases we might want rank 2 to send some information to rank 4, or we might want rank 0 to receive information from all of the other processes.
-Calling `world_comm.Get_rank()' returns the rank of the process that called it within `world_comm`.
+Calling `world_comm.Get_rank()` returns the rank of the process that called it within `world_comm`.
 
 Go ahead and run the code now:
 
@@ -131,10 +131,171 @@ World Size: 2   Rank: 1
 
 ### Basic Infrastructure
 
+Switch to the second MPI example directory, `parallel-programming/examples/mdi/examples2`.
+Here you will find `example2.py`, which does some very simple math with NumPy arrays.
+Run the code now.
+
+**$ python example2.py **
+
+> Average: 5000001.5
+
+Let's learn something about which parts of this code account for most of the run time.
+MPI4Py provides a timer, `MPI.Wtime()`, which returns the current walltime.
+We can use this function to determine how long each section of the code takes to run.
+
+For example, to determine how much time is spent initializing array `a`, do the following:
+
+```Python
+    # initialize a
+    start_time = MPI.Wtime()
+    a = np.ones( N )
+    end_time = MPI.Wtime()
+    if my_rank == 0:
+        print("Initialize a time: " + str(end_time-start_time))
+```
+
+As the above code indicates, we don't really want every rank to print the timings, since that could look messy in the output.
+Instead, we have only rank 0 print this information.
+Of course, this requires that we add a few lines near the top of the code to query the rank of each process:
+
+```Python
+    # get basic information about the MPI communicator
+    world_comm = MPI.COMM_WORLD
+    world_size = world_comm.Get_size()
+    my_rank = world_comm.Get_rank()
+```
+
+Also determine and print the timings of each of the other sections of the code: the intialization of array `b`, the addition of the two arrays, and final averaging of the result.
+Your code should look something like this:
+
+```Python
+import numpy as np
+
+if __name__ == "__main__":
+
+    # get basic information about the MPI communicator
+    world_comm = MPI.COMM_WORLD
+    world_size = world_comm.Get_size()
+    my_rank = world_comm.Get_rank()
+
+    N = 10000000
+
+    # determine the workload of each rank
+    workloads = [ N // world_size for i in range(world_size) ]
+    for i in range( N % world_size ):
+        workloads[i] += 1
+    my_start = 0
+    for i in range( my_rank ):
+        my_start += workloads[i]
+    my_end = my_start + workloads[my_rank]
+
+    # initialize a
+    start_time = MPI.Wtime()
+    a = np.ones( N )
+    end_time = MPI.Wtime()
+    if my_rank == 0:
+        print("Initialize a time: " + str(end_time-start_time))
+
+    # initialize b
+    start_time = MPI.Wtime()
+    b = np.zeros( N )
+    for i in range( N ):
+        b[i] = 1.0 + i
+    end_time = MPI.Wtime()
+    if my_rank == 0:
+        print("Initialize b time: " + str(end_time-start_time))
+
+    # add the two arrays
+    start_time = MPI.Wtime()
+    for i in range( N ):
+        a[i] = a[i] + b[i]
+    end_time = MPI.Wtime()
+    if my_rank == 0:
+        print("Add arrays time: " + str(end_time-start_time))
+
+    # average the result
+    start_time = MPI.Wtime()
+    sum = 0.0
+    for i in range( N ):
+        sum += a[i]
+    average = sum / N
+    end_time = MPI.Wtime()
+    if my_rank == 0:
+        print("Average result time: " + str(end_time-start_time))
+        print("Average: " + str(average))
+```
+
+Now run the code again:
+
+**$ python example2.py **
+
+> Initialize a time: 0.03975701332092285\
+Initialize b time: 1.569957971572876\
+Add arrays time: 4.173098087310791\
+Average result time: 2.609341859817505\
+Average: 5000001.5
+
+
+
 ### Point-to-Point Communication
 
-### Collective Communication
+You can try running this on multiple ranks now:
 
+**$ mpiexec -n 4 python example2.py **
+
+> Initialize a time: 0.042365074157714844\
+Initialize b time: 1.9863519668579102\
+Add arrays time: 4.9583611488342285\
+Average result time: 2.9468209743499756\
+Average: 5000001.5
+
+Running on multiple ranks doesn't help with the timings, because each rank is duplicating all of the same work.
+We want the ranks to cooperate on the problem, with each rank working on a different part of the calculation.
+In this example, that means that different ranks will work on different parts of the arrays `a` and `b`, and then the results on each rank will be summed across all the ranks.
+
+We need to decide what parts of the arrays each of the ranks will work on; this is more generally known as a rank's workload.
+Add the following code just before the initialization of array `a`:
+
+```Python
+    # determine the workload of each rank
+    workloads = [ N // world_size for i in range(world_size) ]
+    for i in range( N % world_size ):
+        workloads[i] += 1
+    my_start = 0
+    for i in range( my_rank ):
+        my_start += workloads[i]
+    my_end = my_start + workloads[my_rank]
+```
+
+In the above code, `my_start` and `my_end` represent the range over which each rank will perform mathematical operations on the arrays.
+
+We'll start by parallelizing the code that averages the result.
+Update the range of the `for` loop to the following:
+
+```Python
+    for i in range( my_start, my_end ):
+```
+
+This will ensure that each rank is only calculating elements `my_start` through `my_end` of the sum.
+We then need the ranks to communicate their individually calculated sums so that we can calculate the global sum.
+To do this, replace the line `average = sum / N` with:
+
+```Python
+    if my_rank == 0:
+        world_sum = sum
+        for i in range( 1, world_size ):
+      	    sum_np = np.empty( 1 )
+            world_comm.Recv( [sum_np, MPI.DOUBLE], source=i, tag=77 )
+            world_sum += sum_np[0]
+        average = world_sum / N
+    else:
+        sum_np = np.array( [sum] )
+        world_comm.Send( [sum_np, MPI.DOUBLE], dest=0, tag=77 )
+```
+
+The `MPI.DOUBLE` parameter tells MPI what type of information is being communicated by the `Send` and `Recv` calls.
+In particular, we are sending a array of double precision numbers.
+If you are communicating information of a different datatype, consult the following:
 
 |**MPI data type**  |**C data type**     |
 |:------------------|:-------------------|
@@ -149,9 +310,126 @@ World Size: 2   Rank: 1
 |`MPI_UNSIGNED_LONG`  |unsigned long int	 |	 
 |`MPI_FLOAT`          |float               |
 |`MPI_DOUBLE`         |double              |
-|etc.               |                    |
-|`MPI_PACKED`	    |define your own with|
-|                   |[`MPI_Pack`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Pack.html)/[`MPI_Unpack`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Pack.html) |
+
+Now run the code again:
+
+**$ mpiexec -n 4 python example2.py **
+
+> Initialize a time: 0.04637002944946289\
+Initialize b time: 1.9484930038452148\
+Add arrays time: 4.914314031600952\
+Average result time: 0.6889588832855225\
+Average: 5000001.5
+
+You can see that the amount of time spent calculating the average has indeed gone down.
+
+Parallelizing the part of the code that adds the two arrays is much easier.
+All you need to do is update the range over which the `for` loop iterations:
+
+```Python
+    for i in range( my_start, my_end ):
+```
+
+Now run the code again:
+
+**$ mpiexec -n 4 python example2.py **
+
+> Initialize a time: 0.04810309410095215\
+Initialize b time: 2.0196259021759033\
+Add arrays time: 1.2053139209747314\
+Average result time: 0.721329927444458\
+Average: 5000001.5
+
+The array addition time has gone down nicely.
+Surprisingly enough, the most expensive part of the calculation is now the initialization of array `b`.
+Updating the range over which that loop iterates speeds up that part of the calation:
+
+```Python
+    for i in range( my_start, my_end ):
+```
+
+**$ mpiexec -n 4 python example2.py **
+
+> Initialize a time: 0.04351997375488281\
+Initialize b time: 0.503791093826294\
+Add arrays time: 1.2048840522766113\
+Average result time: 0.7626049518585205\
+Average: 5000001.5
+
+
+
+### Reducing the Memory Footprint
+
+The simulation is running much faster now thanks to the parallelization we have added.
+If that's all we care about, we could stop working on the code now.
+In reality, though, **time** is only one resource we should be concerned about.
+Another resource that is often even more important is **memory**.
+The changes we have made to the code make it run faster, but don't decrease its memory footprint in any way: each rank allocates arrays `a` and `b` with `N` double precision values.
+That means that each rank allocates `2*N` double precision values; across all of our ranks, that correspodns to a total of `2*nproc*world_size` double precision values.
+Running on more processors might decrease our run time, but it increases our memory footprint!
+
+Of course, there isn't really a good reason for each rank to allocate the entire arrays of size `N`, because each rank will only ever use values within the range of `my_start` to `my_end`.
+Let's modify the code so that each rank allocates `a` and `b` to a size of `workloads[my_rank]`.
+
+Replace the initialization of `a` with:
+
+```Python
+    a = np.ones( workloads[my_rank] )
+```
+
+Replace the initialization of `b` with:
+
+```Python
+    b = np.zeros( workloads[my_rank] )
+    for i in range( workloads[my_rank] ):
+        b[i] = 1.0 + ( i + my_start )
+```
+
+Replace the range of the loops that add and sum the arrays to `range( workloads[my_rank] )`.
+
+Run the code again:
+
+**$ mpiexec -n 4 python example2.py **
+
+> Initialize a time: 0.009948015213012695\
+Initialize b time: 0.5988950729370117\
+Add arrays time: 1.2081310749053955\
+Average result time: 0.7307591438293457\
+Average: 5000001.5
+
+
+
+
+### Collective Communication
+
+Previously, we used **point-to-point communication** (i.e. `Send` and `Recv`) to sum the results across all ranks:
+
+```Python
+    if my_rank == 0:
+        world_sum = sum
+        for i in range( 1, world_size ):
+            sum_np = np.empty( 1 )
+            world_comm.Recv( [sum_np, MPI.DOUBLE], source=i, tag=77 )
+            world_sum += sum_np[0]
+        average = world_sum / N
+    else:
+        sum_np = np.array( [sum] )
+        world_comm.Send( [sum_np, MPI.DOUBLE], dest=0, tag=77 )
+```
+
+MPI provides many **collective communication** functions, which automate many processes that can be complicated to write out using only point-to-point communication.
+In particular, the `Reduce` function allows us to sum a value across all ranks, without all of the above code.
+Replace the above with:
+
+```Python
+    sum = np.array( [sum] )
+    world_sum = np.zeros( 1 )
+    world_comm.Reduce( [sum, MPI.DOUBLE], [world_sum, MPI.DOUBLE], op = MPI.SUM, root = 0 )
+    average = world_sum / N
+```
+The `op` argument lets us specify what operation should be performed on all of the data that is reduced.
+Setting this argument to `MPI.SUM`, as we do above, causes all of the values to be summed onto the root process.
+There are many other operations provided by MPI, as you can see here:
 
 |**Operation** | Description | Datatype|
 |:-------------|:------------|:--------|
@@ -168,11 +446,15 @@ World Size: 2   Rank: 1
 |`MPI_MAXLOC`    |max value and location|float|
 |`MPI_MINLOC`    |min value and location|float|
 
+Note that in addition to enabling us to write simpler-looking code, collective communication operations tend to be faster than what we can achieve by trying to write our own communication operations using point-to-point calls.
+
+
+
 ## Example 3
 
 Switch to the third MPI example directory, `parallel-programming/examples/mdi/examples3`.
 Here you will find `example3.py`, which is a simple Monte-Carlo simulation.
-Running the code now.
+Run the code now.
 
 **$ python example3.py **
 
