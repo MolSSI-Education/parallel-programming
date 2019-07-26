@@ -36,8 +36,8 @@ int main()
   //print the result
   printf("Average: %f\n",average);
 
-  delete(a);
-  delete(b);
+  delete[] a;
+  delete[] b;
 
   return 0;
 }

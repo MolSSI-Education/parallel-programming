@@ -53,8 +53,8 @@ int main()
   //print the result
   printf("Average: %f\n",average);
 
-  delete(a);
-  delete(b);
+  delete[] a;
+  delete[] b;
 
   printf("Total time: %f\n",omp_get_wtime()-start_time);
 
