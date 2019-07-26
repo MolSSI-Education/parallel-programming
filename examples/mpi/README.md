@@ -3,8 +3,8 @@
 All of the MPI examples will use [`mpi4py`](https://mpi4py.readthedocs.io/en/stable/) in Python.
 
 **$ conda create --name sss_parallel\
-source activate sss_parallel\
-conda install -c conda-forge Python=3.7 mpi4py numpy**
+$source activate sss_parallel\
+$conda install -c conda-forge Python=3.7 mpi4py numpy**
 
 If you are using `Windows`, you will also need to install [`MS-MPI`](https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi).
 Click the link [`here`](https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi), download an MS-MPI install binary from the website, and use it to install MS-MPI onto your machine.
@@ -20,7 +20,7 @@ The exact output isn't critical, as long as some version of `mpiexec` is found.
 
 Now, check that the `mpi4py` package installed correctly:
 
-**$ mpiexec -n 4 python -c "from mpi4py import MPI;print(MPI.COMM_WORLD.Get_size())" **
+**$ mpiexec -n 4 python -c "from mpi4py import MPI;print(MPI.COMM_WORLD.Get_size())"**
 
 > 4\
 4\
@@ -44,8 +44,8 @@ if __name__ == "__main__":
 Acquire a copy of the example files for this lesson, and then run MPI Example 1:
 
 **$ git clone git@github.com:MolSSI-Education/parallel-programming.git\
-cd parallel-programming/examples/mpi/example1\
-python example1.py**
+$ cd parallel-programming/examples/mpi/example1\
+$ python example1.py**
 
 > Hello World!
 
@@ -57,7 +57,7 @@ Many environments also provide an `mpirun` command, which usually - but not alwa
 Whenever possible, you should use `mpiexec` and not `mpirun`, in order to guarantee more consistent results.
 The general format for lanching a code on multiple processes is:
 
-**$ mpiexec -n <number_of_processes> <command_to_launch_code> **
+**$ mpiexec -n <number_of_processes> <command_to_launch_code>**
 
 For example, to launch `example1.py` on 4 processes, do:
 
@@ -135,7 +135,7 @@ Switch to the second MPI example directory, `parallel-programming/examples/mdi/e
 Here you will find `example2.py`, which does some very simple math with NumPy arrays.
 Run the code now.
 
-**$ python example2.py **
+**$ python example2.py**
 
 > Average: 5000001.5
 
@@ -227,7 +227,7 @@ if __name__ == "__main__":
 
 Now run the code again:
 
-**$ python example2.py **
+**$ python example2.py**
 
 > Initialize a time: 0.03975701332092285\
 Initialize b time: 1.569957971572876\
@@ -241,7 +241,7 @@ Average: 5000001.5
 
 You can try running this on multiple ranks now:
 
-**$ mpiexec -n 4 python example2.py **
+**$ mpiexec -n 4 python example2.py**
 
 > Initialize a time: 0.042365074157714844\
 Initialize b time: 1.9863519668579102\
@@ -313,7 +313,7 @@ If you are communicating information of a different datatype, consult the follow
 
 Now run the code again:
 
-**$ mpiexec -n 4 python example2.py **
+**$ mpiexec -n 4 python example2.py**
 
 > Initialize a time: 0.04637002944946289\
 Initialize b time: 1.9484930038452148\
@@ -332,7 +332,7 @@ All you need to do is update the range over which the `for` loop iterations:
 
 Now run the code again:
 
-**$ mpiexec -n 4 python example2.py **
+**$ mpiexec -n 4 python example2.py**
 
 > Initialize a time: 0.04810309410095215\
 Initialize b time: 2.0196259021759033\
@@ -348,7 +348,7 @@ Updating the range over which that loop iterates speeds up that part of the cala
     for i in range( my_start, my_end ):
 ```
 
-**$ mpiexec -n 4 python example2.py **
+**$ mpiexec -n 4 python example2.py**
 
 > Initialize a time: 0.04351997375488281\
 Initialize b time: 0.503791093826294\
@@ -389,7 +389,7 @@ Replace the range of the loops that add and sum the arrays to `range( workloads[
 
 Run the code again:
 
-**$ mpiexec -n 4 python example2.py **
+**$ mpiexec -n 4 python example2.py**
 
 > Initialize a time: 0.009948015213012695\
 Initialize b time: 0.5988950729370117\
@@ -456,7 +456,7 @@ Switch to the third MPI example directory, `parallel-programming/examples/mdi/ex
 Here you will find `example3.py`, which is a simple Monte-Carlo simulation.
 Run the code now.
 
-**$ python example3.py **
+**$ python example3.py**
 
 > 1000 248.52688099543923\
 2000 10.588491394826892\
@@ -568,7 +568,7 @@ Replace the line `return e_total` with the following:
 
 Try to run it now:
 
-**$ mpiexec -n 4 python example3.py **
+**$ mpiexec -n 4 python example3.py**
 
 >1000 -35480909996.566864\
 2000 -66252436255523.72\
@@ -594,7 +594,7 @@ To have the energies reduced to all of the ranks, replace the `Reduce` call with
     comm.Allreduce( [e_single, MPI.DOUBLE], [e_summed, MPI.DOUBLE], op = MPI.SUM )
 ```
 
-**$ mpiexec -n 4 python example3.py **
+**$ mpiexec -n 4 python example3.py**
 
 > 1000 -5402881.246788438\
 2000 -5403807.559181325\
@@ -722,7 +722,7 @@ Replace the above with the following:
 
 Try running the code again:
 
-**$ mpiexec -n 4 python example3.py **
+**$ mpiexec -n 4 python example3.py**
 
 > 1000 248.52688099525105\
 2000 10.588491394638726\
