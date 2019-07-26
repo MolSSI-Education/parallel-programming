@@ -1,19 +1,3 @@
----
-title: "OpenMP Hands-On"
-teaching: 0
-exercises: 90
-questions:
-- "Key question (FIXME)"
-objectives:
-- "First learning objective. (FIXME)"
-keypoints:
-- "First key point. Brief Answer to questions. (FIXME)"
----
-FIXME
-
-{% include links.md %}
-
-
 ## Example 1
 
 **$ cd example1**
@@ -33,12 +17,17 @@ int main()
 
 Go ahead and build the code.
 
-**$ make**
+**$ mkdir build\
+$ cd build\
+$ cmake ..\
+$ make**
 
 You could run the code just by typing `example1` into the command line, but there is also a simple script that does the same thing.
 Run the script now.
 
-**$ qsub run.sh**
+Now run the code:
+
+**$ ./example1**
 
 > Hello World!
 
@@ -65,13 +54,6 @@ int main()
 }
 ```
 
-We need to tell the compiler that we are using OpenMP.
-Open `Makefile` and add the `-qopenmp` flag to `CXXFLAGS`:
-
-~~~
-CXXFLAGS = -xHOST -O3 -ipo -no-prec-div -fp-model fast=2 -qopenmp
-~~~
-
 Go ahead and rebuild the code.
 
 **$ make**
@@ -87,7 +69,7 @@ export OMP_NUM_THREADS=4
 
 Now let's run the code:
 
-**$ qsub run.sh**
+**$ ./example1**
 
 > Hello World!\
 Hello World!\
@@ -119,7 +101,7 @@ int main()
 Compile and run the code:
 
 **$ make\
-$ qsub run.sh**
+$ ./example1**
 
 >Hello World! (2)\
 Hello World! (3)\
@@ -189,7 +171,7 @@ We will now work on Example 2.
 In this directory is a code that does some simple math on some arrays, and then prints the average of the result:
 
 **$ make\
-$ qsub run.sh**
+$ ./example2**
 
 >Average: 500000001.500000
 
@@ -361,7 +343,7 @@ Now we will look at Example 3.
 Compiling and running this code should produce something like the following:
 
 **$ make\
-$ qsub run.sh**
+$ ./example3**
 
 >Iteration: 999      Energy: 92079.129718      PE: 16253.127101\
 \
@@ -509,7 +491,7 @@ Now we will work on a somewhat more realistic example of an MD code.
 
 **cd ../example4\
 make\
-qsub run.sh**
+./example4**
 
 >Time step 0.03\
 optim: 1.84389e+17 0.1\
