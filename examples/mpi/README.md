@@ -4,7 +4,7 @@ All of the MPI examples will use [`mpi4py`](https://mpi4py.readthedocs.io/en/sta
 
 **$ conda create --name sss_parallel\
 $ source activate sss_parallel\
-$ conda install -c conda-forge Python=3.7 mpi4py numpy
+$ conda install -c conda-forge Python=3.7 mpi4py numpy\
 $ conda install -c conda-forge cmake**
 
 If you are using `Windows`, you will also need to install [`MS-MPI`](https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi).
