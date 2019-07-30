@@ -298,19 +298,19 @@ The `MPI.DOUBLE` parameter tells MPI what type of information is being communica
 In particular, we are sending a array of double precision numbers.
 If you are communicating information of a different datatype, consult the following:
 
-|**MPI data type**  |**C data type**     |
+|**MPI4Py data type**  |**C data type**     |
 |:------------------|:-------------------|
-|`MPI_BYTE`           |8 binary digits     |
-|`MPI_CHAR`           |char                |
-|`MPI_UNSIGNED_CHAR`  |unsigned char       |
-|`MPI_SHORT`          |signed short int	 |	 
-|`MPI_UNSIGNED_SHORT` |unsigned short int	 |	 
-|`MPI_INT`            |signed int          |
-|`MPI_UNSIGNED`       |unsigned int	 |	 
-|`MPI_LONG`           |signed long int	 |	 
-|`MPI_UNSIGNED_LONG`  |unsigned long int	 |	 
-|`MPI_FLOAT`          |float               |
-|`MPI_DOUBLE`         |double              |
+|`MPI.BYTE`           |8 binary digits     |
+|`MPI.CHAR`           |char                |
+|`MPI.UNSIGNED_CHAR`  |unsigned char       |
+|`MPI.SHORT`          |signed short int	 |	 
+|`MPI.UNSIGNED_SHORT` |unsigned short int	 |	 
+|`MPI.INT`            |signed int          |
+|`MPI.UNSIGNED`       |unsigned int	 |	 
+|`MPI.LONG`           |signed long int	 |	 
+|`MPI.UNSIGNED_LONG`  |unsigned long int	 |	 
+|`MPI.FLOAT`          |float               |
+|`MPI.DOUBLE`         |double              |
 
 Now run the code again:
 
@@ -434,18 +434,18 @@ There are many other operations provided by MPI, as you can see here:
 
 |**Operation** | Description | Datatype|
 |:-------------|:------------|:--------|
-|`MPI_MAX`       |maximum      |integer,float|
-|`MPI_MIN`       |minimum      |integer,float|
-|`MPI_SUM`       |sum          |integer,float|
-|`MPI_PROD`      |product      |integer,float|
-|`MPI_LAND`      |logical AND  |integer|
-|`MPI_BAND`      |bit-wise AND |integer,MPI_BYTE|
-|`MPI_LOR`       |logical OR   |integer|
-|`MPI_BOR`       |bit-wise OR  |integer,MPI_BYTE|
-|`MPI_LXOR`      |logical XOR  |integer|
-|`MPI_BXOR`      |bit-wise XOR |integer,MPI_BYTE|
-|`MPI_MAXLOC`    |max value and location|float|
-|`MPI_MINLOC`    |min value and location|float|
+|`MPI.MAX`       |maximum      |integer,float|
+|`MPI.MIN`       |minimum      |integer,float|
+|`MPI.SUM`       |sum          |integer,float|
+|`MPI.PROD`      |product      |integer,float|
+|`MPI.LAND`      |logical AND  |integer|
+|`MPI.BAND`      |bit-wise AND |integer,MPI_BYTE|
+|`MPI.LOR`       |logical OR   |integer|
+|`MPI.BOR`       |bit-wise OR  |integer,MPI_BYTE|
+|`MPI.LXOR`      |logical XOR  |integer|
+|`MPI.BXOR`      |bit-wise XOR |integer,MPI_BYTE|
+|`MPI.MAXLOC`    |max value and location|float|
+|`MPI.MINLOC`    |min value and location|float|
 
 Note that in addition to enabling us to write simpler-looking code, collective communication operations tend to be faster than what we can achieve by trying to write our own communication operations using point-to-point calls.
 
