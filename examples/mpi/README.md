@@ -3,7 +3,7 @@
 All of the MPI examples will use [`mpi4py`](https://mpi4py.readthedocs.io/en/stable/) in Python.
 
 **$ conda create --name sss_parallel\
-$ source activate sss_parallel\
+$ conda activate sss_parallel\
 $ conda install -c conda-forge Python=3.7 mpi4py numpy\
 $ conda install -c conda-forge cmake**
 
