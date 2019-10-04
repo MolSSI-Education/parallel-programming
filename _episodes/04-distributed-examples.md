@@ -1,5 +1,5 @@
 ---
-title: "MPI Hands-On"
+title: "MPI Hands-On - C++"
 teaching: 0
 exercises: 90
 questions:
