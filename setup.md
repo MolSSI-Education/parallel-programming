@@ -18,6 +18,13 @@ Regardless of how you choose to install it, *please make sure you install Python
 2. Download the installer. **Be sure you get the Python 3 version.**
 3. Double click the installer icon and follow the setup instructions.  You can use all of the default options.
 
+#### Linux - [Video Tutorial](https://www.youtube.com/watch?v=DY0DB_NwEu0)
+
+1. Open the [Anaconda Linux download page](https://www.anaconda.com/download/#linux).
+2. Download the installer using `wget` or `curl` downloader. **Be sure you get the Python 3 version.**
+3. Open a terminal and navigate to the folder where the anaconda installer .sh file is located.
+4. Then execute .sh file to start installation, for example, type: `sh Anaconda3-2019.10-Linux-x86_64.sh`
+
 ## Obtain lesson materials
 1. Put link to download materials here.
 2. Create a folder called `cms-workshop` on your Desktop.
