@@ -3,7 +3,7 @@ title: "Introduction to Distributed-Memory Parallelization"
 teaching: 20
 exercises: 0
 questions:
-- "What is distributed-memory parallelization"
+- "What is distributed-memory parallelization?"
 objectives:
 - "Understand the advantages and limitations of distributed-memory parallelization."
 keypoints:
