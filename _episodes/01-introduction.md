@@ -24,7 +24,7 @@ The “processing units” might include central processing units (CPUs), graphi
 Just as multiple construction workers can build a house faster than a single construction worker, multiple processing units can complete a calculation faster than a single processing unit.
 For example, if a calculation takes 1 hour to run using one CPU, it might be possible to parallelize the work of the calculation across two CPUs and run it in only 30 minutes.
 Note that parallelization cannot reduce the total amount of computational work required to run a calculation; in fact, it generally introduces additional work associated with communication and coordination between the processing units.
-In general, if a calculation takes *t* hours to run in serial (that is, on a single processing unit), it will take at least *t/n* hours to run on $n$ processing units; this principle is more formally expressed through [Amdahl’s law](https://en.wikipedia.org/wiki/Amdahl%27s_law).
+In general, if a calculation takes *t* hours to run in serial (that is, on a single processing unit), it will take at least *t/n* hours to run on *n* processing units; this principle is more formally expressed through [Amdahl’s law](https://en.wikipedia.org/wiki/Amdahl%27s_law).
 A primary goal of parallelization is to ensure that the actual parallelized runtimes are as close to the ideal runtime of *t/n* as possible.
 
 The field of high performance computing (HPC) takes this concept of parallelization to its logical limit.
@@ -76,3 +76,4 @@ These tutorials focus on distributed-memory and shared-memory parallelization.
 In the next section, we will introduce distributed-memory parallelization, which is also the subject of the hands-on activities in episodes 3 and 4.
 Shared-memory parallelization will be covered in episodes 5 and 6.
 
+{% include links.md %}
