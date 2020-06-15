@@ -3,13 +3,15 @@ title: "Introduction"
 teaching: 15
 exercises: 0
 questions:
-- "Key question (FIXME)"
+- "What is parallelization and how does it work?"
 objectives:
-- "First learning objective. (FIXME)"
+- "Understand the motivation for parallelizing code."
+- "Understand how machine architecture affects the ability to parallelize code."
+- "Be aware of the types of parallelization common in computational chemistry."
 keypoints:
-- "First key point. Brief Answer to questions. (FIXME)"
+- "Parallelization is essential for achieving good performance on modern computer architectures."
+- "There are many different forms of parallelization. The optimal approach depends on both the type of software problem and the type of hardware available."
 ---
-FIXME
 
 ## What is Parallelization?
 
