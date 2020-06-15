@@ -3,16 +3,20 @@ title: "MPI Hands-On - mpi4py"
 teaching: 0
 exercises: 90
 questions:
-- "Key question (FIXME)"
+- "How can I use MPI to parallelize a Python code?"
 objectives:
-- "First learning objective. (FIXME)"
+- "Learn how to prepare an environment that includes mpi4py."
+- "Learn the basics of writing an MPI-parallelized code."
+- "Explore point-to-point and collective MPI operations"
 keypoints:
-- "First key point. Brief Answer to questions. (FIXME)"
+- "Where possible, use collective communication operations instead of point-to-point communication for improved efficiency and simplicity."
+- "Intelligent design choices can help you reduce the memory footprint required by MPI-parallelized codes"
 ---
 
 ## Setting up your environment
 
-For this lesson, all of the MPI examples will use [`mpi4py`](https://mpi4py.readthedocs.io/en/stable/) in Python.
+In this lesson, we will learn the basics of using MPI in Python.
+All of the examples will use [`mpi4py`](https://mpi4py.readthedocs.io/en/stable/), which is a Python wrapper for MPI.
 
 ~~~
 $ conda create --name molssi_parallel
