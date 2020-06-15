@@ -27,7 +27,7 @@ keypoints:
 
 ### Writing hello world
 
-Start from sequential version [`exercises/hello.cc`](https://github.com/wadejong/Summer-School-Materials/blob/master/Tuesday-afternoon/exercises/hello.cc)
+Start from sequential version [`exercises/hello.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/hello.cc)
 ```c++
     #include <iostream>
     int main() {
@@ -63,7 +63,7 @@ or this if you are handling errors
 * By default errors abort (i.e., the error handler is `MPI_ERRORS_ARE_FATAL`).  If you want MPI to return errors for you to handle, you can call [`MPI_Errhandler_set`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Errhandler_set.html)`(MPI_COMM_WORLD, MPI_ERRORS_RETURN)`.
 * To abort execution you cannot just `exit` or `return` because there's lots of clean up that needs to be done when running in parallel --- a poorly managed error can easily waste 1000s of hours of computer time.  You must call `MPI_Abort` to exit with an error code.
 
-The new version ([`exercises/mpihello.cc`](https://github.com/wadejong/Summer-School-Materials/blob/master/Tuesday-afternoon/exercises/mpihello.cc)) looks like this
+The new version ([`exercises/mpihello.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/hello.cc/mpihello.cc)) looks like this
 ```c++
     #include <mpi.h>
     #include <iostream>
@@ -118,7 +118,7 @@ We used four processes on the local machine (e.g., your laptop or the cluster lo
 * queue jobs according to priority, resource needs, etc.
 
 
-Here's an example batch job ([`exercises/mpihello.pbs`](https://github.com/wadejong/Summer-School-Materials/blob/master/Tuesday-afternoon/exercises/mpihello.pbs)) for SeaWulf annotated so show what is going on:
+Here's an example batch job ([`exercises/mpihello.pbs`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/mpihello.pbs)) for SeaWulf annotated so show what is going on:
 ~~~
     #!/bin/bash
     #PBS -l nodes=2:ppn=24,walltime=00:02:00
@@ -153,7 +153,7 @@ Here's an example batch job ([`exercises/mpihello.pbs`](https://github.com/wadej
 
     # You can run more things below
 ~~~
-But I find the comments distracting, so here ([`exercises/mpihello.pbs`](https://github.com/wadejong/Summer-School-Materials/blob/master/Tuesday-afternoon/exercises/mpihello_minimal.pbs)) is a minimal version.
+But I find the comments distracting, so here ([`exercises/mpihello.pbs`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/mpihello_minimal.pbs)) is a minimal version.
 ~~~
      #!/bin/bash
      #PBS -l nodes=2:ppn=24,walltime=00:02:00
@@ -370,13 +370,13 @@ There are many pre-defined reduction operation and you can also define your own
 
 ### Exercise
 
-In [`exercises/pi_seq.cc`](https://github.com/wadejong/Summer-School-Materials/blob/master/Tuesday-afternoon/exercises/pi_seq.cc) is a (now traditional) Monte Carlo program to compute the value of pi.  Make it run in parallel using broadcast and reduce.  Increase the number of points to demonstrate a speedup.
+In [`exercises/pi_seq.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/pi_seq.cc) is a (now traditional) Monte Carlo program to compute the value of pi.  Make it run in parallel using broadcast and reduce.  Increase the number of points to demonstrate a speedup.
 
 We will walk through the solution together since this is an important example.
 
 ### Exercise:
 
-In [`exercises/trapezoid_seq.cc`](https://github.com/wadejong/Summer-School-Materials/blob/master/Tuesday-afternoon/exercises/trapezoid_seq.cc) is a sequential program that uses the trapezoid rule to estimate the value of the integral
+In [`exercises/trapezoid_seq.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/trapezoid_seq.cc) is a sequential program that uses the trapezoid rule to estimate the value of the integral
 
 <img src="https://latex.codecogs.com/svg.latex?\Large&space;\int&#95;{-6}^{6}\exp(-x^2)\cos(3x)\,dx" title="Amdahl" />
 
@@ -484,8 +484,8 @@ There are some powerful visual parallel debuggers that understand MPI, but since
 
 ## 5. Work and data distribution strategies
 
-* partitioning the iterations of an outer loop (see [`exercises/trapezoid_seq.cc`](https://github.com/wadejong/Summer-School-Materials/blob/master/Tuesday-afternoon/exercises/trapezoid_seq.cc) and parallel version)
-* using a counter to distribute the iterations of a nest of loops (see [`exercises/nest_seq.cc`](https://github.com/wadejong/Summer-School-Materials/blob/master/Tuesday-afternoon/exercises/nest_seq.cc) and parallel veersion)
+* partitioning the iterations of an outer loop (see [`exercises/trapezoid_seq.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/trapezoid_seq.cc) and parallel version)
+* using a counter to distribute the iterations of a nest of loops (see [`exercises/nest_seq.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/nest_seq.cc) and parallel veersion)
 * master slave model
 * replicated vs. distributed data
 * systolic loop
@@ -497,10 +497,10 @@ There are some powerful visual parallel debuggers that understand MPI, but since
 1. [easy] Skim through some of the other tutorials and documentation that have links provided above
 2. [easy-medium] Write a program to benchmark the performance of reduce, all-reduce, broadcast as a function of both N and P.  Use N=1,2,4,8,...,1024*1024 doubles. And experiment with processes on the same node and on
 different nodes (this means setting #nodes and #ppn correctly in the PBS file).
-4. [easy] Parallelize Monte Carlo computation of pi starting from [`exercises/pi_seq.cc`](https://github.com/wadejong/Summer-School-Materials/blob/master/Tuesday-afternoon/exercises/pi_seq.cc) using global operations
+4. [easy] Parallelize Monte Carlo computation of pi starting from [`exercises/pi_seq.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/pi_seq.cc) using global operations
 4. [easy] Work through the other various examples in the `exercises/` directory
-5. [medium] Parallelize the recursively adaptive quadrature program [`exercises/recursive_seq.cc`](https://github.com/wadejong/Summer-School-Materials/blob/master/Tuesday-afternoon/exercises/recursive_seq.cc)
-6. [medium-hard] Write MPI versions of the example SCF, VMC, or MD codes in the main [chemistry examples directory](https://github.com/wadejong/Summer-School-Materials/blob/master/examples).  This tree includes example programs for Hartree Fock, molecular dynamics (already seen in the OpenMP lecture), and variational quantum Monte Carlo.  Sequential, OpenMP, and MPI versions are provided, and the `README` in each directory gives more details.  There's lots of different approaches so don't take our parallel versions as definitive.
+5. [medium] Parallelize the recursively adaptive quadrature program [`exercises/recursive_seq.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/recursive_seq.cc)
+6. [medium-hard] Write MPI versions of the example SCF, VMC, or MD codes in the main [chemistry examples directory](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises).  This tree includes example programs for Hartree Fock, molecular dynamics (already seen in the OpenMP lecture), and variational quantum Monte Carlo.  Sequential, OpenMP, and MPI versions are provided, and the `README` in each directory gives more details.  There's lots of different approaches so don't take our parallel versions as definitive.
     * VMC is the easiest
     * MD is also easy to get started, but harder to get best performance
     * Hartree-Fock is actually not that hard but the complexity of the code and algorithm can obscure this
