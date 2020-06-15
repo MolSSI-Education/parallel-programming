@@ -17,7 +17,7 @@ keypoints:
 
 ### Writing hello world
 
-Start from sequential version [`exercises/hello.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/hello.cc)
+We will start with a simple "Hello world" code [`exercises/hello.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/hello.cc):
 ```c++
     #include <iostream>
     int main() {
@@ -25,7 +25,7 @@ Start from sequential version [`exercises/hello.cc`](https://github.com/wadejong
         return 0;
     }
 ```
-Build the sequential version with `make hello` or `icpc -o hello hello.cc`.
+Build this code with `make hello` or `icpc -o hello hello.cc`.
 
 ### Required elements of all MPI programs
 
