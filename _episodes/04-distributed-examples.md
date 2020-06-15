@@ -15,16 +15,6 @@ keypoints:
 
 ## 1. Hello world 
 
-### Essential elements:
-
-1. Incremental transformation
-2. Compiling and linking
-3. Simple initialization
-3. MPI interface convention and errors
-4. Communicators
-5. Process rank
-6. Running interactively and in batch
-
 ### Writing hello world
 
 Start from sequential version [`exercises/hello.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/hello.cc)
@@ -413,66 +403,9 @@ Or 9 if you want a timer
     MPI_Wtime
 ~~~
 
-##  4. Reasoning about performance
 
-Essential concepts to reason about the performance of your message passing application
 
-* Amdahl's law, speed up and efficiency
-
-* Weak and strong scaling
-
-* Load balance, data balance, hot spots, synchronizations
-
-* Latency and bandwidth of communication
-
-### Amdahl's law
-
-[Ahdahl's law](https://en.wikipedia.org/wiki/Amdahl%27s_law) is both simple and brutal.  Dividing the execution time into a sequential component (*Ts*) and perfectly parallel program (*Tp*) the execution time on *P* processes is then
-
-<img src="https://latex.codecogs.com/svg.latex?\Large&space;T(P)=Ts+\frac{Tp}{P}" title="Amdahl" />
-
-Speedup is the ratio of sequential to parallel execution time (whereas efficiency is the ratio of the ideal speedup, *P*, and the actual speedup)
-
-<img src="https://latex.codecogs.com/svg.latex?\Large&space;S(P)=\frac{Ts+Tp}{Ts+\frac{Tp}{P}}" title="speedup" />
-
-You can see that (assuming *Tp>>Ts*) the maximum speed up is *Tp/Ts*.  I.e., to get a speedup of 100, 99% of your work must run perfectly parallel.  To get a speedup of 1,000,000  (the size of modern supercomputers) 99.9999% perfect parallelism is necessary.   Bear this in mind when setting performance goals and expectations.
-
-For these reasons the concepts of strong and weak scaling were introduced.
-* Strong scaling: An application shows good strong scaling if for a fixed problem size it shows a near ideal (linear in *P*) speedup as you add more processes.  This is hard because of Amhdahl's law, but unfortunately is what we often want to do in molecular science.
-
-* Weak scaling: An application shows good weak scaling if its execution time remains constant as the amount of work is increased proportional to the number of processors.  I.e., on bigger machines you run bigger problems that ideally have more parallelism.  However, while this is perhaps straightforward for many grid-based engineering code for which the amount of work scales linearly with the amount of data, many chemistry and materials applications have non-linear scaling.
-
-### Load, data balance and hot spots
-
-Further limiting performance is the assumption of perfect parallelism.  It can be very hard to distribute work (a.k.a. load balance) across all of the processes.  For some applications, work is entirely driven by the data but this is not always the case.  A process that has too much work is sometimes referred to as a hot spot (also used to refer to a compute-intensive block of code).
-
-Data distribution can also be a challenge.  The finite memory of each node is one constraint.  Another is that all of the data needed by a task must be brought together for it to be executed.  A non-uniform data distribution can also lead to communication hot spots (processors that must send/recv a lot of data) or hot links (wires in the network that are heavily used to transmit data).  This last point highlights the role of network topology --- the communication pattern of your application is mapped onto the wiring pattern (toplogy) of your network.  A communication intensive application may be sensive to this mapping, and MPI provides some assistance for this (e.g., see [here](http://wgropp.cs.illinois.edu/courses/cs598-s16/lectures/lecture28.pdf)).  See also bisection bandwidth below.
-
-The performance impact of poor load balance will become apparent at synchronization points (e.g., blocking global communications) where all processes must wait for the slowest one to catch up.
-
-### Latency and bandwidth
-
-For point-to-point communication, the central concepts are latency (*L*, the time in seconds for a zero-length message) and bandwidth (*B*, speed of data transfer in bytes/second).  These enable us to model the time to send a message of *N* bytes as
-
-<img src="https://latex.codecogs.com/svg.latex?\Large&space;T(N)=L+\frac{N}{B}" title="LB" />
-
-For typical modern computers *L*=1-10us and *B*=1-100Gbytes/s.  It is hard to accurately measure the latency since on modern hardware the actual cost can depend upon what else is going on in the system and upon your communication pattern.  The bandwidth is a bit easier to measure by sending very large messages, but it can still depend on communication pattern and destination.
-
-An important and easy to remember value is *N1/2*, which is the message length necessary to obtain 50% of peak bandwidth (i.e., *T(N)=2N/B*)
-
-<img src="https://latex.codecogs.com/svg.latex?\Large&space;N&#95;{1/2}=LB" title="Nhalf" />
-
-Inserting *L*=1us and *B*=10Gbyte/s, we obtain *N1/2*=10000bytes.
-
-Excercise: Derive a similar a similar formula for the length necessary to acheive 90% peak bandwith.
-
-Bisection bandwidth is another important concept especially if you are doing a lot of communication all at once.  The network connecting the computers (nodes) in your cluster probably does not directly connect all nodes with every other node --- for anything except a small cluster this would involve too many wires (*O(P^2)* wires, *P*=number of nodes).  Instead, networks use simpler topologies with just *O(P)* wires --- e.g., mesh, n-dimension torous, tree, fat tree, etc.  Imagine dividing this network in two halves so as to give the worst possible bandwidth connecting the halves, which you can derive by counting the number of wires that you cut. This is the bisection bandwidth.  If your application is doing a lot of communication that is not local but is uniform and random, your effective bandwidth is the bisection bandwidth divided by the number of processes.  This can be much smaller than the bandwidth obtained by a single message on a quiet machine.  For instance, in a square mesh of P processes, the bisection bandwidth is *O(sqrt(P))* and if all proceses are trying to communicate globally the average available bandwidth is *O(1/sqrt(P))*, which is clearly not scalable.
-
-Thus, the communication intensity and the communication pattern of your application are both important.  Spreading communication over a larger period of time is a possible optimization.  Another is trying to communicate only to processes that are close in the sense of distance (wires traversed) on the actual network.
-
-For global communication, the details are more complicated because a broadcast or reduction is executed on an MPI-implementation-specific tree of processes that is mapped to the underlying network topology.  However, for long messages an optimized implementation should be able to deliver similar bandwidth to that of the point-to-point communication, with a latency that grows roughly logarithmically with the number of MPI processes.
-
-##  Debugging
+### 4. Debugging
 
 There are some powerful visual parallel debuggers that understand MPI, but since these can be expensive we are often left just with GDB. There are variety of ways of using GDB to debug a parallel application:
 
@@ -482,17 +415,7 @@ There are some powerful visual parallel debuggers that understand MPI, but since
 
 * A more portable solution that assumes the MPI processes can create an X-window on your computer is `mpirun -np 2 xterm -e gdb executable` which creates an `xterm` for each process in your application.  This works great for a few processes, but does not scale and it can be complicated to get X-windows to work thru firewalls, etc.
 
-## 5. Work and data distribution strategies
-
-* partitioning the iterations of an outer loop (see [`exercises/trapezoid_seq.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/trapezoid_seq.cc) and parallel version)
-* using a counter to distribute the iterations of a nest of loops (see [`exercises/nest_seq.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/nest_seq.cc) and parallel veersion)
-* master slave model
-* replicated vs. distributed data
-* systolic loop
-* parallel matrix multiplication ([here](http://www.cs.utexas.edu/~flame/pubs/SUMMA2d3dTOMS.pdf) and [here](https://www3.nd.edu/~zxu2/acms60212-40212/Lec-07-3.pdf)) is not as easy as you might think
-* etc.
-
-## 6. Exercises
+## 5. Exercises
 
 1. [easy] Skim through some of the other tutorials and documentation that have links provided above
 2. [easy-medium] Write a program to benchmark the performance of reduce, all-reduce, broadcast as a function of both N and P.  Use N=1,2,4,8,...,1024*1024 doubles. And experiment with processes on the same node and on
