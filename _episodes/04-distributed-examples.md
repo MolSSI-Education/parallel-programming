@@ -3,15 +3,15 @@ title: "MPI Hands-On - C++"
 teaching: 0
 exercises: 90
 questions:
-- "Key question (FIXME)"
+- "How can I use MPI to parallelize a compiled code?"
 objectives:
-- "First learning objective. (FIXME)"
+- "Compile and run C++ codes that are parallelized using MPI."
+- "Use proper MPI error handling."
+- "Learn how to use non-blocking communication methods."
+- "Use a debugger with an parallelized code."
 keypoints:
-- "First key point. Brief Answer to questions. (FIXME)"
+- "Correct use of non-blocking can substantially reduce the time your code spends communicating between processes."
 ---
-FIXME
-
-{% include links.md %}
 
 ## 1. Hello world 
 
@@ -505,3 +505,5 @@ different nodes (this means setting #nodes and #ppn correctly in the PBS file).
     * MD is also easy to get started, but harder to get best performance
     * Hartree-Fock is actually not that hard but the complexity of the code and algorithm can obscure this
     * Look at the `README.md` files in the `mpi` sub-directories to get hints.
+
+{% include links.md %}
