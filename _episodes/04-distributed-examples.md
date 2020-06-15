@@ -405,7 +405,7 @@ Or 9 if you want a timer
 
 
 
-### 4. Debugging
+## 4. Debugging
 
 There are some powerful visual parallel debuggers that understand MPI, but since these can be expensive we are often left just with GDB. There are variety of ways of using GDB to debug a parallel application:
 
