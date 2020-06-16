@@ -18,31 +18,42 @@ keypoints:
 ### Writing hello world
 
 We will start with a simple "Hello world" code [`exercises/hello.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/hello.cc):
-```c++
+~~~
     #include <iostream>
     int main() {
         std::cout << "Hello" << std::endl;
         return 0;
     }
-```
+~~~
+{: .language-cpp}
+
+
 Build this code with `make hello` or `icpc -o hello hello.cc`.
 
 ### Required elements of all MPI programs
 
 * Include `mpi.h` --- older versions of some MPI implementations required it be the first header
 * Initialize MPI --- by calling [`MPI_Init`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Init.html), or [`MPI_Init_thread`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Init_thread.html). Usually the first line of your main program will be similar to the following if you are not handling errors yourself (see just below)
-```c++
+
+~~~
     MPI_Init(&argc,&argv);
-```
+~~~
+{: .language-cpp}
+
 or this if you are handling errors
-```c++
+
+~~~
     if (MPI_Init(&argc,&argv) != MPI_SUCCESS) MPI_Abort(MPI_COMM_WORLD, 1);
-```
+~~~
+{: .language-cpp}
 
 * Finalize MPI --- by calling [`MPI_Finalize`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Finalize.html) usually the penultimate line of your main program will be
-```c++
+
+~~~
     MPI_Finalize();
-```
+~~~
+{: .language-cpp}
+
 * Initializing MPI gives us access to the default communicator (`MPI_COMM_WORLD`)
     * An intra communicator encapsulates all information and resources needed for a group of processes to communicate with each other.  For our simple applications we will always being `MPI_COMM_WORLD` but for real applications you should be passing a communicator into all of your routines to enable reuse and interoperability.
     * We will look at communicators in more detail soon --- for now we just need to get the number of processes (by calling [`MPI_Comm_size`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Comm_size.html)) and the rank (`0,1,2,...`) of the current process (by calling [`MPI_Comm_rank`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Comm_rank.html)).
@@ -54,7 +65,8 @@ or this if you are handling errors
 * To abort execution you cannot just `exit` or `return` because there's lots of clean up that needs to be done when running in parallel --- a poorly managed error can easily waste 1000s of hours of computer time.  You must call `MPI_Abort` to exit with an error code.
 
 The new version ([`exercises/mpihello.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/hello.cc/mpihello.cc)) looks like this
-```c++
+
+~~~
     #include <mpi.h>
     #include <iostream>
     
@@ -70,7 +82,8 @@ The new version ([`exercises/mpihello.cc`](https://github.com/wadejong/Summer-Sc
         MPI_Finalize();
         return 0;
     }
-```
+~~~
+{: .language-cpp}
 
 ### Compiling MPI programs
 
@@ -84,24 +97,31 @@ Build your parallel version with `make mpihello` or `mpiicpc -o mpihello mpihell
 You can run the program sequentially just like any other program.
 
 To run it in parallel we must use the use the `mpirun` command (this is system dependent and a common variant is `mpiexec`) since again there's lots of machine dependent stuff that needs doing.  At its simplest we must tell MPI how many processes we want to use --- here we use 4.
+
 ~~~
-    mpirun -np 4 ./mpihello1
+$ mpirun -np 4 ./mpihello1
 ~~~
+{: .language-bash}
 
 Your output might look like
+
 ~~~
     Hello from process 1 of 4
     Hello from process 0 of 4
     Hello from process 3 of 4
     Hello from process 2 of 4
 ~~~
+{: .output}
+
 but more likely will look something like
+
 ~~~
     Hello from process Hello from process 1 of 4
     Hello from process 2 of 4
     3 of 4
     Hello from process 0 of 4
 ~~~
+{: .output}
 
 We used four processes on the local machine (e.g., your laptop or the cluster login node).  More typically, and to avoid the ire of colleagues, we want to use multiple computers from the cluster.  You can manually provide to `mpirun` a hostfile that tells it which computers to use --- on most clusters this is rarely necessary since a batch system is used to
 * time share the computers in the cluster
@@ -109,6 +129,7 @@ We used four processes on the local machine (e.g., your laptop or the cluster lo
 
 
 Here's an example batch job ([`exercises/mpihello.pbs`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/mpihello.pbs)) for SeaWulf annotated so show what is going on:
+
 ~~~
     #!/bin/bash
     #PBS -l nodes=2:ppn=24,walltime=00:02:00
@@ -143,7 +164,10 @@ Here's an example batch job ([`exercises/mpihello.pbs`](https://github.com/wadej
 
     # You can run more things below
 ~~~
+{: .language-bash}
+
 But I find the comments distracting, so here ([`exercises/mpihello.pbs`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/mpihello_minimal.pbs)) is a minimal version.
+
 ~~~
      #!/bin/bash
      #PBS -l nodes=2:ppn=24,walltime=00:02:00
@@ -153,12 +177,16 @@ But I find the comments distracting, so here ([`exercises/mpihello.pbs`](https:/
      cd $PBS_O_WORKDIR
      mpirun ./mpihello
 ~~~
+{: .language-bash}
+
 You can copy and edit the file for your other jobs.  Note that other other systems running PBS will differ.
 
 Submit the job from the directory holding your executable (or modify the batch script to use the full path to your executable)
+
 ~~~
-    qsub mpihello.pbs
+$ qsub mpihello.pbs
 ~~~
+{: .language-bash}
 
 Useful PBS/Torque commands are
 * `qstat` --- see all queued/running jobs
@@ -192,9 +220,11 @@ But messages from multiple processes can be interleaved with each other.
 * When a blocking send function ([`MPI_Send`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Send.html)) completes the buffer can immediately be reused without affecting the sent message.  Note that the receiving process may not necessarily have yet received the message.
 * When a blocking recv function ([`MPI_Send`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Recv.html)) completes the received message is fully available in the buffer.
 
-```c++
+~~~
     int MPI_Send(const void *buf, int count, MPI_Datatype datatype, int dest, int tag,  MPI_Comm comm);
-```
+~~~
+{: .language-cpp}
+
 * `buf` --- pointer to the start of the buffer being sent
 * `count` --- number of elements to send
 * `datatype` --- MPI data type of each element
@@ -202,9 +232,11 @@ But messages from multiple processes can be interleaved with each other.
 * `tag`  --- message tag
 * `comm` --- the communicator to use
 
-```c++
+~~~
     int MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status);
-```
+~~~
+{: .language-cpp}
+
 * `buf` --- pointer to the start of the buffer to receive the message
 * `count` --- maximum number of elements the buffer can hold
 * `datatype` --- MPI data type of each element
@@ -214,11 +246,13 @@ But messages from multiple processes can be interleaved with each other.
 * `status` --- pointer to the structure in which to store status
 
 The actual source and tag of the received message can be accessed directly from the status.  Call [`MPI_Get_count`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Get_count.html) to get the count.
-```c++
+
+~~~
     status.MPI_TAG;
     status.MPI_SOURCE;
     MPI_Get_count( &status, datatype, &count );
-```
+~~~
+{: .language-cpp}
 
 There's data types for everything, and you can define you own including non-contiguous data structures:
 
@@ -258,7 +292,6 @@ Note that this is such a common operation that there is a special ([`MPI_Sendrec
 
 Write a program to send an integer (`=99`) around a ring of processes (i.e., `0` sends to `1`, `1` sends to `2`, `2` sends to `3`, ..., `P-1` sends to `0`, with process 0 verifying the value is correct.  Your program should work for any number of processes greater than one.
 
-
 ### One minimal set of six operations
 
 ~~~
@@ -278,17 +311,21 @@ A timer is also useful --- [`MPI_Wtime`](https://www.mpich.org/static/docs/v3.2/
 
 * When a non-blocking recv function ([`MPI_Irecv`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Irecv.html)) completes, any message data is not completely available in the buffer until the request is known to have completed.
 
-```c++
+~~~
     int MPI_Isend(const void *buf, int count, MPI_Datatype datatype, int dest, int tag,  MPI_Comm comm, MPI_Request *request);
     int MPI_Irecv(void *buf, int count, MPI_Datatype datatype, int source,  int tag, MPI_Comm comm, MPI_Request *request);
-```
+~~~
+{: .language-cpp}
+
 * `request` --- a pointer to structure that will hold the information and status for the request
 
-```c++
+~~~
     int MPI_Test(MPI_Request *request, int *flag, MPI_Status *status);
     int MPI_Wait(MPI_Request *request, MPI_Status *status);
     int MPI_Cancel(MPI_Request *request);
-```
+~~~
+{: .language-cpp}
+
 * `request` --- a pointer to the request being tested/waited-upon/cancelled
 * `flag` --- a pointer to an int that will be non-zero (true) if the operation has completed
 * `status` --- a pointer to the structure in which status will be stored if the operation has completed
@@ -311,7 +348,7 @@ A timer is also useful --- [`MPI_Wtime`](https://www.mpich.org/static/docs/v3.2/
 3. Implied global synchronization
 4. Other global operations
 
-In constrast to point-to-point operations that involve just two processes, global operations move data between **all** processes asscociated with a communicator with an implied **synchronization** between them.  All processes within a communicator are required to invoke the operation --- hence the alternative name "collective" operations.
+In contrast to point-to-point operations that involve just two processes, global operations move data between **all** processes associated with a communicator with an implied **synchronization** between them.  All processes within a communicator are required to invoke the operation --- hence the alternative name "collective" operations.
 
 Many chemistry, materials, and biophysics applications are written using only global operations to
 * share/replicate information between all processes by broadcasting, and
@@ -333,11 +370,13 @@ We introduce broadcast and reduction, and then work through an example.
 
 To combines values from all processes with a reduction operation either to just process `root` (([`MPI_Reduce`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Reduce.html))) or distributing the result back to all processes (([`MPI_Allreduce`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Allreduce.html))).
 
-```c++
+~~~
     int MPI_Reduce (const void *sendbuf, void *recvbuf, int count, MPI_Datatype datatype, MPI_Op op, int root, MPI_Comm comm);
 
     int MPI_Allreduce (const void *sendbuf, void *recvbuf, int count, MPI_Datatype datatype, MPI_Op op, MPI_Comm comm );
-```
+~~~
+{: .language-cpp}
+
 * `sendbuf` --- a pointer to the buffer that contains the local data to be reduced
 * `recvbuf` --- a pointer to the buffer that will hold the result
 
@@ -402,8 +441,6 @@ Or 9 if you want a timer
 ~~~
     MPI_Wtime
 ~~~
-
-
 
 ## 4. Debugging
 
