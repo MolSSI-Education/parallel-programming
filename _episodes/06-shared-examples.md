@@ -68,13 +68,6 @@ int main()
 }
 ```
 
-We need to tell the compiler that we are using OpenMP.
-Open `Makefile` and add the `-qopenmp` flag to `CXXFLAGS`:
-
-~~~
-CXXFLAGS = -xHOST -O3 -ipo -no-prec-div -fp-model fast=2 -qopenmp
-~~~
-
 Go ahead and rebuild the code.
 
 **$ cmake .  
