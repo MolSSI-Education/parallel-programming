@@ -17,7 +17,7 @@ keypoints:
 
 ### Writing Hello World
 
-We'll start with the first example in [`mpi/example1`](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/example1), which is a simple Hello World code:
+We'll start with the first example in [mpi/example1](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/example1), which is a simple Hello World code:
 
 ~~~
 if __name__ == "__main__":
@@ -157,13 +157,13 @@ World Size: 2   Rank: 1
 ### Basic Infrastructure
 
 
-Copy the code in this script in [`example2.py`](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/example2). This script does some simple math with NumPy arrays.
+Copy the code in this script in [example2.py](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/example2). This script does some simple math with NumPy arrays.
 Run the code now.
 
 ~~~
 $ python example2.py
 ~~~
-{: .language-python}
+{: .language-bash}
 
 ~~~
 Average: 5000001.5
@@ -527,7 +527,7 @@ Note that in addition to enabling us to write simpler-looking code, collective c
 
 ## Example 3
 
-Next, view [`example3.py`](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/example3) which is a simple Monte-Carlo simulation.
+Next, view [example3.py](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/example3) which is a simple Monte-Carlo simulation.
 Run the code now.
 
 ~~~
@@ -634,7 +634,7 @@ Change the `for` loop in `get_particle_energy` to the following:
 ~~~
     for j_particle in range(my_rank, particle_count, world_size):
 ~~~
-{: .languge-python}
+{: .language-python}
 
 The above code will cause each rank to iterate over particles with a stride of `world_size` and an initial offset of `my_rank`.
 For example, if you run on 4 ranks, rank 0 will iterate over particles 0, 4, 8, 12, etc., while rank 1 will iterate over particles 1, 5, 9, 13, etc.
