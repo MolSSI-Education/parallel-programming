@@ -35,7 +35,8 @@ int main()
 
 Go ahead and build the code.
 
-**$ make**
+**$ cmake .  
+$ make**
 
 You could run the code just by typing `./example1` into the command line, but there is also a simple script that does the same thing.
 Run the script now.
@@ -76,7 +77,8 @@ CXXFLAGS = -xHOST -O3 -ipo -no-prec-div -fp-model fast=2 -qopenmp
 
 Go ahead and rebuild the code.
 
-**$ make**
+**$ cmake .  
+$ make**
 
 Before running the code, we should also specify how many OpenMP threads we want to run on.
 This is something that you decide at run-time, by setting a special system variable called `OMP_NUM_THREADS`.
@@ -120,7 +122,8 @@ int main()
 
 Compile and run the code:
 
-**$ make  
+**$ cmake .  
+$ make  
 $ ./run.sh**
 
 >Hello World! (2)  
@@ -190,7 +193,8 @@ We will now work on Example 2.
 
 In this directory is a code that does some simple math on some arrays, and then prints the average of the result:
 
-**$ make  
+**$ cmake.  
+$ make  
 $ ./run.sh**
 
 >Average: 500000001.500000
@@ -363,7 +367,8 @@ Now we will look at Example 3.
 
 Compiling and running this code should produce something like the following:
 
-**$ make  
+**$ cmake .  
+$ make  
 $ ./run.sh**
 
 >Iteration: 999      Energy: 92079.129718      PE: 16253.127101  
@@ -510,9 +515,10 @@ That definitely helped - apparently the code was spending nearly half the time d
 
 Now we will work on a somewhat more realistic example of an MD code.
 
-**cd ../example4  
-make  
-./run.sh**
+**$ cd ../example4  
+$ cmake .  
+$ make  
+$ ./run.sh**
 
 >Time step 0.03  
 >optim: 1.84389e+17 0.1  
