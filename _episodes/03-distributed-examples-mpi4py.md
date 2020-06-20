@@ -104,7 +104,7 @@ if __name__ == "__main__":
 In the above code we first import `mpi4py`.
 Then, we get the communicator that spans all of the processes, which is called `MPI.COMM_WORLD`.
 The communicator's `Get_size()` function tells us the total number of processes within that communicator.
-Each of these processes is assigned a uniqe rank, which is an integer that ranges from `0` to `world_size - 1`.
+Each of these processes is assigned a unique rank, which is an integer that ranges from `0` to `world_size - 1`.
 The rank of a process allows it to be identified whenever processes communicate with one another.
 For example, in some cases we might want rank 2 to send some information to rank 4, or we might want rank 0 to receive information from all of the other processes.
 Calling `world_comm.Get_rank()` returns the rank of the process that called it within `world_comm`.
