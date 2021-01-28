@@ -17,7 +17,7 @@ keypoints:
 
 ### Writing Hello World
 
-We'll start with the first example in [mpi/example1](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/example1), which is a simple Hello World code:
+We'll start with the first example in [mpi/example1](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi4py/example1), which is a simple Hello World code:
 
 ~~~
 if __name__ == "__main__":
@@ -30,7 +30,7 @@ Acquire a copy of the example files for this lesson, and then run MPI Example 1:
 
 ~~~
 $ git clone git@github.com:MolSSI-Education/parallel-programming.git
-$ cd parallel-programming/examples/mpi/example1
+$ cd parallel-programming/examples/mpi4py/example1
 $ python example1.py
 ~~~
 {: .language-bash}
@@ -112,7 +112,7 @@ Calling `world_comm.Get_rank()` returns the rank of the process that called it w
 Go ahead and run the code now:
 
 ~~~
-$ mpiexec -n 4 python example1.py**
+$ mpiexec -n 4 python example1.py
 ~~~
 {: .language-bash}
 
@@ -157,7 +157,7 @@ World Size: 2   Rank: 1
 ### Basic Infrastructure
 
 
-Copy the code in this script in [example2.py](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/example2). This script does some simple math with NumPy arrays.
+Copy the code in this script in [example2.py](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi4py/example2). This script does some simple math with NumPy arrays.
 Run the code now.
 
 ~~~
@@ -527,7 +527,7 @@ Note that in addition to enabling us to write simpler-looking code, collective c
 
 ## Example 3
 
-Next, view [example3.py](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/example3) which is a simple Monte-Carlo simulation.
+Next, view [example3.py](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi4py/example3) which is a simple Monte-Carlo simulation.
 Run the code now.
 
 ~~~
