@@ -13,215 +13,374 @@ keypoints:
 - "Correct use of non-blocking can substantially reduce the time your code spends communicating between processes."
 ---
 
-## 1. Hello world 
+## 1. Example 1
 
-### Writing hello world
+### Writing Hello World
 
-We will start with a simple "Hello world" code [`exercises/hello.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/hello.cc):
-~~~
-    #include <iostream>
-    int main() {
-        std::cout << "Hello" << std::endl;
-        return 0;
-    }
-~~~
-{: .language-cpp}
-
-
-Build this code with `make hello` or `icpc -o hello hello.cc`.
-
-### Required elements of all MPI programs
-
-* Include `mpi.h` --- older versions of some MPI implementations required it be the first header
-* Initialize MPI --- by calling [`MPI_Init`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Init.html), or [`MPI_Init_thread`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Init_thread.html). Usually the first line of your main program will be similar to the following if you are not handling errors yourself (see just below)
+We'll start with the first example in [mpi/example1](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/example1), which is a simple Hello World code:
 
 ~~~
-    MPI_Init(&argc,&argv);
+#include <iostream>
+
+int main(int argc, char **argv) {
+    std::cout << "Hello World!" << std::endl;
+    return 0;
+}
 ~~~
 {: .language-cpp}
 
-or this if you are handling errors
+Acquire a copy of the example files for this lesson, and then compile and run the example code:
 
 ~~~
-    if (MPI_Init(&argc,&argv) != MPI_SUCCESS) MPI_Abort(MPI_COMM_WORLD, 1);
-~~~
-{: .language-cpp}
-
-* Finalize MPI --- by calling [`MPI_Finalize`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Finalize.html) usually the penultimate line of your main program will be
-
-~~~
-    MPI_Finalize();
-~~~
-{: .language-cpp}
-
-* Initializing MPI gives us access to the default communicator (`MPI_COMM_WORLD`)
-    * An intra communicator encapsulates all information and resources needed for a group of processes to communicate with each other.  For our simple applications we will always being `MPI_COMM_WORLD` but for real applications you should be passing a communicator into all of your routines to enable reuse and interoperability.
-    * We will look at communicators in more detail soon --- for now we just need to get the number of processes (by calling [`MPI_Comm_size`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Comm_size.html)) and the rank (`0,1,2,...`) of the current process (by calling [`MPI_Comm_rank`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Comm_rank.html)).
-* Note how MPI wants access to the command line arguments (so we must modify the signature of `main`). You can use `NULL` instead of `argv` and `argc` but passing arguments to MPI is very useful.
-
-### Error detection and exit
-* MPI functions return `MPI_SUCCESS` on success or an error code (see documentation) on failure depending on how errors are handled.
-* By default errors abort (i.e., the error handler is `MPI_ERRORS_ARE_FATAL`).  If you want MPI to return errors for you to handle, you can call [`MPI_Errhandler_set`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Errhandler_set.html)`(MPI_COMM_WORLD, MPI_ERRORS_RETURN)`.
-* To abort execution you cannot just `exit` or `return` because there's lots of clean up that needs to be done when running in parallel --- a poorly managed error can easily waste 1000s of hours of computer time.  You must call `MPI_Abort` to exit with an error code.
-
-The new version ([`exercises/mpihello.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/hello.cc/mpihello.cc)) looks like this
-
-~~~
-    #include <mpi.h>
-    #include <iostream>
-    
-    int main(int argc, char** argv) {
-        MPI_Init(&argc,&argv);
-        
-        int nproc, rank;
-        MPI_Comm_size(MPI_COMM_WORLD, &nproc);
-        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-        
-        std::cout << "Hello from process " << rank << " of " << nproc << std::endl;
-        
-        MPI_Finalize();
-        return 0;
-    }
-~~~
-{: .language-cpp}
-
-### Compiling MPI programs
-
-Build your parallel version with `make mpihello` or `mpiicpc -o mpihello mpihello.cc`
-
-* MPI provides wrappers for compiling and linking programs because there's a lot of machine specific stuff that must be done.
-* For the summer school we are using the Intel C++ compiler and MPI library so we use the command `mpiicpc` (`mpiifort` for the Intel FORTRAN, `mpiicc` for Intel C) but more commonly you might be using the GNU stack (`mpicxx`, `mpicc`, `mpifort`, etc.) (see [here](https://software.intel.com/en-us/mpi-developer-reference-linux-compiler-commands) for more details).
-
-### Running MPI programs
-
-You can run the program sequentially just like any other program.
-
-To run it in parallel we must use the use the `mpirun` command (this is system dependent and a common variant is `mpiexec`) since again there's lots of machine dependent stuff that needs doing.  At its simplest we must tell MPI how many processes we want to use --- here we use 4.
-
-~~~
-$ mpirun -np 4 ./mpihello1
+$ git clone git@github.com:MolSSI-Education/parallel-programming.git
+$ cd parallel-programming/examples/mpi/hello
+$ mkdir build
+$ cd build
+$ cmake -DCMAKE_C_COMPILER=mpicc -DCMAKE_CXX_COMPILER=mpicxx -DCMAKE_Fortran_COMPILER=mpifort ..
+$ make
+$ ./hello
 ~~~
 {: .language-bash}
 
-Your output might look like
-
 ~~~
-    Hello from process 1 of 4
-    Hello from process 0 of 4
-    Hello from process 3 of 4
-    Hello from process 2 of 4
+Hello World!
 ~~~
 {: .output}
 
-but more likely will look something like
+### Getting Started with MPI
+
+Let's try running this code on multiple processes.
+This is done using the `mpiexec` command.
+Many environments also provide an `mpirun` command, which usually - but not always - works the same way.
+Whenever possible, you should use `mpiexec` and not `mpirun`, in order to guarantee more consistent results.
+
+> ## MPI - `mpiexec` vs `mpirun`
+> MPI stands for **'message passing interface'** and is a message passing standard which is designed to work on a variety of parallel computing architectures. The [MPI standard](https://www.mpi-forum.org/docs/drafts/mpi-2018-draft-report.pdf) defines how syntax and semantics of a library of routines. There are a number of implementations of this standard including OpenMPI, MPICH, and MS MPI.
+>
+>  The primary difference between `mpiexec` and `mpirun` is that `mpiexec` is defined as part of the MPI standard, while `mpirun` is not.  Different implementations of MPI (i.e. OpenMPI, MPICH, MS MPI, etc.) are not guaranteed to implement `mpirun`, or might implement different options for `mpirun`.  Technically, the MPI standard doesn't actually require that MPI implementations implement `mpiexec` either, but the standard does at least describe guidelines for how `mpiexec` should work.  Because of this, `mpiexec` is generally the preferred command.
+>
+{: .callout}
+
+The general format for lanching a code on multiple processes is:
 
 ~~~
-    Hello from process Hello from process 1 of 4
-    Hello from process 2 of 4
-    3 of 4
-    Hello from process 0 of 4
+$ mpiexec -n <number_of_processes> <command_to_launch_code>
+~~~
+{: .language-bash}
+
+For example, to launch `example1.py` on 4 processes, do:
+
+~~~
+$ mpiexec -n 4 ./hello
+~~~
+{: .language-bash}
+
+~~~
+Hello World!
+Hello World!
+Hello World!
+Hello World!
 ~~~
 {: .output}
 
-We used four processes on the local machine (e.g., your laptop or the cluster login node).  More typically, and to avoid the ire of colleagues, we want to use multiple computers from the cluster.  You can manually provide to `mpirun` a hostfile that tells it which computers to use --- on most clusters this is rarely necessary since a batch system is used to
-* time share the computers in the cluster
-* queue jobs according to priority, resource needs, etc.
+When you execute the above command, `mpiexec` launches 4 different instances of `./hello` simultaneously, which each print "Hello World!".
 
+Typically, as long as you have at least 4 processors on the machine you are running on, each process will be launched on a different processor; however, certain environment variables and optional arguments to `mpiexec` can change this behavior.
+Each process runs the code in `example1.py` independently of the others.
 
-Here's an example batch job ([`exercises/mpihello.pbs`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/mpihello.pbs)) for SeaWulf annotated so show what is going on:
+It might not be obvious yet, but the processes `mpiexec` launches aren't completely unaware of one another.
+The `mpiexec` adds each of the processes to an MPI communicator, which enables each of the processes to send and receive information to one another via MPI.
+The MPI communicator that spans all of the processes launched by `mpiexec` is called `MPI_COMM_WORLD`.
 
-~~~
-    #!/bin/bash
-    #PBS -l nodes=2:ppn=24,walltime=00:02:00
-    #PBS -q molssi
-    #PBS -N hello
-    #PBS -j oe
-
-    # Above says:
-    # - job has 2 (dedicated) nodes with 24 processes per node with a 2 minute max runtime
-    # - use the molssi queue
-    # - name the job "hello"
-    # - merge the standard output and error into one file
-
-    # Output should appear in the file "<jobname>.o<jobnumber>" in the
-    # directory from which you submitted the job
-
-    # ================================================
-    # If this is not in your .bashrc it needs to be here so that your job
-    # uses the same compilers/libraries that you compiled with
-    source /gpfs/projects/molssi/modules-intel
-
-    # This will change to the directory from which you submitted the job
-    # which we assume below is the one holding the executable
-    cd $PBS_O_WORKDIR
-
-    # Uncomment this if you want to see other PBS environment variables
-    # env | grep PBS
-
-    # Finally, run the executable using $PBS_NUM_NODES*$PBS_NUM_PPN
-    # processes spread across all the nodes
-    mpirun ./mpihello
-
-    # You can run more things below
-~~~
-{: .language-bash}
-
-But I find the comments distracting, so here ([`exercises/mpihello.pbs`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/mpihello_minimal.pbs)) is a minimal version.
+We can use the MPI library to get some information about the `MPI_COMM_WORLD` communicator and the processes within it.
+Edit `hello.cpp` so that it reads as follows:
 
 ~~~
-     #!/bin/bash
-     #PBS -l nodes=2:ppn=24,walltime=00:02:00
-     #PBS -q molssi -N hello -j oe
+#include <iostream>
+#include <mpi.h>
 
-     source /gpfs/projects/molssi/modules-intel
-     cd $PBS_O_WORKDIR
-     mpirun ./mpihello
+int main(int argc, char **argv) {
+  // Initialize MPI
+  // This must always be called before any other MPI functions
+  MPI_Init(&argc, &argv);
+
+  // Get the number of processes in MPI_COMM_WORLD
+  int world_size;
+  MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+
+  // Get the rank of this process in MPI_COMM_WORLD
+  int my_rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+
+  // Print out information about MPI_COMM_WORLD
+  std::cout << "World Size: " << world_size << "   Rank: " << my_rank << std::endl;
+
+  // Finalize MPI
+  // This must always be called after all other MPI functions
+  MPI_Finalize();
+
+  return 0;
+}
+~~~
+{: .language-cpp}
+
+Recompile the code:
+
+~~~
+$ make
 ~~~
 {: .language-bash}
 
-You can copy and edit the file for your other jobs.  Note that other other systems running PBS will differ.
+In the above code we first include the MPI library header, `mpi.h`.
+Then, we call `MPI_Init()`.
+This function **must** be called before any other MPI functions, and is typically one of the first lines of an MPI-parallelized code.
+Then, we call `MPI_Comm_size()` to get the number of processes in `MPI_COMM_WORLD`, which corresponds to the number of processes launched whenever `mpiexec` is executed at the command line.
+Each of these processes is assigned a uniqe rank, which is an integer that ranges from `0` to `world_size - 1`.
+The rank of a process allows it to be identified whenever processes communicate with one another.
+For example, in some cases we might want rank 2 to send some information to rank 4, or we might want rank 0 to receive information from all of the other processes.
+Calling `MPI_Comm_rank()` returns the rank of the process calling it within `MPI_COMM_WORLD`.
 
-Submit the job from the directory holding your executable (or modify the batch script to use the full path to your executable)
+Go ahead and run the code now:
 
 ~~~
-$ qsub mpihello.pbs
+$ mpiexec -n 4 ./hello
 ~~~
 {: .language-bash}
 
-Useful PBS/Torque commands are
-* `qstat` --- see all queued/running jobs
-* `qstat -u <username>` --- to see just your jobs
-* `qstat -f <jobid?>` --- to see detailed info about a job
-* `qstat -Q` and `qstat -q` --- to see info about batch queues (for the summer school only `molssi` is available)
-* `qdel <jobid>` --- to cancel a job
+~~~
+World Size: 4   Rank: 1
+World Size: 4   Rank: 0
+World Size: 4   Rank: 2
+World Size: 4   Rank: 3
+~~~
+{: .output}
 
-##  2. Sending and receiving messages --- point to point communication
+As you can see, the `MPI_Comm_size()` function outputs 4, which is the total number of ranks we told `mpiexec` to run with (through the `-n` argument).
+Each of the processes is assigned a rank in the range of 0 to 3.
 
-### Essential elements
-1. Process rank, message tag, MPI data type, communicator size
-2. Blocking communication
-3. One minimal set of six operations
-3. Buffering and safe communication
-4. Non-blocking communication
-5. Implied weak synchronization
-6. Other communication modes (synchronous send, buffered send)
-
-A process is identified by its rank --- an integer `0,1,..,P-1` where `P` is the number of processes in the communicator (`P` is the size of the communicator).
-
-Every message has a `tag` (integer) that you can use to uniquely identify the message.  This implements the CSP concept of message type --- MPI uses the term `tag` in order to distinguish from the datatype being sent (byte, integer, double, etc.).
-
-In a conversation between a pair of processes, messages of the same `tag` are received in the order sent.
-
-But messages from multiple processes can be interleaved with each other.
-
-
-### Blocking communication
-
-* When a blocking send function ([`MPI_Send`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Send.html)) completes the buffer can immediately be reused without affecting the sent message.  Note that the receiving process may not necessarily have yet received the message.
-* When a blocking recv function ([`MPI_Send`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Recv.html)) completes the received message is fully available in the buffer.
+As you can see, the ranks don't necessarily print out their messages in order; whichever rank completes the `cout` first will print out its message first.
+If you run the code again, the ranks are likely to print thier message in a different order:
 
 ~~~
-    int MPI_Send(const void *buf, int count, MPI_Datatype datatype, int dest, int tag,  MPI_Comm comm);
+World Size: 4   Rank: 2
+World Size: 4   Rank: 0
+World Size: 4   Rank: 3
+World Size: 4   Rank: 1
+~~~
+{: .output}
+
+You can also try rerunning with a different value for the `-n` `mpiexec` argument.
+For example:
+
+~~~
+$ mpiexec -n 2 ./hello
+~~~
+{: .language-bash}
+
+~~~
+World Size: 2   Rank: 0
+World Size: 2   Rank: 1
+~~~
+{: .output}
+
+
+
+### Error Handling with MPI
+
+If an error forces an MPI program to exit, it should **never** just call `return` or `exit`.
+This is because calling `return` or `exit` might terminate one of the MPI processes, but leave others running (but not doing anything productive) indefintely.
+If you're not careful, you could waste massive amounts of computational resources running a failed calculation your thought had terminated.
+Instead, MPI-parallelized codes should call `MPI_Abort()` when something goes wrong, as this function will ensure all MPI processes terminate.
+The `MPI_Abort` function takes two arguments: the first is the communicator corresponding to the set of MPI processes to terminate (this should generally be `MPI_COMM_WORLD`), while the second is an error code that will be returned to the environment.
+
+It is also useful to keep in mind that all MPI functions have a return value.
+If this value is equal to `MPI_SUCCESS`, the function was executed successfully; otherwise, the function call failed.
+By default, MPI functions automatically abort if they encounter an error, so you'll only ever get a return value of `MPI_SUCCESS`.
+If you want to handle MPI errors yourself, you can call `MPI_Errhandler_set(MPI_COMM_WORLD, MPI_ERRORS_RETURN)`; if you do this, you must check the return value of every MPI function and call `MPI_Abort` if it is not equal to `MPI_SUCCESS`.
+For example, when initializing MPI, you might do the following:
+
+~~~
+if (MPI_Init(&argc,&argv) != MPI_SUCCESS) MPI_Abort(MPI_COMM_WORLD, 1);
+~~~
+{: .language-cpp}
+
+
+
+
+## Example 2
+
+### Basic Infrastructure
+
+We will now do some work with the the example in [examples/mpi/average](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/average), which does some simple math with NumPy arrays.
+Run the code now.
+
+~~~
+$ cd parallel-programming/examples/mpi/average
+$ mkdir build
+$ cd build
+$ cmake -DCMAKE_C_COMPILER=mpicc -DCMAKE_CXX_COMPILER=mpicxx -DCMAKE_Fortran_COMPILER=mpifort ..
+$ make
+$ ./average
+~~~
+{: .language-bash}
+
+~~~
+Average: 100000001.5
+~~~
+{: .output}
+
+Let's learn something about which parts of this code account for most of the run time.
+MPI provides a timer, `MPI_Wtime()`, which returns the current walltime.
+We can use this function to determine how long each section of the code takes to run.
+
+For example, to determine how much time is spent initializing array `a`, do the following:
+
+~~~
+  // Initialize a
+  double start_time = MPI_Wtime();
+  double *a = new double[N];
+  for (int i=0; i<N; i++) {
+    a[i] = 1.0;
+  }
+  double end_time = MPI_Wtime();
+  if (my_rank == 0 ) {
+    std::cout << "Initialize a time: " << end_time - start_time << std::endl;
+  }
+~~~
+{: .language-cpp}
+
+As the above code indicates, we don't really want every rank to print the timings, since that could look messy in the output.
+Instead, we have only rank 0 print this information.
+Of course, this requires that we add a few lines near the top of the code to initialize MPI and query the rank of each process:
+
+~~~
+  // Initialize MPI
+  int world_size, my_rank;
+  MPI_Init(&argc, &argv);
+  MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+  MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+~~~
+{: .language-cpp}
+
+Also determine and print the timings of each of the other sections of the code: the intialization of array `b`, the addition of the two arrays, and the final averaging of the result.
+Your code should look something like this:
+
+~~~
+#include <iostream>
+#include <mpi.h>
+
+int main(int argc, char **argv) {
+  // Initialize MPI
+  int world_size, my_rank;
+  MPI_Init(&argc, &argv);
+  MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+  MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+
+  int N = 200000000;
+
+  // Initialize a
+  double start_time = MPI_Wtime();
+  double *a = new double[N];
+  for (int i=0; i<N; i++) {
+    a[i] = 1.0;
+  }
+  double end_time = MPI_Wtime();
+  if (my_rank == 0 ) {
+    std::cout << "Initialize a time: " << end_time - start_time << std::endl;
+  }
+
+  // Initialize b
+  start_time = MPI_Wtime();
+  double *b = new double[N];
+  for (int i=0; i<N; i++) {
+    b[i] = 1.0 + double(i);
+  }
+  end_time = MPI_Wtime();
+  if (my_rank == 0 ) {
+    std::cout << "Initialize b time: " << end_time - start_time << std::endl;
+  }
+  
+  // Add the two arrays
+  start_time = MPI_Wtime();
+  for (int i=0; i<N; i++) {
+    a[i] = a[i] + b[i];
+  }
+  end_time = MPI_Wtime();
+  if (my_rank == 0 ) {
+    std::cout << "Add arrays time: " << end_time - start_time << std::endl;
+  }
+
+  // Average the result
+  start_time = MPI_Wtime();
+  double average = 0.0;
+  for (int i=0; i<N; i++) {
+    average += a[i] / double(N);
+  }
+  end_time = MPI_Wtime();
+  if (my_rank == 0 ) {
+    std::cout << "Average result time: " << end_time - start_time << std::endl;
+  }
+
+  std::cout.precision(12);
+  if (my_rank == 0 ) {
+    std::cout << "Average: " << average << std::endl;
+  }
+  delete [] a;
+  delete [] b;
+  MPI_Finalize();
+  return 0;
+}
+~~~
+{: .language-cpp}
+
+Now compile and run the code again:
+
+~~~
+$ make
+$ ./average
+~~~
+{: .language-bash}
+
+~~~
+Initialize a time: 0.544075
+Initialize b time: 0.624939
+Add arrays time: 0.258915
+Average result time: 0.266418
+Average: 100000001.5
+~~~
+{: .language-output}
+
+
+### Point-to-Point Communication
+
+You can try running this on multiple ranks now:
+
+~~~
+$ mpiexec -n 4 ./average
+~~~
+{: .language-bash}
+
+~~~
+Initialize a time: 0.640894
+Initialize b time: 0.893775
+Add arrays time: 1.38309
+Average result time: 0.330192
+Average: 100000001.5
+~~~
+{: .output}
+
+Running on multiple ranks doesn't help with the timings, because each rank is duplicating all of the same work.
+In some ways, running on multiple ranks makes the timings worse, because all of the processes are forced to compete for the same computational resources.
+Memory bandwidth in particular is likely a serious problem due to the extremely large arrays that must be accessed and manipulated by each process.
+We want the ranks to cooperate on the problem, with each rank working on a different part of the calculation.
+In this example, that means that different ranks will work on different parts of the arrays `a` and `b`, and then the results on each rank will be summed across all the ranks.
+
+In this section, we will handle the details of the communication between processes using *point-to-point* communication.
+Point-to-point communication involves cases in which a code explicitly instructs one specific process to send/recieve information to/from another specific process.
+The primary functions associated with this approach are `MPI_Send()` and `MPI_Recv()`, which are involve the following arguments:
+
+~~~
+int MPI_Send(const void *buf, int count, MPI_Datatype datatype, int dest, int tag,  MPI_Comm comm);
 ~~~
 {: .language-cpp}
 
@@ -233,7 +392,7 @@ But messages from multiple processes can be interleaved with each other.
 * `comm` --- the communicator to use
 
 ~~~
-    int MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status);
+int MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status);
 ~~~
 {: .language-cpp}
 
@@ -245,16 +404,56 @@ But messages from multiple processes can be interleaved with each other.
 * `comm` --- the communicator to use
 * `status` --- pointer to the structure in which to store status
 
-The actual source and tag of the received message can be accessed directly from the status.  Call [`MPI_Get_count`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Get_count.html) to get the count.
+We need to decide what parts of the arrays each of the ranks will work on; this is more generally known as a rank's workload.
+Add the following code just before the initialization of array `a`:
 
 ~~~
-    status.MPI_TAG;
-    status.MPI_SOURCE;
-    MPI_Get_count( &status, datatype, &count );
+  // Determine the workload of each ran
+  int workloads[world_size];
+  for (int i=0; i<world_size; i++) {
+    workloads[i] = N / world_size;
+    if ( i < N % world_size ) workloads[i]++;
+  }
+  int my_start = 0;
+  for (int i=0; i<my_rank; i++) {
+    my_start +=	workloads[i];
+  }
+  int my_end = my_start	+ workloads[my_rank];
 ~~~
 {: .language-cpp}
 
-There's data types for everything, and you can define you own including non-contiguous data structures:
+In the above code, `my_start` and `my_end` represent the range over which each rank will perform mathematical operations on the arrays.
+
+We'll start by parallelizing the code that averages the result.
+Update the range of the `for` loop in this part of the code to the following:
+
+~~~
+  for (int i=my_start; i<my_end; i++) {
+~~~
+{: .language-cpp}
+
+This will ensure that each rank is only calculating elements `my_start` through `my_end` of the sum.
+We then need the ranks to communicate their individually calculated sums so that we can calculate the global sum.
+To do this, add the following immediately after the end of the `for` loop:
+
+~~~
+  if ( my_rank == 0 ) {
+    for (int i=1; i<world_size; i++) {
+      double partial_average;
+      MPI_Status status;
+      MPI_Recv( &partial_average, 1, MPI_DOUBLE, i, 77, MPI_COMM_WORLD, &status );
+      average += partial_average;
+    }
+  }
+  else {
+    MPI_Send( &average, 1, MPI_DOUBLE, 0, 77, MPI_COMM_WORLD );
+  }
+~~~
+{: .language-cpp}
+
+The `MPI_DOUBLE` parameter tells MPI what type of information is being communicated by the `Send` and `Recv` calls.
+In this case, we are sending a array of double precision numbers.
+If you are communicating information of a different datatype, consult the following:
 
 |**MPI data type**  |**C data type**     |
 |:------------------|:-------------------|
@@ -273,114 +472,170 @@ There's data types for everything, and you can define you own including non-cont
 |`MPI_PACKED`	    |define your own with|
 |                   |[`MPI_Pack`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Pack.html)/[`MPI_Unpack`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Pack.html) |
 
-
-#### Exercise:
-
-Write a program to send an integer (`=99`) from process 0 to process 1 and verify the value is correct.  If it is correct, then print "OK" and terminate correctly, otherwise abort.  Run your program.
-
-Hint: start by copying `exercises/mpihello.cc`.
-
-#### Exercise:
-
-Write a program that has two processes exchanging a buffer of length `N` bytes.  Initialize the buffers to the process rank and verify the exchange happened correctly (i.e., the elements in the buffer received by process 1 should have the value 0).  Try `N=10**n` for `n=0,1,2,3,4,5,6,7,8` (i.e., go from small to very large messages).
-
-There are several ways (both correct and incorrect) of writing this program.  You might try the simplest option first --- each process first sends its buffer and then receives its buffer.
-
-Note that this is such a common operation that there is a special ([`MPI_Sendrecv`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Sendrecv.html)) operation to make this less error prone, less verbose, and to enable optimizations.
-
-#### Exercise:
-
-Write a program to send an integer (`=99`) around a ring of processes (i.e., `0` sends to `1`, `1` sends to `2`, `2` sends to `3`, ..., `P-1` sends to `0`, with process 0 verifying the value is correct.  Your program should work for any number of processes greater than one.
-
-### One minimal set of six operations
+Now compile and run the code again:
 
 ~~~
-    MPI_Init
-    MPI_Finalize
-    MPI_Comm_size
-    MPI_Comm_rank
-    MPI_Send
-    MPI_Recv
+$ make
+$ ./average
 ~~~
-
-A timer is also useful --- [`MPI_Wtime`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Wtime.html) returns a high precision wall clock (elapsed) time.  Note that clocks on each process are **not** synchronized.
-
-### Non-blocking (asynchronous) communication
-
-* When a non-blocking send function ([`MPI_Isend`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Isend.html)) completes, the user must not modify the send buffer until the request is known to have completed (e.g., using ([`MPI_Test`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Test.html)) or [`MPI_Wait`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Wait.html)).
-
-* When a non-blocking recv function ([`MPI_Irecv`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Irecv.html)) completes, any message data is not completely available in the buffer until the request is known to have completed.
+{: .language-bash}
 
 ~~~
-    int MPI_Isend(const void *buf, int count, MPI_Datatype datatype, int dest, int tag,  MPI_Comm comm, MPI_Request *request);
-    int MPI_Irecv(void *buf, int count, MPI_Datatype datatype, int source,  int tag, MPI_Comm comm, MPI_Request *request);
+Initialize a time: 0.63251
+Initialize b time: 1.31379
+Add arrays time: 1.89099
+Average result time: 0.100575
+Average: 100000001.5
+~~~
+{: .language-output}
+
+You can see that the amount of time spent calculating the average has indeed gone down.
+
+Parallelizing the part of the code that adds the two arrays is much easier.
+All you need to do is update the range over which the `for` loop iterates:
+
+~~~
+  for (int i=my_start; i<my_end; i++) {
 ~~~
 {: .language-cpp}
 
-* `request` --- a pointer to structure that will hold the information and status for the request
+Now compile and run the code again:
 
 ~~~
-    int MPI_Test(MPI_Request *request, int *flag, MPI_Status *status);
-    int MPI_Wait(MPI_Request *request, MPI_Status *status);
-    int MPI_Cancel(MPI_Request *request);
+$ make
+$ ./average
+~~~
+{: .language-bash}
+
+~~~
+Initialize a time: 0.636685
+Initialize b time: 1.66542
+Add arrays time: 0.466888
+Average result time: 0.0871116
+Average: 100000001.5
+~~~
+{: .language-output}
+
+The array addition time has gone down nicely.
+Surprisingly enough, the most expensive part of the calculation is now the initialization of the arrays `a` and `b`.
+Updating the range over which those loops iterate speeds up those parts of the calation:
+
+~~~
+  // Initialze a
+  for (int i=my_start; i<my_end; i++) {
+...
+  // Initialize b
+  for (int i=my_start; i<my_end; i++) {
+~~~
+{: .language-python}
+
+~~~
+$ make
+$ ./average
+~~~
+{: .language-bash}
+
+~~~
+Initialize a time: 0.159471
+Initialize b time: 0.183946
+Add arrays time: 0.193497
+Average result time: 0.0847806
+Average: 100000001.5
+~~~
+{: .output}
+
+
+
+### Reducing the Memory Footprint
+
+The simulation is running much faster now thanks to the parallelization we have added.
+If that's all we care about, we could stop working on the code now.
+In reality, though, **time** is only one resource we should be concerned about.
+Another resource that is often even more important is **memory**.
+The changes we have made to the code make it run faster, but don't decrease its memory footprint in any way: each rank allocates arrays `a` and `b` with `N` double precision values.
+That means that each rank allocates `2*N` double precision values; across all of our ranks, that corresponds to a total of `2*nproc*world_size` double precision values.
+Running on more processors might decrease our run time, but it increases our memory footprint!
+
+Of course, there isn't really a good reason for each rank to allocate the entire arrays of size `N`, because each rank will only ever use values within the range of `my_start` to `my_end`.
+Let's modify the code so that each rank allocates `a` and `b` to a size of `workloads[my_rank]`.
+
+Replace the initialization of `a` with:
+
+~~~
+  double *a = new double[ workloads[my_rank] ];
+  for (int i=0; i<workloads[my_rank]; i++) {
+    a[i] = 1.0;
+  }
 ~~~
 {: .language-cpp}
 
-* `request` --- a pointer to the request being tested/waited-upon/cancelled
-* `flag` --- a pointer to an int that will be non-zero (true) if the operation has completed
-* `status` --- a pointer to the structure in which status will be stored if the operation has completed
-* See also `MPI_Waitall`, `MPI_Waitany` and `MPI_Waitsome` for waiting on multiple requests
-
-
-### Other P2P communication modes
-
-*  Buffered send --- provide sender-side buffering to ensure a send always completes and to make memory-management more explicit
-*  Synchronous send --- completes on the sender-side when the receive has also completed
-*  Ready send --- if you know a matching receive has already been posted this enables optimizations, and this style of programming is explicitly safe from memory/buffer issues
-*  One-sided operations --- remote memory access (RMA)
-
-
-## 3. Global or collective operations
-
-### Essential elements
-1. Broadcast
-2. Reduction
-3. Implied global synchronization
-4. Other global operations
-
-In contrast to point-to-point operations that involve just two processes, global operations move data between **all** processes associated with a communicator with an implied **synchronization** between them.  All processes within a communicator are required to invoke the operation --- hence the alternative name "collective" operations.
-
-Many chemistry, materials, and biophysics applications are written using only global operations to
-* share/replicate information between all processes by broadcasting, and
-* compute sums over (partial) results computed by each processes.
-
-This approach does not necessarily scale to the very largest supercomputers, but can suffice for many needs.
-
-We introduce broadcast and reduction, and then work through an example.
-
-### Broadcast
-
-([`MPI_Bcast`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Bcast.html)) broadcasts a buffer of data from process rank `root` to all other processes.  Once the operation is complete within a process its buffer contains the same data as that of process `root`.
-```c++
-    int MPI_Bcast (void *buffer, int count, MPI_Datatype datatype, int root,  MPI_Comm comm)
-```
-* `root` --- the process that is broadcasting the data --- this **must** be the same in all processes
-
-### Reduction
-
-To combines values from all processes with a reduction operation either to just process `root` (([`MPI_Reduce`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Reduce.html))) or distributing the result back to all processes (([`MPI_Allreduce`](https://www.mpich.org/static/docs/v3.2/www3/MPI_Allreduce.html))).
+Replace the initialization of `b` with:
 
 ~~~
-    int MPI_Reduce (const void *sendbuf, void *recvbuf, int count, MPI_Datatype datatype, MPI_Op op, int root, MPI_Comm comm);
-
-    int MPI_Allreduce (const void *sendbuf, void *recvbuf, int count, MPI_Datatype datatype, MPI_Op op, MPI_Comm comm );
+  double *b = new double[ workloads[my_rank] ];
+  for (int i=0; i<workloads[my_rank]; i++) {
+    b[i] = 1.0 + double(i + my_start);
+  }
 ~~~
 {: .language-cpp}
 
-* `sendbuf` --- a pointer to the buffer that contains the local data to be reduced
-* `recvbuf` --- a pointer to the buffer that will hold the result
+Replace the range of the loops that add and average the arrays to `for (int i=0; i<workloads[my_rank]; i++)`.
 
-There are many pre-defined reduction operation and you can also define your own
+Now compile and run the code again:
+
+~~~
+$ make
+$ ./average
+~~~
+{: .language-bash}
+
+~~~
+Initialize a time: 0.16013
+Initialize b time: 0.176896
+Add arrays time: 0.190774
+Average result time: 0.0871552
+Average: 100000001.5
+~~~
+{: .language-output}
+
+
+### Collective Communication
+
+Previously, we used **point-to-point communication** (i.e. `MPI_Send` and `MPI_Recv`) to sum the results across all ranks:
+
+~~~
+  if ( my_rank == 0 ) {
+    for (int i=1; i<world_size; i++) {
+      double partial_average;
+      MPI_Status status;
+      MPI_Recv( &partial_average, 1, MPI_DOUBLE, i, 77, MPI_COMM_WORLD, &status );
+      average += partial_average;
+    }
+  }
+  else {
+    MPI_Send( &average, 1, MPI_DOUBLE, 0, 77, MPI_COMM_WORLD );
+  }
+~~~
+{: .language-cpp}
+
+MPI provides many **collective communication** functions, which automate many processes that can be complicated to write out using only point-to-point communication.
+One particularly useful collective communication function is `MPI_Reduce()`:
+
+~~~
+  int MPI_Reduce(const void *sendbuf, void *recvbuf, int count, MPI_Datatype datatype,
+                 MPI_Op op, int root, MPI_Comm comm)
+~~~
+{: .language-cpp}
+
+* `sendbuf` --- address of send buffer
+* `recvbuf` --- address of receive buffer
+* `count` --- number of elements in send buffer
+* `datatype` --- MPI data type of each element
+* `op` --- reduce operation
+* `root` --- rank of root process
+* `comm` --- the communicator to use
+
+Possible values for `op` are:
 
 |**Operation** | Description | Datatype|
 |:-------------|:------------|:--------|
@@ -397,73 +652,17 @@ There are many pre-defined reduction operation and you can also define your own
 |`MPI_MAXLOC`    |max value and location|float|
 |`MPI_MINLOC`    |min value and location|float|
 
-### Exercise
-
-In [`exercises/pi_seq.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/pi_seq.cc) is a (now traditional) Monte Carlo program to compute the value of pi.  Make it run in parallel using broadcast and reduce.  Increase the number of points to demonstrate a speedup.
-
-We will walk through the solution together since this is an important example.
-
-### Exercise:
-
-In [`exercises/trapezoid_seq.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/trapezoid_seq.cc) is a sequential program that uses the trapezoid rule to estimate the value of the integral
-
-<img src="https://latex.codecogs.com/svg.latex?\Large&space;\int&#95;{-6}^{6}\exp(-x^2)\cos(3x)\,dx" title="Amdahl" />
-
-It repeatedly increases the number of points by a factor two until the error is satisfactory.
-
-Please make it run in parallel using MPI.  Initially just make the integration step run in parallel using all-reduce. Then, make only process 0 responsible for deciding if the error is satisfactory (and of course telling everyone else).
-
-We will walk through the solution together since this is an important example.
-
-### Other global operations
-
-There are many other global operations --- barrier, gather, scatter, parallel prefix, etc.
-
-There are also asynchronous variants --- which are interesting because they may permit overlap of multiple global operations, or overlap of work and communication, or reduce the impact of load imbalance.
-
-
-### Another minimal set of six operations
+We will use the `MPI_Reduce()` function to sum a value across all ranks, without all of the point-to-point communication code we needed earlier.
+Replace all of your point-to-point communication code above with:
 
 ~~~
-    MPI_Init
-    MPI_Finalize
-    MPI_Comm_size
-    MPI_Comm_rank
-    MPI_Bcast
-    MPI_Reduce
+  double partial_average = average;
+  MPI_Reduce(&partial_average, &average, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 ~~~
-Or a total of eight if you include
-~~~
-    MPI_Send
-    MPI_Recv
-~~~
-Or 9 if you want a timer
-~~~
-    MPI_Wtime
-~~~
+{: .language-cpp}
 
-## 4. Debugging
+Compiling and running with this change should produce the same results as before.
 
-There are some powerful visual parallel debuggers that understand MPI, but since these can be expensive we are often left just with GDB. There are variety of ways of using GDB to debug a parallel application:
-
-* Intel MPI and MPICH provide an easy mechanism --- just add `-gdb` to your `mpirun` command.  At this point you are interacting with `gdb` attached to each of your processes.  By default your commands are sent to all processes and output is annoted process. You can control which process you are interacting with using the `z` command.  Some more info is in section 7 of [here](http://physics.princeton.edu/it/cluster/docs/mpich2-user-guide.pdf).
-
-* Other MPI implementations have other mechanisms.  E.g., see here for [OpenMPI debugging](https://www.open-mpi.org/faq/?category=debugging).
-
-* A more portable solution that assumes the MPI processes can create an X-window on your computer is `mpirun -np 2 xterm -e gdb executable` which creates an `xterm` for each process in your application.  This works great for a few processes, but does not scale and it can be complicated to get X-windows to work thru firewalls, etc.
-
-## 5. Exercises
-
-1. [easy] Skim through some of the other tutorials and documentation that have links provided above
-2. [easy-medium] Write a program to benchmark the performance of reduce, all-reduce, broadcast as a function of both N and P.  Use N=1,2,4,8,...,1024*1024 doubles. And experiment with processes on the same node and on
-different nodes (this means setting #nodes and #ppn correctly in the PBS file).
-4. [easy] Parallelize Monte Carlo computation of pi starting from [`exercises/pi_seq.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/pi_seq.cc) using global operations
-4. [easy] Work through the other various examples in the `exercises/` directory
-5. [medium] Parallelize the recursively adaptive quadrature program [`exercises/recursive_seq.cc`](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises/recursive_seq.cc)
-6. [medium-hard] Write MPI versions of the example SCF, VMC, or MD codes in the main [chemistry examples directory](https://github.com/wadejong/Summer-School-Materials/tree/master/MPI/exercises).  This tree includes example programs for Hartree Fock, molecular dynamics (already seen in the OpenMP lecture), and variational quantum Monte Carlo.  Sequential, OpenMP, and MPI versions are provided, and the `README` in each directory gives more details.  There's lots of different approaches so don't take our parallel versions as definitive.
-    * VMC is the easiest
-    * MD is also easy to get started, but harder to get best performance
-    * Hartree-Fock is actually not that hard but the complexity of the code and algorithm can obscure this
-    * Look at the `README.md` files in the `mpi` sub-directories to get hints.
+Note that in addition to enabling us to write simpler-looking code, collective communication operations tend to be faster than what we can achieve by trying to write our own communication operations using point-to-point calls.
 
 {% include links.md %}

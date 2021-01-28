@@ -100,7 +100,7 @@ $ conda activate molssi_pp
 Next, install NumPy, mpi4py, CMake, and OpenMP:
 
 ~~~
-$ conda install -c conda-forge numpy mpi4py cmake openmp
+$ conda install -c conda-forge numpy mpi4py cmake openmp mpich compilers
 ~~~
 {: .language-bash}
 
