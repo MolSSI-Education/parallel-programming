@@ -10,7 +10,9 @@ objectives:
 - "Learn how to use non-blocking communication methods."
 - "Use a debugger with an parallelized code."
 keypoints:
-- "Correct use of non-blocking can substantially reduce the time your code spends communicating between processes."
+- "Where possible, use collective communication operations instead of point-to-point communication for improved efficiency and simplicity."
+- "Intelligent design choices can help you reduce the memory footprint required by MPI-parallelized codes"
+"
 ---
 
 ## 1. Example 1
@@ -1079,6 +1081,6 @@ Total simulation time: 22.2873
 ~~~
 {: .output}
 
-Now we can clearly see an speedup when running in parallel.
+Now we can clearly see a speedup when running in parallel.
 
 {% include links.md %}
