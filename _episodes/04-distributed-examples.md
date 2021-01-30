@@ -193,7 +193,7 @@ If you're not careful, you could waste massive amounts of computational resource
 Instead, MPI-parallelized codes should call `MPI_Abort()` when something goes wrong, as this function will ensure all MPI processes terminate.
 The `MPI_Abort` function takes two arguments: the first is the communicator corresponding to the set of MPI processes to terminate (this should generally be `MPI_COMM_WORLD`), while the second is an error code that will be returned to the environment.
 
-It is also useful to keep in mind that all MPI functions have a return value.
+It is also useful to keep in mind that most MPI functions have a return value that indicates whether the function completed succesfully.
 If this value is equal to `MPI_SUCCESS`, the function was executed successfully; otherwise, the function call failed.
 By default, MPI functions automatically abort if they encounter an error, so you'll only ever get a return value of `MPI_SUCCESS`.
 If you want to handle MPI errors yourself, you can call `MPI_Errhandler_set(MPI_COMM_WORLD, MPI_ERRORS_RETURN)`; if you do this, you must check the return value of every MPI function and call `MPI_Abort` if it is not equal to `MPI_SUCCESS`.
@@ -664,5 +664,421 @@ Replace all of your point-to-point communication code above with:
 Compiling and running with this change should produce the same results as before.
 
 Note that in addition to enabling us to write simpler-looking code, collective communication operations tend to be faster than what we can achieve by trying to write our own communication operations using point-to-point calls.
+
+
+
+
+
+
+## Example 3
+
+Next, view [examples/mc](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/mc) which is a simple Monte-Carlo simulation.
+Compile and run the code now.
+
+~~~
+$ cd parallel-programming/examples/mpi/mc
+$ mkdir build
+$ cd build
+$ cmake -DCMAKE_C_COMPILER=mpicc -DCMAKE_CXX_COMPILER=mpicxx -DCMAKE_Fortran_COMPILER=mpifort ..
+$ make
+$ ./mc
+~~~
+{: .language-bash}
+
+
+~~~
+...
+497000   -6.28643
+498000   -6.28989
+499000   -5.96743
+500000   -6.06861
+Total simulation time: 2.59121
+    Energy time:       2.47059
+    Decision time:     0.0425119
+~~~
+{: .output}
+
+As you can see, the code already has some timings, and the vast majority of time is spent in the calls to 'get_particle_energy()'.
+That is where we will focus our parallelization efforts.
+
+The function in question is:
+
+~~~
+double get_particle_energy(double *coordinates, int particle_count, double box_length, int i_particle, double cutoff2) {
+  double e_total = 0.0;
+  double *i_position = &coordinates[3*i_particle];
+
+  for (int j_particle=0; j_particle < particle_count; j_particle++) {
+    if ( i_particle != j_particle ) {
+      double *j_position = &coordinates[3*j_particle];
+      double rij2 = minimum_image_distance( i_position, j_position, box_length );
+      if ( rij2 < cutoff2 ) {
+        e_total += lennard_jones_potential(rij2);
+      }
+    }
+  }
+
+  return e_total;
+}
+~~~
+{: .language-cpp}
+
+This looks like it should be fairly straightforward to parallelize: it consists of a single `for` loop which just sums the interaction energies of particle pairs.
+To parallelize this loop, we need each rank to compute the interaction energies of a subset of these pairs, and then sum the energy across all ranks.
+
+The `get_particle_energy()` function is going to need to know some basic information about the MPI communicator, so add the MPI communicator to its parameters:
+
+~~~
+double get_particle_energy(double *coordinates, int particle_count, double box_length, int i_particle, double cutoff2, MPI_Comm comm) {
+~~~
+{: .language-cpp}
+
+Now update the two times `get_particle_energy()` is called by `main`:
+
+~~~
+    double current_energy = get_particle_energy( coordinates, num_particles, box_length, i_particle, simulation_cutoff2, world_comm );
+    ...
+    double proposed_energy = get_particle_energy( coordinates, num_particles, box_length, i_particle, simulation_cutoff2, world_comm );
+~~~
+{: .language-python}
+
+Place the following at the beginning of `get_particle_energy()`:
+
+~~~
+  // Get information about the MPI communicator
+  int my_rank, world_size;
+  MPI_Comm_size(comm, &world_size);
+  MPI_Comm_rank(comm, &my_rank);
+~~~
+{: .language-cpp}
+
+Change the `for` loop in `get_particle_energy` to the following:
+
+~~~
+  for (int j_particle=my_rank; j_particle < particle_count; j_particle += world_size) {
+~~~
+{: .language-cpp}
+
+The above code will cause each rank to iterate over particles with a stride of `world_size` and an initial offset of `my_rank`.
+For example, if you run on 4 ranks, rank 0 will iterate over particles 0, 4, 8, 12, etc., while rank 1 will iterate over particles 1, 5, 9, 13, etc.
+
+We then need to sum the energies across all ranks.
+Replace the line `return e_total;` with the following:
+
+~~~
+  // Sum the energy across all ranks
+  double e_summed = 0.0;
+  MPI_Reduce(e_total, e_summed, 1, MPI_DOUBLE, MPI_SUM, 0, comm);
+  return e_summed;
+~~~
+{: .language-cpp}
+
+Try to run it in parallel now:
+
+~~~
+$ make
+$ mpiexec -n 4 ./mc
+~~~
+{: .language-bash}
+
+~~~
+16000   -2.19516e+19
+17000   -2.19517e+19
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 81043 RUNNING AT Taylors-MacBook-Pro.local
+=   EXIT CODE: 9
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+YOUR APPLICATION TERMINATED WITH THE EXIT STRING: Segmentation fault: 11 (signal 11)
+This typically refers to a problem with your application.
+Please see the FAQ page for debugging suggestions
+~~~
+{: .output}
+
+That doesn't seem right at all.
+What went wrong?
+
+Our call to `MPI_Reduce` causes the energies to be summed onto rank 0, but none of the other ranks have the summed energies.
+To have the energies reduced to all of the ranks, replace the `MPI_Reduce` call with a call to `MPI_Allreduce`:
+
+~~~
+  MPI_Allreduce(&e_total, &e_summed, 1, MPI_DOUBLE, MPI_SUM, comm);
+~~~
+{: .language-cpp}
+
+~~~
+$ make
+$ mpiexec -n 4 ./mc
+~~~
+{: .language-bash}
+
+~~~
+497000   -6.28644
+498000   -6.2899
+499000   -5.96744
+500000   -6.06862
+Total simulation time: 8.38658
+    Energy time:       8.24201
+    Decision time:     0.0563176
+~~~
+{: .output}
+
+This is better, but we certainly aren't getting good timings.
+
+Before we work on the timings problem, let's try another experiment.
+Near the top of `mc.cpp` is some code that initializes the random number generator with a random seed.
+Currently, the random number generator is being initialized with a fixed random seed of `1`:
+
+~~~
+// Initialize the random number generator with a pre-defined seed
+std::mt19937 mt(1);
+
+// Initialize the random number generator with a random seed
+//std::random_device rd;
+//std::mt19937 mt(rd());
+~~~
+{: .language-cpp}
+
+Let's try switching to using a random number to initialize the random number generator:
+
+~~~
+// Initialize the random number generator with a pre-defined seed
+//std::mt19937 mt(1);
+
+// Initialize the random number generator with a random seed
+std::random_device rd;
+std::mt19937 mt(rd());
+~~~
+{: .language-cpp}
+
+Now recompile and run again:
+
+~~~
+$ make
+$ mpiexec -n 4 ./mc
+~~~
+{: .language-bash}
+
+~~~
+497000   -7.9279e+12
+498000   -7.9279e+12
+499000   -7.9279e+12
+500000   -7.9279e+12
+Total simulation time: 8.73895
+    Energy time:       8.59179
+    Decision time:     0.0549728
+~~~
+{: .output}
+
+These are some crazy, unphysical numbers!
+If you try running again with a single process (`mpiexec -n 1 ./mc`), you can confirm that the code gives much more reasonable energies when running on in serial.
+The problem is that each iteration, the coordinates are updated by randomly displacing one of the particles.
+Each rank randomly selects a particle to displace and the displacement vector.
+Instead of contributing to the calculation of the same particle's interaction energies for the same nuclear configuration, each rank ends up calculating some of the interaction energies for different atoms and different coordinates.
+This leads to utter chaos throughout the simulation.
+
+You might be tempted to fix this by generating the random number generator seed on a single process, and then sending that information to the other processes, so that every process is using the same seed.
+Although that might sound reasonable, it would still leave open the possibility that different processes could end up diverging over the course of a long simulation (remember, computers aren't infinitely accurate - slight descrepancies are guaranteed to happen, given enough time).
+
+To fix this, we will have rank 0 be the only rank that randomly selects a particle or a displacement vector.
+Rank 0 will then broadcast all necessary information to the other ranks, so that they keep in sync.
+
+Replace the line where the coordinates are intially generated (where `generate_initial_state` is called) with this:
+
+~~~
+  if ( my_rank == 0 ) {
+    generate_initial_state(num_particles, box_length, coordinates);
+  }
+  MPI_Bcast(coordinates, 3*num_particles, MPI_DOUBLE, 0, world_comm);
+~~~
+{: .language-cpp}
+
+At the beginning of the `for` loop in `main` you will see the following code:
+
+~~~
+  // Beginning of main MC iterative loop
+  n_trials = 0;
+  for (int i_step=0; i_step<n_steps; i_step++) {
+    n_trials += 1;
+    int i_particle = floor( double(num_particles) * dist(mt) );
+    double random_displacement[3];
+    for (int i=0; i<3; i++) {
+      random_displacement[i] = ( ( 2.0 * dist(mt) ) - 1.0 ) * max_displacement;
+    }
+~~~
+{: .language-cpp}
+
+Replace the above with the following:
+
+~~~
+  // Beginning of main MC iterative loop
+  n_trials = 0;
+  for (int i_step=0; i_step<n_steps; i_step++) {
+
+    int i_particle;
+    double random_displacement[3];
+    if ( my_rank == 0 ) {
+      n_trials += 1;
+      i_particle = floor( double(num_particles) * dist(mt) );
+      for (int i=0; i<3; i++) {
+        random_displacement[i] = ( ( 2.0 * dist(mt) ) - 1.0 ) * max_displacement;
+      }
+    }
+    MPI_Bcast(&i_particle, 1, MPI_INT, 0, world_comm);
+    MPI_Bcast(coordinates, 3*num_particles, MPI_DOUBLE, 0, world_comm);
+    MPI_Bcast(random_displacement, 3, MPI_DOUBLE, 0, world_comm);
+~~~
+{: .language-cpp}
+
+At the end of the `for` loop in `main` is the following code:
+
+~~~
+    // test whether to accept or reject this step
+    double start_decision_time = MPI_Wtime();
+    double delta_e = proposed_energy - current_energy;
+    bool accept = accept_or_reject(delta_e, beta);
+    if (accept) {
+      total_pair_energy += delta_e;
+      n_accept += 1;
+    }
+    else {
+      // revert the position of the test particle
+      for (int i=0; i<3; i++) {
+        coordinates[3*i_particle + i] -= random_displacement[i];
+        coordinates[3*i_particle + i] -= box_length * round(coordinates[3*i_particle + i] / box_length);
+      }
+    }
+
+    double total_energy = (total_pair_energy + tail_correction) / double(num_particles);
+    energy_array[i_step] = total_energy;
+
+    if ( (i_step+1) % freq == 0 ) {
+      if ( my_rank == 0 ) {
+        std::cout << i_step + 1 << "   " << energy_array[i_step] << std::endl;
+      }
+
+      if ( tune_displacement ) {
+        max_displacement = adjust_displacement(n_trials, n_accept, max_displacement);
+        n_trials = 0;
+        n_accept = 0;
+      }
+
+      total_decision_time += MPI_Wtime() - start_decision_time;
+~~~
+{: .language-cpp}
+
+Replace the above with the following, so that only rank `0` is executing it:
+
+~~~
+    if ( my_rank == 0 ) {
+      // test whether to accept or reject this step
+      double start_decision_time = MPI_Wtime();
+      double delta_e = proposed_energy - current_energy;
+      bool accept = accept_or_reject(delta_e, beta);
+      if (accept) {
+	total_pair_energy += delta_e;
+	n_accept += 1;
+      }
+      else {
+	// revert the position of the test particle
+	for (int i=0; i<3; i++) {
+	  coordinates[3*i_particle + i] -= random_displacement[i];
+	  coordinates[3*i_particle + i] -= box_length * round(coordinates[3*i_particle + i] / box_length);
+	}
+      }
+
+      double total_energy = (total_pair_energy + tail_correction) / double(num_particles);
+      energy_array[i_step] = total_energy;
+
+      if ( (i_step+1) % freq == 0 ) {
+	if ( my_rank == 0 ) {
+	  std::cout << i_step + 1 << "   " << energy_array[i_step] << std::endl;
+	}
+
+	if ( tune_displacement ) {
+	  max_displacement = adjust_displacement(n_trials, n_accept, max_displacement);
+	  n_trials = 0;
+	  n_accept = 0;
+	}
+      }
+
+      total_decision_time += MPI_Wtime() - start_decision_time;
+    }
+~~~
+{: .language-cpp}
+
+Recompile and rerun the code.
+
+~~~
+$ make
+$ mpiexec -n 4 ./mc
+~~~
+{: .language-bash}
+
+~~~
+497000   -6.06666
+498000   -6.10058
+499000   -5.98052
+500000   -5.95301
+Total simulation time: 16.7881
+    Energy time:       15.9948
+    Decision time:     0.0690625
+~~~
+{: .output}
+
+This time the energies are much more consistent with what we expect; however, our timings are considerably worse than when we were only running on single process!
+This is because the system we are running these calculations on is extremely small.
+If you check the system parameters (under the `Parameter setup` comment in `mc.cpp`), you will see that this calculation only involves 100 particles.
+The amount of work required to compute the energy of `100` Lennard-Jones particles is actually smaller than the amount of overhead associated with the extra MPI processes.
+Let's make the simulation somewhat larger:
+
+~~~
+  int n_steps = 100000;
+  int freq = 1000;
+  int num_particles = 10000;
+~~~
+{: .language-cpp}
+
+Recompile and rerun the code on a single core.
+
+~~~
+$ make
+$ ./mc
+~~~
+{: .language-bash}
+
+~~~
+97000   612.067
+98000   609.113
+99000   603.538
+100000   599.461
+Total simulation time: 41.0191
+    Energy time:       39.9748
+    Decision time:     0.011933
+~~~
+{: .output}
+
+Finally, run the calculation in parallel.
+
+~~~
+$ mpiexec -n 4 ./mc
+~~~
+{: .language-bash}
+
+~~~
+97000   99.1126
+98000   93.454
+99000   91.1246
+100000   87.397
+Total simulation time: 22.2873
+    Energy time:       15.4661
+    Decision time:     0.0175401
+~~~
+{: .output}
+
+Now we can clearly see an speedup when running in parallel.
 
 {% include links.md %}
