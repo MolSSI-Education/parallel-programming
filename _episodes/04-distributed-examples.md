@@ -12,7 +12,6 @@ objectives:
 keypoints:
 - "Where possible, use collective communication operations instead of point-to-point communication for improved efficiency and simplicity."
 - "Intelligent design choices can help you reduce the memory footprint required by MPI-parallelized codes"
-"
 ---
 
 ## 1. Example 1
