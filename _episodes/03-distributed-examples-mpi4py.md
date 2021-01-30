@@ -645,7 +645,7 @@ Replace the line `return e_total` with the following:
 ~~~
 {: .language-python}
 
-Try to run it now:
+Try to run it in parallel now:
 
 ~~~
 $ mpiexec -n 4 python example3.py
@@ -739,7 +739,7 @@ Replace the above with the following:
 ~~~
     for i_step in range(n_steps):
 
-    if my_rank == 0:
+        if my_rank == 0:
             n_trials += 1
 
             i_particle = np.random.randint(num_particles)
