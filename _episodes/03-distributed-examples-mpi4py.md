@@ -17,7 +17,7 @@ keypoints:
 
 ### Writing Hello World
 
-We'll start with the first example in [mpi/example1](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/example1), which is a simple Hello World code:
+We'll start with the first example in [mpi/example1](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi4py/example1), which is a simple Hello World code:
 
 ~~~
 if __name__ == "__main__":
@@ -30,7 +30,7 @@ Acquire a copy of the example files for this lesson, and then run MPI Example 1:
 
 ~~~
 $ git clone git@github.com:MolSSI-Education/parallel-programming.git
-$ cd parallel-programming/examples/mpi/example1
+$ cd parallel-programming/examples/mpi4py/example1
 $ python example1.py
 ~~~
 {: .language-bash}
@@ -112,7 +112,7 @@ Calling `world_comm.Get_rank()` returns the rank of the process that called it w
 Go ahead and run the code now:
 
 ~~~
-$ mpiexec -n 4 python example1.py**
+$ mpiexec -n 4 python example1.py
 ~~~
 {: .language-bash}
 
@@ -152,12 +152,14 @@ World Size: 2   Rank: 1
 ~~~
 {: .output}
 
+
+
+
 ## Example 2
 
 ### Basic Infrastructure
 
-
-Copy the code in this script in [example2.py](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/example2). This script does some simple math with NumPy arrays.
+We will now do some work with the script in [example2.py](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi4py/example2), which does some simple math with NumPy arrays.
 Run the code now.
 
 ~~~
@@ -198,7 +200,7 @@ Of course, this requires that we add a few lines near the top of the code to que
 ~~~
 {: .language-python}
 
-Also determine and print the timings of each of the other sections of the code: the intialization of array `b`, the addition of the two arrays, and final averaging of the result.
+Also determine and print the timings of each of the other sections of the code: the intialization of array `b`, the addition of the two arrays, and the final averaging of the result.
 Your code should look something like this:
 
 ~~~
@@ -212,15 +214,6 @@ if __name__ == "__main__":
     my_rank = world_comm.Get_rank()
 
     N = 10000000
-
-    # determine the workload of each rank
-    workloads = [ N // world_size for i in range(world_size) ]
-    for i in range( N % world_size ):
-        workloads[i] += 1
-    my_start = 0
-    for i in range( my_rank ):
-        my_start += workloads[i]
-    my_end = my_start + workloads[my_rank]
 
     # initialize a
     start_time = MPI.Wtime()
@@ -316,7 +309,7 @@ Add the following code just before the initialization of array `a`:
 In the above code, `my_start` and `my_end` represent the range over which each rank will perform mathematical operations on the arrays.
 
 We'll start by parallelizing the code that averages the result.
-Update the range of the `for` loop to the following:
+Update the range of the `for` loop in this part of the code to the following:
 
 ~~~
     for i in range( my_start, my_end ):
@@ -342,7 +335,7 @@ To do this, replace the line `average = sum / N` with:
 {: .language-python}
 
 The `MPI.DOUBLE` parameter tells MPI what type of information is being communicated by the `Send` and `Recv` calls.
-In particular, we are sending a array of double precision numbers.
+In this case, we are sending a array of double precision numbers.
 If you are communicating information of a different datatype, consult the following:
 
 |**MPI4Py data type**  |**C data type**     |
@@ -378,7 +371,7 @@ Average: 5000001.5
 You can see that the amount of time spent calculating the average has indeed gone down.
 
 Parallelizing the part of the code that adds the two arrays is much easier.
-All you need to do is update the range over which the `for` loop iterations:
+All you need to do is update the range over which the `for` loop iterates:
 
 ~~~
     for i in range( my_start, my_end ):
@@ -527,7 +520,7 @@ Note that in addition to enabling us to write simpler-looking code, collective c
 
 ## Example 3
 
-Next, view [example3.py](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/example3) which is a simple Monte-Carlo simulation.
+Next, view [example3.py](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi4py/example3) which is a simple Monte-Carlo simulation.
 Run the code now.
 
 ~~~
@@ -652,7 +645,7 @@ Replace the line `return e_total` with the following:
 ~~~
 {: .language-python}
 
-Try to run it now:
+Try to run it in parallel now:
 
 ~~~
 $ mpiexec -n 4 python example3.py
@@ -746,7 +739,7 @@ Replace the above with the following:
 ~~~
     for i_step in range(n_steps):
 
-    if my_rank == 0:
+        if my_rank == 0:
             n_trials += 1
 
             i_particle = np.random.randint(num_particles)
