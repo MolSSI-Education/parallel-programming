@@ -212,7 +212,7 @@ if (MPI_Init(&argc,&argv) != MPI_SUCCESS) MPI_Abort(MPI_COMM_WORLD, 1);
 
 ### Basic Infrastructure
 
-We will now do some work with the the example in [examples/mpi/average](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/average), which does some simple math with NumPy arrays.
+We will now do some work with the the example in [examples/mpi/average](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/average), which does some simple math.
 Run the code now.
 
 ~~~
@@ -477,7 +477,7 @@ Now compile and run the code again:
 
 ~~~
 $ make
-$ ./average
+$ mpiexec -n 4 ./average
 ~~~
 {: .language-bash}
 
@@ -504,7 +504,7 @@ Now compile and run the code again:
 
 ~~~
 $ make
-$ ./average
+$ mpiexec -n 4 ./average
 ~~~
 {: .language-bash}
 
@@ -528,7 +528,7 @@ Updating the range over which those loops iterate speeds up those parts of the c
   // Initialize b
   for (int i=my_start; i<my_end; i++) {
 ~~~
-{: .language-python}
+{: .language-cpp}
 
 ~~~
 $ make
@@ -741,7 +741,7 @@ Now update the two times `get_particle_energy()` is called by `main`:
     ...
     double proposed_energy = get_particle_energy( coordinates, num_particles, box_length, i_particle, simulation_cutoff2, world_comm );
 ~~~
-{: .language-python}
+{: .language-cpp}
 
 Place the following at the beginning of `get_particle_energy()`:
 
@@ -769,7 +769,7 @@ Replace the line `return e_total;` with the following:
 ~~~
   // Sum the energy across all ranks
   double e_summed = 0.0;
-  MPI_Reduce(e_total, e_summed, 1, MPI_DOUBLE, MPI_SUM, 0, comm);
+  MPI_Reduce(&e_total, &e_summed, 1, MPI_DOUBLE, MPI_SUM, 0, comm);
   return e_summed;
 ~~~
 {: .language-cpp}
