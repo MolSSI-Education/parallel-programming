@@ -18,7 +18,7 @@ keypoints:
 
 ### Writing Hello World
 
-We'll start with the first example in [mpi/example1](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/example1), which is a simple Hello World code:
+We'll start with the first example in [mpi/hello](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/hello), which is a simple Hello World code:
 
 ~~~
 #include <iostream>
@@ -69,7 +69,7 @@ $ mpiexec -n <number_of_processes> <command_to_launch_code>
 ~~~
 {: .language-bash}
 
-For example, to launch `example1.py` on 4 processes, do:
+For example, to launch `hello` on 4 processes, do:
 
 ~~~
 $ mpiexec -n 4 ./hello
@@ -87,7 +87,7 @@ Hello World!
 When you execute the above command, `mpiexec` launches 4 different instances of `./hello` simultaneously, which each print "Hello World!".
 
 Typically, as long as you have at least 4 processors on the machine you are running on, each process will be launched on a different processor; however, certain environment variables and optional arguments to `mpiexec` can change this behavior.
-Each process runs the code in `example1.py` independently of the others.
+Each process runs the code in `hello` independently of the others.
 
 It might not be obvious yet, but the processes `mpiexec` launches aren't completely unaware of one another.
 The `mpiexec` adds each of the processes to an MPI communicator, which enables each of the processes to send and receive information to one another via MPI.
