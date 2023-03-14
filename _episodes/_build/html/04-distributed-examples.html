@@ -1,0 +1,1973 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>MPI Hands-On - C++ &#8212; molssi_best_practices  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/design-tabs.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '04-distributed-examples';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Shared Memory Parallelization" href="00-shared-memory.html" />
+    <link rel="prev" title="MPI Hands-On - mpi4py" href="03-distributed-examples-mpi4py.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/molssi_main_logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/molssi_main_logo_inverted_white.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+    <p class="title logo__title">Parallel Programming</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="setup.html">
+                        Set Up
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="00-intro.html">
+                        Introduction
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="00-distributed-memory.html">
+                        Distributed Memory Parallelization
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="00-shared-memory.html">
+                        Shared Memory Parallelization
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                <li class="nav-item">
+                  <a class="nav-link nav-external" href="https://molssi.org">
+                    MolSSI
+                  </a>
+                </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/jchen0506/molssi_doc_theme" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-twitter"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="setup.html">
+                        Set Up
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="00-intro.html">
+                        Introduction
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="00-distributed-memory.html">
+                        Distributed Memory Parallelization
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="00-shared-memory.html">
+                        Shared Memory Parallelization
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                <li class="nav-item">
+                  <a class="nav-link nav-external" href="https://molssi.org">
+                    MolSSI
+                  </a>
+                </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/jchen0506/molssi_doc_theme" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-twitter"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="02-distribution-intro.html">Introduction to Distributed-Memory Parallelization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-distributed-examples-mpi4py.html">MPI Hands-On - mpi4py</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">MPI Hands-On - C++</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="00-distributed-memory.html" class="nav-link">Distributed Memory Parallelization</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">MPI Hands-On - C++</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="mpi-hands-on-c">
+<h1>MPI Hands-On - C++<a class="headerlink" href="#mpi-hands-on-c" title="Permalink to this heading">#</a></h1>
+<div class="overview admonition">
+<p class="admonition-title">Overview</p>
+<p>Questions:</p>
+<ul class="simple">
+<li><p>How can I use MPI to parallelize a compiled code?</p></li>
+</ul>
+<p>Objectives:</p>
+<ul class="simple">
+<li><p>Compile and run C++ codes that are parallelized using MPI.</p></li>
+<li><p>Use proper MPI error handling.</p></li>
+<li><p>Learn how to use non-blocking communication methods.</p></li>
+<li><p>Use a debugger with an parallelized code.</p></li>
+</ul>
+</div>
+<section id="example-1">
+<h2>1. Example 1<a class="headerlink" href="#example-1" title="Permalink to this heading">#</a></h2>
+<section id="writing-hello-world">
+<h3>Writing Hello World<a class="headerlink" href="#writing-hello-world" title="Permalink to this heading">#</a></h3>
+<p>We’ll start with the first example in <a class="reference external" href="https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/hello">mpi/hello</a>, which is a simple Hello World code:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-0">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">argv</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Hello World!&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Acquire a copy of the example files for this lesson, and then compile and run the example code:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-1" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-1">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:MolSSI-Education/parallel-programming.git
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>parallel-programming/examples/mpi/hello
+$<span class="w"> </span>mkdir<span class="w"> </span>build
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>cmake<span class="w"> </span>-DCMAKE_C_COMPILER<span class="o">=</span>mpicc<span class="w"> </span>-DCMAKE_CXX_COMPILER<span class="o">=</span>mpicxx<span class="w"> </span>-DCMAKE_Fortran_COMPILER<span class="o">=</span>mpifort<span class="w"> </span>..
+$<span class="w"> </span>make
+$<span class="w"> </span>./hello
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-2">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Hello World!</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="getting-started-with-mpi">
+<h3>Getting Started with MPI<a class="headerlink" href="#getting-started-with-mpi" title="Permalink to this heading">#</a></h3>
+<p>Let’s try running this code on multiple processes.
+This is done using the <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> command.
+Many environments also provide an <code class="docutils literal notranslate"><span class="pre">mpirun</span></code> command, which usually - but not always - works the same way.
+Whenever possible, you should use <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> and not <code class="docutils literal notranslate"><span class="pre">mpirun</span></code>, in order to guarantee more consistent results.</p>
+<blockquote>
+<div><h2 class="rubric" id="mpi-mpiexec-vs-mpirun">MPI - <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> vs <code class="docutils literal notranslate"><span class="pre">mpirun</span></code></h2>
+<p>MPI stands for <strong>‘message passing interface’</strong> and is a message passing standard which is designed to work on a variety of parallel computing architectures. The <a class="reference external" href="https://www.mpi-forum.org/docs/drafts/mpi-2018-draft-report.pdf">MPI standard</a> defines how syntax and semantics of a library of routines. There are a number of implementations of this standard including OpenMPI, MPICH, and MS MPI.</p>
+<p>The primary difference between <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> and <code class="docutils literal notranslate"><span class="pre">mpirun</span></code> is that <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> is defined as part of the MPI standard, while <code class="docutils literal notranslate"><span class="pre">mpirun</span></code> is not.  Different implementations of MPI (i.e. OpenMPI, MPICH, MS MPI, etc.) are not guaranteed to implement <code class="docutils literal notranslate"><span class="pre">mpirun</span></code>, or might implement different options for <code class="docutils literal notranslate"><span class="pre">mpirun</span></code>.  Technically, the MPI standard doesn’t actually require that MPI implementations implement <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> either, but the standard does at least describe guidelines for how <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> should work.  Because of this, <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> is generally the preferred command.</p>
+</div></blockquote>
+<p>{: .callout}</p>
+<p>The general format for lanching a code on multiple processes is:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-3">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span>&lt;number_of_processes&gt;<span class="w"> </span>&lt;command_to_launch_code&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>For example, to launch <code class="docutils literal notranslate"><span class="pre">hello</span></code> on 4 processes, do:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-4">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>./hello
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-5" name="sd-tab-set-5" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-5">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Hello World!</span>
+<span class="go">Hello World!</span>
+<span class="go">Hello World!</span>
+<span class="go">Hello World!</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>When you execute the above command, <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> launches 4 different instances of <code class="docutils literal notranslate"><span class="pre">./hello</span></code> simultaneously, which each print “Hello World!”.</p>
+<p>Typically, as long as you have at least 4 processors on the machine you are running on, each process will be launched on a different processor; however, certain environment variables and optional arguments to <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> can change this behavior.
+Each process runs the code in <code class="docutils literal notranslate"><span class="pre">hello</span></code> independently of the others.</p>
+<p>It might not be obvious yet, but the processes <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> launches aren’t completely unaware of one another.
+The <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> adds each of the processes to an MPI communicator, which enables each of the processes to send and receive information to one another via MPI.
+The MPI communicator that spans all of the processes launched by <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> is called <code class="docutils literal notranslate"><span class="pre">MPI_COMM_WORLD</span></code>.</p>
+<p>We can use the MPI library to get some information about the <code class="docutils literal notranslate"><span class="pre">MPI_COMM_WORLD</span></code> communicator and the processes within it.
+Edit <code class="docutils literal notranslate"><span class="pre">hello.cpp</span></code> so that it reads as follows:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-6" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-6">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mpi.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">argv</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Initialize MPI</span>
+<span class="w">  </span><span class="c1">// This must always be called before any other MPI functions</span>
+<span class="w">  </span><span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Get the number of processes in MPI_COMM_WORLD</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">world_size</span><span class="p">;</span>
+<span class="w">  </span><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">world_size</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Get the rank of this process in MPI_COMM_WORLD</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">my_rank</span><span class="p">;</span>
+<span class="w">  </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_rank</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Print out information about MPI_COMM_WORLD</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;World Size: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">world_size</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;   Rank: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">my_rank</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Finalize MPI</span>
+<span class="w">  </span><span class="c1">// This must always be called after all other MPI functions</span>
+<span class="w">  </span><span class="n">MPI_Finalize</span><span class="p">();</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Recompile the code:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-7" name="sd-tab-set-7" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-7">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the above code we first include the MPI library header, <code class="docutils literal notranslate"><span class="pre">mpi.h</span></code>.
+Then, we call <code class="docutils literal notranslate"><span class="pre">MPI_Init()</span></code>.
+This function <strong>must</strong> be called before any other MPI functions, and is typically one of the first lines of an MPI-parallelized code.
+Then, we call <code class="docutils literal notranslate"><span class="pre">MPI_Comm_size()</span></code> to get the number of processes in <code class="docutils literal notranslate"><span class="pre">MPI_COMM_WORLD</span></code>, which corresponds to the number of processes launched whenever <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> is executed at the command line.
+Each of these processes is assigned a uniqe rank, which is an integer that ranges from <code class="docutils literal notranslate"><span class="pre">0</span></code> to <code class="docutils literal notranslate"><span class="pre">world_size</span> <span class="pre">-</span> <span class="pre">1</span></code>.
+The rank of a process allows it to be identified whenever processes communicate with one another.
+For example, in some cases we might want rank 2 to send some information to rank 4, or we might want rank 0 to receive information from all of the other processes.
+Calling <code class="docutils literal notranslate"><span class="pre">MPI_Comm_rank()</span></code> returns the rank of the process calling it within <code class="docutils literal notranslate"><span class="pre">MPI_COMM_WORLD</span></code>.</p>
+<p>Go ahead and run the code now:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-8" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-8">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>./hello
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-9" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-9">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">World Size: 4   Rank: 1</span>
+<span class="go">World Size: 4   Rank: 0</span>
+<span class="go">World Size: 4   Rank: 2</span>
+<span class="go">World Size: 4   Rank: 3</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As you can see, the <code class="docutils literal notranslate"><span class="pre">MPI_Comm_size()</span></code> function outputs 4, which is the total number of ranks we told <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> to run with (through the <code class="docutils literal notranslate"><span class="pre">-n</span></code> argument).
+Each of the processes is assigned a rank in the range of 0 to 3.</p>
+<p>As you can see, the ranks don’t necessarily print out their messages in order; whichever rank completes the <code class="docutils literal notranslate"><span class="pre">cout</span></code> first will print out its message first.
+If you run the code again, the ranks are likely to print thier message in a different order:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-10" name="sd-tab-set-10" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-10">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">World Size: 4   Rank: 2</span>
+<span class="go">World Size: 4   Rank: 0</span>
+<span class="go">World Size: 4   Rank: 3</span>
+<span class="go">World Size: 4   Rank: 1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can also try rerunning with a different value for the <code class="docutils literal notranslate"><span class="pre">-n</span></code> <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> argument.
+For example:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-11" name="sd-tab-set-11" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-11">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>./hello
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-12" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-12">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">World Size: 2   Rank: 0</span>
+<span class="go">World Size: 2   Rank: 1</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="error-handling-with-mpi">
+<h3>Error Handling with MPI<a class="headerlink" href="#error-handling-with-mpi" title="Permalink to this heading">#</a></h3>
+<p>If an error forces an MPI program to exit, it should <strong>never</strong> just call <code class="docutils literal notranslate"><span class="pre">return</span></code> or <code class="docutils literal notranslate"><span class="pre">exit</span></code>.
+This is because calling <code class="docutils literal notranslate"><span class="pre">return</span></code> or <code class="docutils literal notranslate"><span class="pre">exit</span></code> might terminate one of the MPI processes, but leave others running (but not doing anything productive) indefintely.
+If you’re not careful, you could waste massive amounts of computational resources running a failed calculation your thought had terminated.
+Instead, MPI-parallelized codes should call <code class="docutils literal notranslate"><span class="pre">MPI_Abort()</span></code> when something goes wrong, as this function will ensure all MPI processes terminate.
+The <code class="docutils literal notranslate"><span class="pre">MPI_Abort</span></code> function takes two arguments: the first is the communicator corresponding to the set of MPI processes to terminate (this should generally be <code class="docutils literal notranslate"><span class="pre">MPI_COMM_WORLD</span></code>), while the second is an error code that will be returned to the environment.</p>
+<p>It is also useful to keep in mind that most MPI functions have a return value that indicates whether the function completed succesfully.
+If this value is equal to <code class="docutils literal notranslate"><span class="pre">MPI_SUCCESS</span></code>, the function was executed successfully; otherwise, the function call failed.
+By default, MPI functions automatically abort if they encounter an error, so you’ll only ever get a return value of <code class="docutils literal notranslate"><span class="pre">MPI_SUCCESS</span></code>.
+If you want to handle MPI errors yourself, you can call <code class="docutils literal notranslate"><span class="pre">MPI_Errhandler_set(MPI_COMM_WORLD,</span> <span class="pre">MPI_ERRORS_RETURN)</span></code>; if you do this, you must check the return value of every MPI function and call <code class="docutils literal notranslate"><span class="pre">MPI_Abort</span></code> if it is not equal to <code class="docutils literal notranslate"><span class="pre">MPI_SUCCESS</span></code>.
+For example, when initializing MPI, you might do the following:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-13" name="sd-tab-set-13" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-13">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="o">&amp;</span><span class="n">argv</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">MPI_SUCCESS</span><span class="p">)</span><span class="w"> </span><span class="n">MPI_Abort</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="example-2">
+<h2>Example 2<a class="headerlink" href="#example-2" title="Permalink to this heading">#</a></h2>
+<section id="basic-infrastructure">
+<h3>Basic Infrastructure<a class="headerlink" href="#basic-infrastructure" title="Permalink to this heading">#</a></h3>
+<p>We will now do some work with the the example in <a class="reference external" href="https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/average">examples/mpi/average</a>, which does some simple math.
+Run the code now.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-14" name="sd-tab-set-14" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-14">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>parallel-programming/examples/mpi/average
+$<span class="w"> </span>mkdir<span class="w"> </span>build
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>cmake<span class="w"> </span>-DCMAKE_C_COMPILER<span class="o">=</span>mpicc<span class="w"> </span>-DCMAKE_CXX_COMPILER<span class="o">=</span>mpicxx<span class="w"> </span>-DCMAKE_Fortran_COMPILER<span class="o">=</span>mpifort<span class="w"> </span>..
+$<span class="w"> </span>make
+$<span class="w"> </span>./average
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-15" name="sd-tab-set-15" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-15">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Average: 100000001.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s learn something about which parts of this code account for most of the run time.
+MPI provides a timer, <code class="docutils literal notranslate"><span class="pre">MPI_Wtime()</span></code>, which returns the current walltime.
+We can use this function to determine how long each section of the code takes to run.</p>
+<p>For example, to determine how much time is spent initializing array <code class="docutils literal notranslate"><span class="pre">a</span></code>, do the following:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-16" name="sd-tab-set-16" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-16">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Initialize a</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">start_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">double</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">end_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">my_rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Initialize a time: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">end_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As the above code indicates, we don’t really want every rank to print the timings, since that could look messy in the output.
+Instead, we have only rank 0 print this information.
+Of course, this requires that we add a few lines near the top of the code to initialize MPI and query the rank of each process:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-17" name="sd-tab-set-17" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-17">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Initialize MPI</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">world_size</span><span class="p">,</span><span class="w"> </span><span class="n">my_rank</span><span class="p">;</span>
+<span class="w">  </span><span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+<span class="w">  </span><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">world_size</span><span class="p">);</span>
+<span class="w">  </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_rank</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Also determine and print the timings of each of the other sections of the code: the intialization of array <code class="docutils literal notranslate"><span class="pre">b</span></code>, the addition of the two arrays, and the final averaging of the result.
+Your code should look something like this:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-18" name="sd-tab-set-18" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-18">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mpi.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">argv</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Initialize MPI</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">world_size</span><span class="p">,</span><span class="w"> </span><span class="n">my_rank</span><span class="p">;</span>
+<span class="w">  </span><span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+<span class="w">  </span><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">world_size</span><span class="p">);</span>
+<span class="w">  </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_rank</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200000000</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Initialize a</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">start_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">double</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">end_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">my_rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Initialize a time: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">end_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Initialize b</span>
+<span class="w">  </span><span class="n">start_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">double</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">end_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">my_rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Initialize b time: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">end_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1">// Add the two arrays</span>
+<span class="w">  </span><span class="n">start_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">end_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">my_rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Add arrays time: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">end_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Average the result</span>
+<span class="w">  </span><span class="n">start_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">average</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">average</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">end_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">my_rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Average result time: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">end_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">.</span><span class="n">precision</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">my_rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Average: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">average</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">delete</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="w">  </span><span class="k">delete</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">  </span><span class="n">MPI_Finalize</span><span class="p">();</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now compile and run the code again:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-19" name="sd-tab-set-19" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-19">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make
+$<span class="w"> </span>./average
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-20" name="sd-tab-set-20" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-20">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Initialize a time: 0.544075</span>
+<span class="go">Initialize b time: 0.624939</span>
+<span class="go">Add arrays time: 0.258915</span>
+<span class="go">Average result time: 0.266418</span>
+<span class="go">Average: 100000001.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="point-to-point-communication">
+<h3>Point-to-Point Communication<a class="headerlink" href="#point-to-point-communication" title="Permalink to this heading">#</a></h3>
+<p>You can try running this on multiple ranks now:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-21" name="sd-tab-set-21" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-21">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>./average
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-22" name="sd-tab-set-22" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-22">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Initialize a time: 0.640894</span>
+<span class="go">Initialize b time: 0.893775</span>
+<span class="go">Add arrays time: 1.38309</span>
+<span class="go">Average result time: 0.330192</span>
+<span class="go">Average: 100000001.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Running on multiple ranks doesn’t help with the timings, because each rank is duplicating all of the same work.
+In some ways, running on multiple ranks makes the timings worse, because all of the processes are forced to compete for the same computational resources.
+Memory bandwidth in particular is likely a serious problem due to the extremely large arrays that must be accessed and manipulated by each process.
+We want the ranks to cooperate on the problem, with each rank working on a different part of the calculation.
+In this example, that means that different ranks will work on different parts of the arrays <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>, and then the results on each rank will be summed across all the ranks.</p>
+<p>In this section, we will handle the details of the communication between processes using <em>point-to-point</em> communication.
+Point-to-point communication involves cases in which a code explicitly instructs one specific process to send/recieve information to/from another specific process.
+The primary functions associated with this approach are <code class="docutils literal notranslate"><span class="pre">MPI_Send()</span></code> and <code class="docutils literal notranslate"><span class="pre">MPI_Recv()</span></code>, which are involve the following arguments:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-23" name="sd-tab-set-23" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-23">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">MPI_Send</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">dest</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">tag</span><span class="p">,</span><span class="w">  </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">buf</span></code> — pointer to the start of the buffer being sent</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">count</span></code> — number of elements to send</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">datatype</span></code> — MPI data type of each element</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dest</span></code> — rank of destination process</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code>  — message tag</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comm</span></code> — the communicator to use</p></li>
+</ul>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-24" name="sd-tab-set-24" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-24">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">MPI_Recv</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">source</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">tag</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Status</span><span class="w"> </span><span class="o">*</span><span class="n">status</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">buf</span></code> — pointer to the start of the buffer to receive the message</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">count</span></code> — maximum number of elements the buffer can hold</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">datatype</span></code> — MPI data type of each element</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">source</span></code> — rank of source process —  <code class="docutils literal notranslate"><span class="pre">MPI_ANY_SOURCE</span></code> matches any process</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code>  — message tag (integer <code class="docutils literal notranslate"><span class="pre">&gt;=</span> <span class="pre">0</span></code>) — <code class="docutils literal notranslate"><span class="pre">MPI_ANY_TAG</span></code> matches any tag</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comm</span></code> — the communicator to use</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">status</span></code> — pointer to the structure in which to store status</p></li>
+</ul>
+<p>We need to decide what parts of the arrays each of the ranks will work on; this is more generally known as a rank’s workload.
+Add the following code just before the initialization of array <code class="docutils literal notranslate"><span class="pre">a</span></code>:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-25" name="sd-tab-set-25" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-25">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Determine the workload of each ran</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">workloads</span><span class="p">[</span><span class="n">world_size</span><span class="p">];</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">world_size</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">workloads</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">world_size</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">world_size</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="n">workloads</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">my_start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">my_rank</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">my_start</span><span class="w"> </span><span class="o">+=</span><span class="w">	</span><span class="n">workloads</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">my_end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_start</span><span class="w">	</span><span class="o">+</span><span class="w"> </span><span class="n">workloads</span><span class="p">[</span><span class="n">my_rank</span><span class="p">];</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the above code, <code class="docutils literal notranslate"><span class="pre">my_start</span></code> and <code class="docutils literal notranslate"><span class="pre">my_end</span></code> represent the range over which each rank will perform mathematical operations on the arrays.</p>
+<p>We’ll start by parallelizing the code that averages the result.
+Update the range of the <code class="docutils literal notranslate"><span class="pre">for</span></code> loop in this part of the code to the following:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-26" name="sd-tab-set-26" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-26">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">my_start</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">my_end</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This will ensure that each rank is only calculating elements <code class="docutils literal notranslate"><span class="pre">my_start</span></code> through <code class="docutils literal notranslate"><span class="pre">my_end</span></code> of the sum.
+We then need the ranks to communicate their individually calculated sums so that we can calculate the global sum.
+To do this, add the following immediately after the end of the <code class="docutils literal notranslate"><span class="pre">for</span></code> loop:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-27" name="sd-tab-set-27" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-27">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">my_rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">world_size</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">partial_average</span><span class="p">;</span>
+<span class="w">      </span><span class="n">MPI_Status</span><span class="w"> </span><span class="n">status</span><span class="p">;</span>
+<span class="w">      </span><span class="n">MPI_Recv</span><span class="p">(</span><span class="w"> </span><span class="o">&amp;</span><span class="n">partial_average</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">77</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">status</span><span class="w"> </span><span class="p">);</span>
+<span class="w">      </span><span class="n">average</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">partial_average</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">MPI_Send</span><span class="p">(</span><span class="w"> </span><span class="o">&amp;</span><span class="n">average</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">77</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="w"> </span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">MPI_DOUBLE</span></code> parameter tells MPI what type of information is being communicated by the <code class="docutils literal notranslate"><span class="pre">Send</span></code> and <code class="docutils literal notranslate"><span class="pre">Recv</span></code> calls.
+In this case, we are sending a array of double precision numbers.
+If you are communicating information of a different datatype, consult the following:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p><strong>MPI data type</strong></p></th>
+<th class="head text-left"><p><strong>C data type</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_BYTE</span></code></p></td>
+<td class="text-left"><p>8 binary digits</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_CHAR</span></code></p></td>
+<td class="text-left"><p>char</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_UNSIGNED_CHAR</span></code></p></td>
+<td class="text-left"><p>unsigned char</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_SHORT</span></code></p></td>
+<td class="text-left"><p>signed short int</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_UNSIGNED_SHORT</span></code></p></td>
+<td class="text-left"><p>unsigned short int</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_INT</span></code></p></td>
+<td class="text-left"><p>signed int</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_UNSIGNED</span></code></p></td>
+<td class="text-left"><p>unsigned int</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_LONG</span></code></p></td>
+<td class="text-left"><p>signed long int</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_UNSIGNED_LONG</span></code></p></td>
+<td class="text-left"><p>unsigned long int</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_FLOAT</span></code></p></td>
+<td class="text-left"><p>float</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_DOUBLE</span></code></p></td>
+<td class="text-left"><p>double</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>etc.</p></td>
+<td class="text-left"><p></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_PACKED</span></code></p></td>
+<td class="text-left"><p>define your own with</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p></p></td>
+<td class="text-left"><p><a class="reference external" href="https://www.mpich.org/static/docs/v3.2/www3/MPI_Pack.html"><code class="docutils literal notranslate"><span class="pre">MPI_Pack</span></code></a>/<a class="reference external" href="https://www.mpich.org/static/docs/v3.2/www3/MPI_Pack.html"><code class="docutils literal notranslate"><span class="pre">MPI_Unpack</span></code></a></p></td>
+</tr>
+</tbody>
+</table>
+<p>Now compile and run the code again:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-28" name="sd-tab-set-28" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-28">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make
+$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>./average
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-29" name="sd-tab-set-29" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-29">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Initialize a time: 0.63251</span>
+<span class="go">Initialize b time: 1.31379</span>
+<span class="go">Add arrays time: 1.89099</span>
+<span class="go">Average result time: 0.100575</span>
+<span class="go">Average: 100000001.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can see that the amount of time spent calculating the average has indeed gone down.</p>
+<p>Parallelizing the part of the code that adds the two arrays is much easier.
+All you need to do is update the range over which the <code class="docutils literal notranslate"><span class="pre">for</span></code> loop iterates:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-30" name="sd-tab-set-30" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-30">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">my_start</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">my_end</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now compile and run the code again:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-31" name="sd-tab-set-31" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-31">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make
+$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>./average
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-32" name="sd-tab-set-32" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-32">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Initialize a time: 0.636685</span>
+<span class="go">Initialize b time: 1.66542</span>
+<span class="go">Add arrays time: 0.466888</span>
+<span class="go">Average result time: 0.0871116</span>
+<span class="go">Average: 100000001.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The array addition time has gone down nicely.
+Surprisingly enough, the most expensive part of the calculation is now the initialization of the arrays <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>.
+Updating the range over which those loops iterate speeds up those parts of the calation:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-33" name="sd-tab-set-33" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-33">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Initialze a</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">my_start</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">my_end</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="p">...</span>
+<span class="w">  </span><span class="c1">// Initialize b</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">my_start</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">my_end</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-34" name="sd-tab-set-34" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-34">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make
+$<span class="w"> </span>./average
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-35" name="sd-tab-set-35" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-35">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Initialize a time: 0.159471</span>
+<span class="go">Initialize b time: 0.183946</span>
+<span class="go">Add arrays time: 0.193497</span>
+<span class="go">Average result time: 0.0847806</span>
+<span class="go">Average: 100000001.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="reducing-the-memory-footprint">
+<h3>Reducing the Memory Footprint<a class="headerlink" href="#reducing-the-memory-footprint" title="Permalink to this heading">#</a></h3>
+<p>The simulation is running much faster now thanks to the parallelization we have added.
+If that’s all we care about, we could stop working on the code now.
+In reality, though, <strong>time</strong> is only one resource we should be concerned about.
+Another resource that is often even more important is <strong>memory</strong>.
+The changes we have made to the code make it run faster, but don’t decrease its memory footprint in any way: each rank allocates arrays <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> with <code class="docutils literal notranslate"><span class="pre">N</span></code> double precision values.
+That means that each rank allocates <code class="docutils literal notranslate"><span class="pre">2*N</span></code> double precision values; across all of our ranks, that corresponds to a total of <code class="docutils literal notranslate"><span class="pre">2*nproc*world_size</span></code> double precision values.
+Running on more processors might decrease our run time, but it increases our memory footprint!</p>
+<p>Of course, there isn’t really a good reason for each rank to allocate the entire arrays of size <code class="docutils literal notranslate"><span class="pre">N</span></code>, because each rank will only ever use values within the range of <code class="docutils literal notranslate"><span class="pre">my_start</span></code> to <code class="docutils literal notranslate"><span class="pre">my_end</span></code>.
+Let’s modify the code so that each rank allocates <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> to a size of <code class="docutils literal notranslate"><span class="pre">workloads[my_rank]</span></code>.</p>
+<p>Replace the initialization of <code class="docutils literal notranslate"><span class="pre">a</span></code> with:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-36" name="sd-tab-set-36" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-36">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">double</span><span class="p">[</span><span class="w"> </span><span class="n">workloads</span><span class="p">[</span><span class="n">my_rank</span><span class="p">]</span><span class="w"> </span><span class="p">];</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">workloads</span><span class="p">[</span><span class="n">my_rank</span><span class="p">];</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Replace the initialization of <code class="docutils literal notranslate"><span class="pre">b</span></code> with:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-37" name="sd-tab-set-37" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-37">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">double</span><span class="p">[</span><span class="w"> </span><span class="n">workloads</span><span class="p">[</span><span class="n">my_rank</span><span class="p">]</span><span class="w"> </span><span class="p">];</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">workloads</span><span class="p">[</span><span class="n">my_rank</span><span class="p">];</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">my_start</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Replace the range of the loops that add and average the arrays to <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">(int</span> <span class="pre">i=0;</span> <span class="pre">i&lt;workloads[my_rank];</span> <span class="pre">i++)</span></code>.</p>
+<p>Now compile and run the code again:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-38" name="sd-tab-set-38" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-38">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make
+$<span class="w"> </span>./average
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-39" name="sd-tab-set-39" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-39">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Initialize a time: 0.16013</span>
+<span class="go">Initialize b time: 0.176896</span>
+<span class="go">Add arrays time: 0.190774</span>
+<span class="go">Average result time: 0.0871552</span>
+<span class="go">Average: 100000001.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="collective-communication">
+<h3>Collective Communication<a class="headerlink" href="#collective-communication" title="Permalink to this heading">#</a></h3>
+<p>Previously, we used <strong>point-to-point communication</strong> (i.e. <code class="docutils literal notranslate"><span class="pre">MPI_Send</span></code> and <code class="docutils literal notranslate"><span class="pre">MPI_Recv</span></code>) to sum the results across all ranks:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-40" name="sd-tab-set-40" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-40">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">my_rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">world_size</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">partial_average</span><span class="p">;</span>
+<span class="w">      </span><span class="n">MPI_Status</span><span class="w"> </span><span class="n">status</span><span class="p">;</span>
+<span class="w">      </span><span class="n">MPI_Recv</span><span class="p">(</span><span class="w"> </span><span class="o">&amp;</span><span class="n">partial_average</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">77</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">status</span><span class="w"> </span><span class="p">);</span>
+<span class="w">      </span><span class="n">average</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">partial_average</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">MPI_Send</span><span class="p">(</span><span class="w"> </span><span class="o">&amp;</span><span class="n">average</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">77</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="w"> </span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>MPI provides many <strong>collective communication</strong> functions, which automate many processes that can be complicated to write out using only point-to-point communication.
+One particularly useful collective communication function is <code class="docutils literal notranslate"><span class="pre">MPI_Reduce()</span></code>:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-41" name="sd-tab-set-41" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-41">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Reduce</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span>
+<span class="w">                 </span><span class="n">MPI_Op</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sendbuf</span></code> — address of send buffer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">recvbuf</span></code> — address of receive buffer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">count</span></code> — number of elements in send buffer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">datatype</span></code> — MPI data type of each element</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">op</span></code> — reduce operation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">root</span></code> — rank of root process</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comm</span></code> — the communicator to use</p></li>
+</ul>
+<p>Possible values for <code class="docutils literal notranslate"><span class="pre">op</span></code> are:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p><strong>Operation</strong></p></th>
+<th class="head text-left"><p>Description</p></th>
+<th class="head text-left"><p>Datatype</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_MAX</span></code></p></td>
+<td class="text-left"><p>maximum</p></td>
+<td class="text-left"><p>integer,float</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_MIN</span></code></p></td>
+<td class="text-left"><p>minimum</p></td>
+<td class="text-left"><p>integer,float</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_SUM</span></code></p></td>
+<td class="text-left"><p>sum</p></td>
+<td class="text-left"><p>integer,float</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_PROD</span></code></p></td>
+<td class="text-left"><p>product</p></td>
+<td class="text-left"><p>integer,float</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_LAND</span></code></p></td>
+<td class="text-left"><p>logical AND</p></td>
+<td class="text-left"><p>integer</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_BAND</span></code></p></td>
+<td class="text-left"><p>bit-wise AND</p></td>
+<td class="text-left"><p>integer,MPI_BYTE</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_LOR</span></code></p></td>
+<td class="text-left"><p>logical OR</p></td>
+<td class="text-left"><p>integer</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_BOR</span></code></p></td>
+<td class="text-left"><p>bit-wise OR</p></td>
+<td class="text-left"><p>integer,MPI_BYTE</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_LXOR</span></code></p></td>
+<td class="text-left"><p>logical XOR</p></td>
+<td class="text-left"><p>integer</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_BXOR</span></code></p></td>
+<td class="text-left"><p>bit-wise XOR</p></td>
+<td class="text-left"><p>integer,MPI_BYTE</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_MAXLOC</span></code></p></td>
+<td class="text-left"><p>max value and location</p></td>
+<td class="text-left"><p>float</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI_MINLOC</span></code></p></td>
+<td class="text-left"><p>min value and location</p></td>
+<td class="text-left"><p>float</p></td>
+</tr>
+</tbody>
+</table>
+<p>We will use the <code class="docutils literal notranslate"><span class="pre">MPI_Reduce()</span></code> function to sum a value across all ranks, without all of the point-to-point communication code we needed earlier.
+Replace all of your point-to-point communication code above with:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-42" name="sd-tab-set-42" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-42">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">partial_average</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">average</span><span class="p">;</span>
+<span class="w">  </span><span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">partial_average</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">average</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_SUM</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Compiling and running with this change should produce the same results as before.</p>
+<p>Note that in addition to enabling us to write simpler-looking code, collective communication operations tend to be faster than what we can achieve by trying to write our own communication operations using point-to-point calls.</p>
+</section>
+</section>
+<section id="example-3">
+<h2>Example 3<a class="headerlink" href="#example-3" title="Permalink to this heading">#</a></h2>
+<p>Next, view <a class="reference external" href="https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/mc">examples/mc</a> which is a simple Monte-Carlo simulation.
+Compile and run the code now.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-43" name="sd-tab-set-43" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-43">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>parallel-programming/examples/mpi/mc
+$<span class="w"> </span>mkdir<span class="w"> </span>build
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>cmake<span class="w"> </span>-DCMAKE_C_COMPILER<span class="o">=</span>mpicc<span class="w"> </span>-DCMAKE_CXX_COMPILER<span class="o">=</span>mpicxx<span class="w"> </span>-DCMAKE_Fortran_COMPILER<span class="o">=</span>mpifort<span class="w"> </span>..
+$<span class="w"> </span>make
+$<span class="w"> </span>./mc
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-44" name="sd-tab-set-44" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-44">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">...</span>
+<span class="go">497000   -6.28643</span>
+<span class="go">498000   -6.28989</span>
+<span class="go">499000   -5.96743</span>
+<span class="go">500000   -6.06861</span>
+<span class="go">Total simulation time: 2.59121</span>
+<span class="go">    Energy time:       2.47059</span>
+<span class="go">    Decision time:     0.0425119</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As you can see, the code already has some timings, and the vast majority of time is spent in the calls to ‘get_particle_energy()’.
+That is where we will focus our parallelization efforts.</p>
+<p>The function in question is:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-45" name="sd-tab-set-45" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-45">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span><span class="w"> </span><span class="nf">get_particle_energy</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">coordinates</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">particle_count</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">box_length</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i_particle</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">cutoff2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">e_total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">i_position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i_particle</span><span class="p">];</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j_particle</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j_particle</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">particle_count</span><span class="p">;</span><span class="w"> </span><span class="n">j_particle</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">i_particle</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">j_particle</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">j_position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">j_particle</span><span class="p">];</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">rij2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">minimum_image_distance</span><span class="p">(</span><span class="w"> </span><span class="n">i_position</span><span class="p">,</span><span class="w"> </span><span class="n">j_position</span><span class="p">,</span><span class="w"> </span><span class="n">box_length</span><span class="w"> </span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">rij2</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">cutoff2</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">e_total</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">lennard_jones_potential</span><span class="p">(</span><span class="n">rij2</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">e_total</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This looks like it should be fairly straightforward to parallelize: it consists of a single <code class="docutils literal notranslate"><span class="pre">for</span></code> loop which just sums the interaction energies of particle pairs.
+To parallelize this loop, we need each rank to compute the interaction energies of a subset of these pairs, and then sum the energy across all ranks.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">get_particle_energy()</span></code> function is going to need to know some basic information about the MPI communicator, so add the MPI communicator to its parameters:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-46" name="sd-tab-set-46" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-46">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span><span class="w"> </span><span class="nf">get_particle_energy</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">coordinates</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">particle_count</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">box_length</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i_particle</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">cutoff2</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now update the two times <code class="docutils literal notranslate"><span class="pre">get_particle_energy()</span></code> is called by <code class="docutils literal notranslate"><span class="pre">main</span></code>:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-47" name="sd-tab-set-47" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-47">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">current_energy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_particle_energy</span><span class="p">(</span><span class="w"> </span><span class="n">coordinates</span><span class="p">,</span><span class="w"> </span><span class="n">num_particles</span><span class="p">,</span><span class="w"> </span><span class="n">box_length</span><span class="p">,</span><span class="w"> </span><span class="n">i_particle</span><span class="p">,</span><span class="w"> </span><span class="n">simulation_cutoff2</span><span class="p">,</span><span class="w"> </span><span class="n">world_comm</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">proposed_energy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_particle_energy</span><span class="p">(</span><span class="w"> </span><span class="n">coordinates</span><span class="p">,</span><span class="w"> </span><span class="n">num_particles</span><span class="p">,</span><span class="w"> </span><span class="n">box_length</span><span class="p">,</span><span class="w"> </span><span class="n">i_particle</span><span class="p">,</span><span class="w"> </span><span class="n">simulation_cutoff2</span><span class="p">,</span><span class="w"> </span><span class="n">world_comm</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Place the following at the beginning of <code class="docutils literal notranslate"><span class="pre">get_particle_energy()</span></code>:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-48" name="sd-tab-set-48" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-48">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Get information about the MPI communicator</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">my_rank</span><span class="p">,</span><span class="w"> </span><span class="n">world_size</span><span class="p">;</span>
+<span class="w">  </span><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">comm</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">world_size</span><span class="p">);</span>
+<span class="w">  </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">comm</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_rank</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Change the <code class="docutils literal notranslate"><span class="pre">for</span></code> loop in <code class="docutils literal notranslate"><span class="pre">get_particle_energy</span></code> to the following:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-49" name="sd-tab-set-49" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-49">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j_particle</span><span class="o">=</span><span class="n">my_rank</span><span class="p">;</span><span class="w"> </span><span class="n">j_particle</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">particle_count</span><span class="p">;</span><span class="w"> </span><span class="n">j_particle</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">world_size</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The above code will cause each rank to iterate over particles with a stride of <code class="docutils literal notranslate"><span class="pre">world_size</span></code> and an initial offset of <code class="docutils literal notranslate"><span class="pre">my_rank</span></code>.
+For example, if you run on 4 ranks, rank 0 will iterate over particles 0, 4, 8, 12, etc., while rank 1 will iterate over particles 1, 5, 9, 13, etc.</p>
+<p>We then need to sum the energies across all ranks.
+Replace the line <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">e_total;</span></code> with the following:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-50" name="sd-tab-set-50" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-50">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Sum the energy across all ranks</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">e_summed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">e_total</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">e_summed</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_SUM</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">e_summed</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Try to run it in parallel now:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-51" name="sd-tab-set-51" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-51">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make
+$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>./mc
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-52" name="sd-tab-set-52" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-52">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">16000   -2.19516e+19</span>
+<span class="go">17000   -2.19517e+19</span>
+
+<span class="go">===================================================================================</span>
+<span class="go">=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES</span>
+<span class="go">=   PID 81043 RUNNING AT Taylors-MacBook-Pro.local</span>
+<span class="go">=   EXIT CODE: 9</span>
+<span class="go">=   CLEANING UP REMAINING PROCESSES</span>
+<span class="go">=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES</span>
+<span class="go">===================================================================================</span>
+<span class="go">YOUR APPLICATION TERMINATED WITH THE EXIT STRING: Segmentation fault: 11 (signal 11)</span>
+<span class="go">This typically refers to a problem with your application.</span>
+<span class="go">Please see the FAQ page for debugging suggestions</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>That doesn’t seem right at all.
+What went wrong?</p>
+<p>Our call to <code class="docutils literal notranslate"><span class="pre">MPI_Reduce</span></code> causes the energies to be summed onto rank 0, but none of the other ranks have the summed energies.
+To have the energies reduced to all of the ranks, replace the <code class="docutils literal notranslate"><span class="pre">MPI_Reduce</span></code> call with a call to <code class="docutils literal notranslate"><span class="pre">MPI_Allreduce</span></code>:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-53" name="sd-tab-set-53" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-53">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">MPI_Allreduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">e_total</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">e_summed</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_SUM</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-54" name="sd-tab-set-54" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-54">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make
+$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>./mc
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-55" name="sd-tab-set-55" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-55">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">497000   -6.28644</span>
+<span class="go">498000   -6.2899</span>
+<span class="go">499000   -5.96744</span>
+<span class="go">500000   -6.06862</span>
+<span class="go">Total simulation time: 8.38658</span>
+<span class="go">    Energy time:       8.24201</span>
+<span class="go">    Decision time:     0.0563176</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is better, but we certainly aren’t getting good timings.</p>
+<p>Before we work on the timings problem, let’s try another experiment.
+Near the top of <code class="docutils literal notranslate"><span class="pre">mc.cpp</span></code> is some code that initializes the random number generator with a random seed.
+Currently, the random number generator is being initialized with a fixed random seed of <code class="docutils literal notranslate"><span class="pre">1</span></code>:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-56" name="sd-tab-set-56" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-56">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Initialize the random number generator with a pre-defined seed</span>
+<span class="n">std</span><span class="o">::</span><span class="n">mt19937</span><span class="w"> </span><span class="nf">mt</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="c1">// Initialize the random number generator with a random seed</span>
+<span class="c1">//std::random_device rd;</span>
+<span class="c1">//std::mt19937 mt(rd());</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s try switching to using a random number to initialize the random number generator:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-57" name="sd-tab-set-57" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-57">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Initialize the random number generator with a pre-defined seed</span>
+<span class="c1">//std::mt19937 mt(1);</span>
+
+<span class="c1">// Initialize the random number generator with a random seed</span>
+<span class="n">std</span><span class="o">::</span><span class="n">random_device</span><span class="w"> </span><span class="n">rd</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">mt19937</span><span class="w"> </span><span class="nf">mt</span><span class="p">(</span><span class="n">rd</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now recompile and run again:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-58" name="sd-tab-set-58" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-58">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make
+$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>./mc
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-59" name="sd-tab-set-59" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-59">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">497000   -7.9279e+12</span>
+<span class="go">498000   -7.9279e+12</span>
+<span class="go">499000   -7.9279e+12</span>
+<span class="go">500000   -7.9279e+12</span>
+<span class="go">Total simulation time: 8.73895</span>
+<span class="go">    Energy time:       8.59179</span>
+<span class="go">    Decision time:     0.0549728</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>These are some crazy, unphysical numbers!
+If you try running again with a single process (<code class="docutils literal notranslate"><span class="pre">mpiexec</span> <span class="pre">-n</span> <span class="pre">1</span> <span class="pre">./mc</span></code>), you can confirm that the code gives much more reasonable energies when running on in serial.
+The problem is that each iteration, the coordinates are updated by randomly displacing one of the particles.
+Each rank randomly selects a particle to displace and the displacement vector.
+Instead of contributing to the calculation of the same particle’s interaction energies for the same nuclear configuration, each rank ends up calculating some of the interaction energies for different atoms and different coordinates.
+This leads to utter chaos throughout the simulation.</p>
+<p>You might be tempted to fix this by generating the random number generator seed on a single process, and then sending that information to the other processes, so that every process is using the same seed.
+Although that might sound reasonable, it would still leave open the possibility that different processes could end up diverging over the course of a long simulation (remember, computers aren’t infinitely accurate - slight descrepancies are guaranteed to happen, given enough time).</p>
+<p>To fix this, we will have rank 0 be the only rank that randomly selects a particle or a displacement vector.
+Rank 0 will then broadcast all necessary information to the other ranks, so that they keep in sync.</p>
+<p>Replace the line where the coordinates are intially generated (where <code class="docutils literal notranslate"><span class="pre">generate_initial_state</span></code> is called) with this:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-60" name="sd-tab-set-60" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-60">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">my_rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">generate_initial_state</span><span class="p">(</span><span class="n">num_particles</span><span class="p">,</span><span class="w"> </span><span class="n">box_length</span><span class="p">,</span><span class="w"> </span><span class="n">coordinates</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">MPI_Bcast</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="o">*</span><span class="n">num_particles</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">world_comm</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>At the beginning of the <code class="docutils literal notranslate"><span class="pre">for</span></code> loop in <code class="docutils literal notranslate"><span class="pre">main</span></code> you will see the following code:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-61" name="sd-tab-set-61" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-61">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Beginning of main MC iterative loop</span>
+<span class="w">  </span><span class="n">n_trials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i_step</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i_step</span><span class="o">&lt;</span><span class="n">n_steps</span><span class="p">;</span><span class="w"> </span><span class="n">i_step</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">n_trials</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i_particle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">floor</span><span class="p">(</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">num_particles</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dist</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">random_displacement</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">random_displacement</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dist</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">max_displacement</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Replace the above with the following:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-62" name="sd-tab-set-62" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-62">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Beginning of main MC iterative loop</span>
+<span class="w">  </span><span class="n">n_trials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i_step</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i_step</span><span class="o">&lt;</span><span class="n">n_steps</span><span class="p">;</span><span class="w"> </span><span class="n">i_step</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i_particle</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">random_displacement</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">my_rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">n_trials</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">      </span><span class="n">i_particle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">floor</span><span class="p">(</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">num_particles</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dist</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span><span class="w"> </span><span class="p">);</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">random_displacement</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dist</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">max_displacement</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">MPI_Bcast</span><span class="p">(</span><span class="o">&amp;</span><span class="n">i_particle</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">world_comm</span><span class="p">);</span>
+<span class="w">    </span><span class="n">MPI_Bcast</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="o">*</span><span class="n">num_particles</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">world_comm</span><span class="p">);</span>
+<span class="w">    </span><span class="n">MPI_Bcast</span><span class="p">(</span><span class="n">random_displacement</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">world_comm</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>At the end of the <code class="docutils literal notranslate"><span class="pre">for</span></code> loop in <code class="docutils literal notranslate"><span class="pre">main</span></code> is the following code:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-63" name="sd-tab-set-63" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-63">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="c1">// test whether to accept or reject this step</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">start_decision_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">delta_e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proposed_energy</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">current_energy</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">accept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">accept_or_reject</span><span class="p">(</span><span class="n">delta_e</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">accept</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">total_pair_energy</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">delta_e</span><span class="p">;</span>
+<span class="w">      </span><span class="n">n_accept</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// revert the position of the test particle</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">coordinates</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i_particle</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">random_displacement</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">        </span><span class="n">coordinates</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i_particle</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">box_length</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">round</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i_particle</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">box_length</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">total_energy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">total_pair_energy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tail_correction</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">num_particles</span><span class="p">);</span>
+<span class="w">    </span><span class="n">energy_array</span><span class="p">[</span><span class="n">i_step</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">total_energy</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="n">i_step</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">freq</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">my_rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">i_step</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;   &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">energy_array</span><span class="p">[</span><span class="n">i_step</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">tune_displacement</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">max_displacement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">adjust_displacement</span><span class="p">(</span><span class="n">n_trials</span><span class="p">,</span><span class="w"> </span><span class="n">n_accept</span><span class="p">,</span><span class="w"> </span><span class="n">max_displacement</span><span class="p">);</span>
+<span class="w">        </span><span class="n">n_trials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="n">n_accept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="n">total_decision_time</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_decision_time</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Replace the above with the following, so that only rank <code class="docutils literal notranslate"><span class="pre">0</span></code> is executing it:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-64" name="sd-tab-set-64" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-64">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">my_rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// test whether to accept or reject this step</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">start_decision_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">delta_e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proposed_energy</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">current_energy</span><span class="p">;</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="n">accept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">accept_or_reject</span><span class="p">(</span><span class="n">delta_e</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">accept</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="n">total_pair_energy</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">delta_e</span><span class="p">;</span>
+<span class="w">	</span><span class="n">n_accept</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="c1">// revert the position of the test particle</span>
+<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	  </span><span class="n">coordinates</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i_particle</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">random_displacement</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">	  </span><span class="n">coordinates</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i_particle</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">box_length</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">round</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i_particle</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">box_length</span><span class="p">);</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">total_energy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">total_pair_energy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tail_correction</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">num_particles</span><span class="p">);</span>
+<span class="w">      </span><span class="n">energy_array</span><span class="p">[</span><span class="n">i_step</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">total_energy</span><span class="p">;</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="n">i_step</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">freq</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">my_rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">i_step</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;   &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">energy_array</span><span class="p">[</span><span class="n">i_step</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">	</span><span class="p">}</span>
+
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">tune_displacement</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	  </span><span class="n">max_displacement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">adjust_displacement</span><span class="p">(</span><span class="n">n_trials</span><span class="p">,</span><span class="w"> </span><span class="n">n_accept</span><span class="p">,</span><span class="w"> </span><span class="n">max_displacement</span><span class="p">);</span>
+<span class="w">	  </span><span class="n">n_trials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">	  </span><span class="n">n_accept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="n">total_decision_time</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_decision_time</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Recompile and rerun the code.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-65" name="sd-tab-set-65" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-65">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make
+$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>./mc
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-66" name="sd-tab-set-66" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-66">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">497000   -6.06666</span>
+<span class="go">498000   -6.10058</span>
+<span class="go">499000   -5.98052</span>
+<span class="go">500000   -5.95301</span>
+<span class="go">Total simulation time: 16.7881</span>
+<span class="go">    Energy time:       15.9948</span>
+<span class="go">    Decision time:     0.0690625</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This time the energies are much more consistent with what we expect; however, our timings are considerably worse than when we were only running on single process!
+This is because the system we are running these calculations on is extremely small.
+If you check the system parameters (under the <code class="docutils literal notranslate"><span class="pre">Parameter</span> <span class="pre">setup</span></code> comment in <code class="docutils literal notranslate"><span class="pre">mc.cpp</span></code>), you will see that this calculation only involves 100 particles.
+The amount of work required to compute the energy of <code class="docutils literal notranslate"><span class="pre">100</span></code> Lennard-Jones particles is actually smaller than the amount of overhead associated with the extra MPI processes.
+Let’s make the simulation somewhat larger:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-67" name="sd-tab-set-67" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-cpp" for="sd-tab-item-67">
+CPP</label><div class="sd-tab-content docutils">
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">n_steps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100000</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">num_particles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10000</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Recompile and rerun the code on a single core.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-68" name="sd-tab-set-68" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-68">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make
+$<span class="w"> </span>./mc
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-69" name="sd-tab-set-69" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-69">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">97000   612.067</span>
+<span class="go">98000   609.113</span>
+<span class="go">99000   603.538</span>
+<span class="go">100000   599.461</span>
+<span class="go">Total simulation time: 41.0191</span>
+<span class="go">    Energy time:       39.9748</span>
+<span class="go">    Decision time:     0.011933</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, run the calculation in parallel.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-70" name="sd-tab-set-70" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-70">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>./mc
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-71" name="sd-tab-set-71" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-71">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">97000   99.1126</span>
+<span class="go">98000   93.454</span>
+<span class="go">99000   91.1246</span>
+<span class="go">100000   87.397</span>
+<span class="go">Total simulation time: 22.2873</span>
+<span class="go">    Energy time:       15.4661</span>
+<span class="go">    Decision time:     0.0175401</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can clearly see a speedup when running in parallel.</p>
+<p>{% include links.md %}</p>
+<div class="key admonition">
+<p class="admonition-title">Key Points</p>
+<ul class="simple">
+<li><p>Where possible, use collective communication operations instead of point-to-point communication for improved efficiency and simplicity.</p></li>
+<li><p>Intelligent design choices can help you reduce the memory footprint required by MPI-parallelized codes</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="03-distributed-examples-mpi4py.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">MPI Hands-On - mpi4py</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="00-shared-memory.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Shared Memory Parallelization</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1">1. Example 1</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#writing-hello-world">Writing Hello World</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started-with-mpi">Getting Started with MPI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-handling-with-mpi">Error Handling with MPI</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2">Example 2</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-infrastructure">Basic Infrastructure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#point-to-point-communication">Point-to-Point Communication</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reducing-the-memory-footprint">Reducing the Memory Footprint</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collective-communication">Collective Communication</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3">Example 3</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="_sources/04-distributed-examples.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            <div class="bd-footer-content__inner"></div>
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+
+<div class="row h-10">
+    <div class="col-2">
+        <a href="https://molssi.org/" target="_blank" title="Go to MolSSI in a new tab">
+            <img src="_static/molssi_main_logo.png" class="logo__image only-light footer_logo" alt="Logo image">
+            <img src="_static/molssi_main_logo_inverted_white.png" class="logo__image only-dark footer_logo" alt="Logo image">
+        </a>
+    </div>
+    <div class="col-8">
+        <p> &copy; Copyright 2019-2023 <a href="https://molssi.org/">The Molecular Sciences Software Institute</a></p>
+        <p>Funded by the National Science Foundation 
+          <a href="https://nsf.gov/awardsearch/showAward?AWD_ID=1547580">OAC-1547580</a> and 
+          <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2136142">CHE-2136142.</a></p>
+ 
+        
+        <p class="sphinx-version">
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+        </p>
+        
+
+        <p class="theme-version">
+        Built with a customized <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.1.
+        </p>
+
+    </div>
+    <div class="col-2">
+        <a href="https://nsf.gov/" target="_blank" title="Go to the NSF in a new tab">
+            <img src="_static/nsf.png" class="footer_logo" alt="The NSF">
+          </a>
+    </div>
+</div></div>
+      
+    </div>
+  
+  
+</div>
+
+  </footer>
+  </body>
+</html>

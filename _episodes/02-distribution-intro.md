@@ -1,15 +1,15 @@
----
-title: "Introduction to Distributed-Memory Parallelization"
-teaching: 20
-exercises: 0
-questions:
-- "What is distributed-memory parallelization?"
-objectives:
-- "Understand the advantages and limitations of distributed-memory parallelization."
-keypoints:
-- "Distributed-memory parallelization is the primary mechanism for acheiving parallelization between nodes."
-- "Distributed-memory parallelization tends to have larger memory requirements than other parallelization techniques."
----
+# Introduction to Distributed-Memory Parallelization
+
+````{admonition} Overview
+:class: overview
+
+Questions:
+- What is distributed-memory parallelization?
+
+Objectives:
+- Understand the advantages and limitations of distributed-memory parallelization.
+````
+
 
 Distributed-memory approaches to parallelization involve running multiple instances of the same executable, with each process being run on a different core.
 This is illustrated in the figure below.
@@ -45,3 +45,9 @@ It is not necessary to do both of these lessons; you may do whichever is most re
 
 {% include links.md %}
 
+````{admonition} Key Points
+:class: key
+
+- Distributed-memory parallelization is the primary mechanism for acheiving parallelization between nodes.
+- Distributed-memory parallelization tends to have larger memory requirements than other parallelization techniques.
+````

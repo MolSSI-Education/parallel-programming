@@ -1,0 +1,1688 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>MPI Hands-On - mpi4py &#8212; molssi_best_practices  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/design-tabs.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '03-distributed-examples-mpi4py';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="MPI Hands-On - C++" href="04-distributed-examples.html" />
+    <link rel="prev" title="Introduction to Distributed-Memory Parallelization" href="02-distribution-intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/molssi_main_logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/molssi_main_logo_inverted_white.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+    <p class="title logo__title">Parallel Programming</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="setup.html">
+                        Set Up
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="00-intro.html">
+                        Introduction
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="00-distributed-memory.html">
+                        Distributed Memory Parallelization
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="00-shared-memory.html">
+                        Shared Memory Parallelization
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                <li class="nav-item">
+                  <a class="nav-link nav-external" href="https://molssi.org">
+                    MolSSI
+                  </a>
+                </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/jchen0506/molssi_doc_theme" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-twitter"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="setup.html">
+                        Set Up
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="00-intro.html">
+                        Introduction
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="00-distributed-memory.html">
+                        Distributed Memory Parallelization
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="00-shared-memory.html">
+                        Shared Memory Parallelization
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                <li class="nav-item">
+                  <a class="nav-link nav-external" href="https://molssi.org">
+                    MolSSI
+                  </a>
+                </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/jchen0506/molssi_doc_theme" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-twitter"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="02-distribution-intro.html">Introduction to Distributed-Memory Parallelization</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">MPI Hands-On - mpi4py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-distributed-examples.html">MPI Hands-On - C++</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="00-distributed-memory.html" class="nav-link">Distributed Memory Parallelization</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">MPI Hands-On - mpi4py</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="mpi-hands-on-mpi4py">
+<h1>MPI Hands-On - mpi4py<a class="headerlink" href="#mpi-hands-on-mpi4py" title="Permalink to this heading">#</a></h1>
+<div class="overview admonition">
+<p class="admonition-title">Overview</p>
+<p>Questions:</p>
+<ul class="simple">
+<li><p>How can I use MPI to parallelize a Python code?</p></li>
+</ul>
+<p>Objectives:</p>
+<ul class="simple">
+<li><p>Learn how to prepare an environment that includes mpi4py.</p></li>
+<li><p>Learn the basics of writing an MPI-parallelized code.</p></li>
+<li><p>Explore point-to-point and collective MPI operations</p></li>
+</ul>
+</div>
+<section id="example-1">
+<h2>1. Example 1<a class="headerlink" href="#example-1" title="Permalink to this heading">#</a></h2>
+<section id="writing-hello-world">
+<h3>Writing Hello World<a class="headerlink" href="#writing-hello-world" title="Permalink to this heading">#</a></h3>
+<p>We’ll start with the first example in <a class="reference external" href="https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi4py/example1">mpi/example1</a>, which is a simple Hello World code:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-0">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello World!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Acquire a copy of the example files for this lesson, and then run MPI Example 1:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-1" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-1">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:MolSSI-Education/parallel-programming.git
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>parallel-programming/examples/mpi4py/example1
+$<span class="w"> </span>python<span class="w"> </span>example1.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-2">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Hello World!</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="getting-started-with-mpi">
+<h3>Getting Started with MPI<a class="headerlink" href="#getting-started-with-mpi" title="Permalink to this heading">#</a></h3>
+<p>Let’s try running this code on multiple processes.
+This is done using the <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> command.
+Many environments also provide an <code class="docutils literal notranslate"><span class="pre">mpirun</span></code> command, which usually - but not always - works the same way.
+Whenever possible, you should use <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> and not <code class="docutils literal notranslate"><span class="pre">mpirun</span></code>, in order to guarantee more consistent results.</p>
+<blockquote>
+<div><h2 class="rubric" id="mpi-mpiexec-vs-mpirun">MPI - <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> vs <code class="docutils literal notranslate"><span class="pre">mpirun</span></code></h2>
+<p>MPI stands for <strong>‘message passing interface’</strong> and is a message passing standard which is designed to work on a variety of parallel computing architectures. The <a class="reference external" href="https://www.mpi-forum.org/docs/drafts/mpi-2018-draft-report.pdf">MPI standard</a> defines how syntax and semantics of a library of routines. There are a number of implementations of this standard including OpenMPI, MPICH, and MS MPI.</p>
+<p>The primary difference between <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> and <code class="docutils literal notranslate"><span class="pre">mpirun</span></code> is that <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> is defined as part of the MPI standard, while <code class="docutils literal notranslate"><span class="pre">mpirun</span></code> is not.  Different implementations of MPI (i.e. OpenMPI, MPICH, MS MPI, etc.) are not guaranteed to implement <code class="docutils literal notranslate"><span class="pre">mpirun</span></code>, or might implement different options for <code class="docutils literal notranslate"><span class="pre">mpirun</span></code>.  Technically, the MPI standard doesn’t actually require that MPI implementations implement <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> either, but the standard does at least describe guidelines for how <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> should work.  Because of this, <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> is generally the preferred command.</p>
+</div></blockquote>
+<p>{: .callout}</p>
+<p>The general format for lanching a code on multiple processes is:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-3">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span>&lt;number_of_processes&gt;<span class="w"> </span>&lt;command_to_launch_code&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>For example, to launch <code class="docutils literal notranslate"><span class="pre">example1.py</span></code> on 4 processes, do:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-4">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>python<span class="w"> </span>example1.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-5" name="sd-tab-set-5" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-5">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Hello World!</span>
+<span class="go">Hello World!</span>
+<span class="go">Hello World!</span>
+<span class="go">Hello World!</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>When you execute the above command, <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> launches 4 different instances of <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">example1.py</span></code> simultaneously, which each print “Hello World!”.</p>
+<p>Typically, as long as you have at least 4 processors on the machine you are running on, each process will be launched on a different processor; however, certain environment variables and optional arguments to <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> can change this behavior.
+Each process runs the code in <code class="docutils literal notranslate"><span class="pre">example1.py</span></code> independently of the others.</p>
+<p>It might not be obvious yet, but the processes <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> launches aren’t completely unaware of one another.
+The <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> adds each of the processes to an MPI communicator, which enables each of the processes to send and receive information to one another via MPI.
+The MPI communicator that spans all of the processes launched by <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> is called <code class="docutils literal notranslate"><span class="pre">MPI.COMM_WORLD</span></code>.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">mpi4py</span></code>, communicators are class objects, and we can query information about them through their class functions.
+Edit <code class="docutils literal notranslate"><span class="pre">example1.py</span></code> so that it reads as follows:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-6" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-6">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpi4py</span> <span class="kn">import</span> <span class="n">MPI</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">world_comm</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
+    <span class="n">world_size</span> <span class="o">=</span> <span class="n">world_comm</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span>
+    <span class="n">my_rank</span> <span class="o">=</span> <span class="n">world_comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;World Size: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">world_size</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;   &quot;</span> <span class="o">+</span> <span class="s2">&quot;Rank: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">my_rank</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the above code we first import <code class="docutils literal notranslate"><span class="pre">mpi4py</span></code>.
+Then, we get the communicator that spans all of the processes, which is called <code class="docutils literal notranslate"><span class="pre">MPI.COMM_WORLD</span></code>.
+The communicator’s <code class="docutils literal notranslate"><span class="pre">Get_size()</span></code> function tells us the total number of processes within that communicator.
+Each of these processes is assigned a uniqe rank, which is an integer that ranges from <code class="docutils literal notranslate"><span class="pre">0</span></code> to <code class="docutils literal notranslate"><span class="pre">world_size</span> <span class="pre">-</span> <span class="pre">1</span></code>.
+The rank of a process allows it to be identified whenever processes communicate with one another.
+For example, in some cases we might want rank 2 to send some information to rank 4, or we might want rank 0 to receive information from all of the other processes.
+Calling <code class="docutils literal notranslate"><span class="pre">world_comm.Get_rank()</span></code> returns the rank of the process that called it within <code class="docutils literal notranslate"><span class="pre">world_comm</span></code>.</p>
+<p>Go ahead and run the code now:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-7" name="sd-tab-set-7" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-7">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>python<span class="w"> </span>example1.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-8" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-8">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">World Size: 4   Rank: 1</span>
+<span class="go">World Size: 4   Rank: 0</span>
+<span class="go">World Size: 4   Rank: 2</span>
+<span class="go">World Size: 4   Rank: 3</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As you can see, the <code class="docutils literal notranslate"><span class="pre">world_comm.Get_size()</span></code> function returns 4, which is the total number of ranks we told <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> to run with (through the <code class="docutils literal notranslate"><span class="pre">-n</span></code> argument).
+Each of the processes is assigned a rank in the range of 0 to 3.</p>
+<p>As you can see, the ranks don’t necessarily print out their messages in order; whichever rank reaches the <code class="docutils literal notranslate"><span class="pre">print</span></code> function first will print out its message first.
+If you run the code again, the ranks are likely to print thier message in a different order:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-9" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-9">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">World Size: 4   Rank: 2</span>
+<span class="go">World Size: 4   Rank: 0</span>
+<span class="go">World Size: 4   Rank: 3</span>
+<span class="go">World Size: 4   Rank: 1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can also try rerunning with a different value for the <code class="docutils literal notranslate"><span class="pre">-n</span></code> <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> argument.
+For example:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-10" name="sd-tab-set-10" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-10">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>python<span class="w"> </span>example1.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-11" name="sd-tab-set-11" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-11">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">World Size: 2   Rank: 0</span>
+<span class="go">World Size: 2   Rank: 1</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="example-2">
+<h2>Example 2<a class="headerlink" href="#example-2" title="Permalink to this heading">#</a></h2>
+<section id="basic-infrastructure">
+<h3>Basic Infrastructure<a class="headerlink" href="#basic-infrastructure" title="Permalink to this heading">#</a></h3>
+<p>We will now do some work with the script in <a class="reference external" href="https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi4py/example2">example2.py</a>, which does some simple math with NumPy arrays.
+Run the code now.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-12" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-12">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>example2.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-13" name="sd-tab-set-13" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-13">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Average: 5000001.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s learn something about which parts of this code account for most of the run time.
+MPI4Py provides a timer, <code class="docutils literal notranslate"><span class="pre">MPI.Wtime()</span></code>, which returns the current walltime.
+We can use this function to determine how long each section of the code takes to run.</p>
+<p>For example, to determine how much time is spent initializing array <code class="docutils literal notranslate"><span class="pre">a</span></code>, do the following:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-14" name="sd-tab-set-14" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-14">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># initialize a</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span> <span class="n">N</span> <span class="p">)</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">my_rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initialize a time: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">end_time</span><span class="o">-</span><span class="n">start_time</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As the above code indicates, we don’t really want every rank to print the timings, since that could look messy in the output.
+Instead, we have only rank 0 print this information.
+Of course, this requires that we add a few lines near the top of the code to query the rank of each process:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-15" name="sd-tab-set-15" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-15">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># get basic information about the MPI communicator</span>
+    <span class="n">world_comm</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
+    <span class="n">world_size</span> <span class="o">=</span> <span class="n">world_comm</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span>
+    <span class="n">my_rank</span> <span class="o">=</span> <span class="n">world_comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Also determine and print the timings of each of the other sections of the code: the intialization of array <code class="docutils literal notranslate"><span class="pre">b</span></code>, the addition of the two arrays, and the final averaging of the result.
+Your code should look something like this:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-16" name="sd-tab-set-16" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-16">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="c1"># get basic information about the MPI communicator</span>
+    <span class="n">world_comm</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
+    <span class="n">world_size</span> <span class="o">=</span> <span class="n">world_comm</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span>
+    <span class="n">my_rank</span> <span class="o">=</span> <span class="n">world_comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+
+    <span class="n">N</span> <span class="o">=</span> <span class="mi">10000000</span>
+
+    <span class="c1"># initialize a</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span> <span class="n">N</span> <span class="p">)</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">my_rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initialize a time: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">end_time</span><span class="o">-</span><span class="n">start_time</span><span class="p">))</span>
+
+    <span class="c1"># initialize b</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="n">N</span> <span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">N</span> <span class="p">):</span>
+        <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">i</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">my_rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initialize b time: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">end_time</span><span class="o">-</span><span class="n">start_time</span><span class="p">))</span>
+
+    <span class="c1"># add the two arrays</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">N</span> <span class="p">):</span>
+        <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">my_rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Add arrays time: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">end_time</span><span class="o">-</span><span class="n">start_time</span><span class="p">))</span>
+
+    <span class="c1"># average the result</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">N</span> <span class="p">):</span>
+        <span class="nb">sum</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">average</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">my_rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Average result time: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">end_time</span><span class="o">-</span><span class="n">start_time</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Average: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">average</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now run the code again:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-17" name="sd-tab-set-17" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-17">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>example2.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-18" name="sd-tab-set-18" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-18">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Initialize a time: 0.03975701332092285</span>
+<span class="go">Initialize b time: 1.569957971572876</span>
+<span class="go">Add arrays time: 4.173098087310791</span>
+<span class="go">Average result time: 2.609341859817505</span>
+<span class="go">Average: 5000001.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="point-to-point-communication">
+<h3>Point-to-Point Communication<a class="headerlink" href="#point-to-point-communication" title="Permalink to this heading">#</a></h3>
+<p>You can try running this on multiple ranks now:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-19" name="sd-tab-set-19" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-19">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>python<span class="w"> </span>example2.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-20" name="sd-tab-set-20" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-20">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Initialize a time: 0.042365074157714844</span>
+<span class="go">Initialize b time: 1.9863519668579102</span>
+<span class="go">Add arrays time: 4.9583611488342285</span>
+<span class="go">Average result time: 2.9468209743499756</span>
+<span class="go">Average: 5000001.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Running on multiple ranks doesn’t help with the timings, because each rank is duplicating all of the same work.
+We want the ranks to cooperate on the problem, with each rank working on a different part of the calculation.
+In this example, that means that different ranks will work on different parts of the arrays <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>, and then the results on each rank will be summed across all the ranks.</p>
+<p>We need to decide what parts of the arrays each of the ranks will work on; this is more generally known as a rank’s workload.
+Add the following code just before the initialization of array <code class="docutils literal notranslate"><span class="pre">a</span></code>:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-21" name="sd-tab-set-21" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-21">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># determine the workload of each rank</span>
+    <span class="n">workloads</span> <span class="o">=</span> <span class="p">[</span> <span class="n">N</span> <span class="o">//</span> <span class="n">world_size</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">world_size</span><span class="p">)</span> <span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">N</span> <span class="o">%</span> <span class="n">world_size</span> <span class="p">):</span>
+        <span class="n">workloads</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">my_start</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">my_rank</span> <span class="p">):</span>
+        <span class="n">my_start</span> <span class="o">+=</span> <span class="n">workloads</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">my_end</span> <span class="o">=</span> <span class="n">my_start</span> <span class="o">+</span> <span class="n">workloads</span><span class="p">[</span><span class="n">my_rank</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the above code, <code class="docutils literal notranslate"><span class="pre">my_start</span></code> and <code class="docutils literal notranslate"><span class="pre">my_end</span></code> represent the range over which each rank will perform mathematical operations on the arrays.</p>
+<p>We’ll start by parallelizing the code that averages the result.
+Update the range of the <code class="docutils literal notranslate"><span class="pre">for</span></code> loop in this part of the code to the following:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-22" name="sd-tab-set-22" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-22">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">my_start</span><span class="p">,</span> <span class="n">my_end</span> <span class="p">):</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This will ensure that each rank is only calculating elements <code class="docutils literal notranslate"><span class="pre">my_start</span></code> through <code class="docutils literal notranslate"><span class="pre">my_end</span></code> of the sum.
+We then need the ranks to communicate their individually calculated sums so that we can calculate the global sum.
+To do this, replace the line <code class="docutils literal notranslate"><span class="pre">average</span> <span class="pre">=</span> <span class="pre">sum</span> <span class="pre">/</span> <span class="pre">N</span></code> with:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-23" name="sd-tab-set-23" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-23">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">if</span> <span class="n">my_rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">world_sum</span> <span class="o">=</span> <span class="nb">sum</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="n">world_size</span> <span class="p">):</span>
+      	    <span class="n">sum_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span>
+            <span class="n">world_comm</span><span class="o">.</span><span class="n">Recv</span><span class="p">(</span> <span class="p">[</span><span class="n">sum_np</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">],</span> <span class="n">source</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="mi">77</span> <span class="p">)</span>
+            <span class="n">world_sum</span> <span class="o">+=</span> <span class="n">sum_np</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">average</span> <span class="o">=</span> <span class="n">world_sum</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sum_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="p">[</span><span class="nb">sum</span><span class="p">]</span> <span class="p">)</span>
+        <span class="n">world_comm</span><span class="o">.</span><span class="n">Send</span><span class="p">(</span> <span class="p">[</span><span class="n">sum_np</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">],</span> <span class="n">dest</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="mi">77</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">MPI.DOUBLE</span></code> parameter tells MPI what type of information is being communicated by the <code class="docutils literal notranslate"><span class="pre">Send</span></code> and <code class="docutils literal notranslate"><span class="pre">Recv</span></code> calls.
+In this case, we are sending a array of double precision numbers.
+If you are communicating information of a different datatype, consult the following:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p><strong>MPI4Py data type</strong></p></th>
+<th class="head text-left"><p><strong>C data type</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.BYTE</span></code></p></td>
+<td class="text-left"><p>8 binary digits</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.CHAR</span></code></p></td>
+<td class="text-left"><p>char</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.UNSIGNED_CHAR</span></code></p></td>
+<td class="text-left"><p>unsigned char</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.SHORT</span></code></p></td>
+<td class="text-left"><p>signed short int</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.UNSIGNED_SHORT</span></code></p></td>
+<td class="text-left"><p>unsigned short int</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.INT</span></code></p></td>
+<td class="text-left"><p>signed int</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.UNSIGNED</span></code></p></td>
+<td class="text-left"><p>unsigned int</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.LONG</span></code></p></td>
+<td class="text-left"><p>signed long int</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.UNSIGNED_LONG</span></code></p></td>
+<td class="text-left"><p>unsigned long int</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.FLOAT</span></code></p></td>
+<td class="text-left"><p>float</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.DOUBLE</span></code></p></td>
+<td class="text-left"><p>double</p></td>
+</tr>
+</tbody>
+</table>
+<p>Now run the code again:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-24" name="sd-tab-set-24" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-24">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>python<span class="w"> </span>example2.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-25" name="sd-tab-set-25" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-25">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Initialize a time: 0.04637002944946289\</span>
+<span class="go">Initialize b time: 1.9484930038452148\</span>
+<span class="go">Add arrays time: 4.914314031600952\</span>
+<span class="go">Average result time: 0.6889588832855225\</span>
+<span class="go">Average: 5000001.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can see that the amount of time spent calculating the average has indeed gone down.</p>
+<p>Parallelizing the part of the code that adds the two arrays is much easier.
+All you need to do is update the range over which the <code class="docutils literal notranslate"><span class="pre">for</span></code> loop iterates:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-26" name="sd-tab-set-26" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-26">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">my_start</span><span class="p">,</span> <span class="n">my_end</span> <span class="p">):</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now run the code again:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-27" name="sd-tab-set-27" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-27">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>python<span class="w"> </span>example2.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-28" name="sd-tab-set-28" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-28">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Initialize a time: 0.04810309410095215</span>
+<span class="go">Initialize b time: 2.0196259021759033</span>
+<span class="go">Add arrays time: 1.2053139209747314</span>
+<span class="go">Average result time: 0.721329927444458</span>
+<span class="go">Average: 5000001.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The array addition time has gone down nicely.
+Surprisingly enough, the most expensive part of the calculation is now the initialization of array <code class="docutils literal notranslate"><span class="pre">b</span></code>.
+Updating the range over which that loop iterates speeds up that part of the calation:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-29" name="sd-tab-set-29" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-29">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">my_start</span><span class="p">,</span> <span class="n">my_end</span> <span class="p">):</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-30" name="sd-tab-set-30" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-30">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>python<span class="w"> </span>example2.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-31" name="sd-tab-set-31" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-31">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Initialize a time: 0.04351997375488281\</span>
+<span class="go">Initialize b time: 0.503791093826294\</span>
+<span class="go">Add arrays time: 1.2048840522766113\</span>
+<span class="go">Average result time: 0.7626049518585205\</span>
+<span class="go">Average: 5000001.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="reducing-the-memory-footprint">
+<h3>Reducing the Memory Footprint<a class="headerlink" href="#reducing-the-memory-footprint" title="Permalink to this heading">#</a></h3>
+<p>The simulation is running much faster now thanks to the parallelization we have added.
+If that’s all we care about, we could stop working on the code now.
+In reality, though, <strong>time</strong> is only one resource we should be concerned about.
+Another resource that is often even more important is <strong>memory</strong>.
+The changes we have made to the code make it run faster, but don’t decrease its memory footprint in any way: each rank allocates arrays <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> with <code class="docutils literal notranslate"><span class="pre">N</span></code> double precision values.
+That means that each rank allocates <code class="docutils literal notranslate"><span class="pre">2*N</span></code> double precision values; across all of our ranks, that corresponds to a total of <code class="docutils literal notranslate"><span class="pre">2*nproc*world_size</span></code> double precision values.
+Running on more processors might decrease our run time, but it increases our memory footprint!</p>
+<p>Of course, there isn’t really a good reason for each rank to allocate the entire arrays of size <code class="docutils literal notranslate"><span class="pre">N</span></code>, because each rank will only ever use values within the range of <code class="docutils literal notranslate"><span class="pre">my_start</span></code> to <code class="docutils literal notranslate"><span class="pre">my_end</span></code>.
+Let’s modify the code so that each rank allocates <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> to a size of <code class="docutils literal notranslate"><span class="pre">workloads[my_rank]</span></code>.</p>
+<p>Replace the initialization of <code class="docutils literal notranslate"><span class="pre">a</span></code> with:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-32" name="sd-tab-set-32" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-32">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span> <span class="n">workloads</span><span class="p">[</span><span class="n">my_rank</span><span class="p">]</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Replace the initialization of <code class="docutils literal notranslate"><span class="pre">b</span></code> with:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-33" name="sd-tab-set-33" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-33">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="n">workloads</span><span class="p">[</span><span class="n">my_rank</span><span class="p">]</span> <span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">workloads</span><span class="p">[</span><span class="n">my_rank</span><span class="p">]</span> <span class="p">):</span>
+        <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="p">(</span> <span class="n">i</span> <span class="o">+</span> <span class="n">my_start</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Replace the range of the loops that add and sum the arrays to <code class="docutils literal notranslate"><span class="pre">range(</span> <span class="pre">workloads[my_rank]</span> <span class="pre">)</span></code>.</p>
+<p>Run the code again:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-34" name="sd-tab-set-34" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-34">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>python<span class="w"> </span>example2.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-35" name="sd-tab-set-35" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-35">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">Initialize a time: 0.009948015213012695\</span>
+<span class="go">Initialize b time: 0.5988950729370117\</span>
+<span class="go">Add arrays time: 1.2081310749053955\</span>
+<span class="go">Average result time: 0.7307591438293457\</span>
+<span class="go">Average: 5000001.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="collective-communication">
+<h3>Collective Communication<a class="headerlink" href="#collective-communication" title="Permalink to this heading">#</a></h3>
+<p>Previously, we used <strong>point-to-point communication</strong> (i.e. <code class="docutils literal notranslate"><span class="pre">Send</span></code> and <code class="docutils literal notranslate"><span class="pre">Recv</span></code>) to sum the results across all ranks:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-36" name="sd-tab-set-36" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-36">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">if</span> <span class="n">my_rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">world_sum</span> <span class="o">=</span> <span class="nb">sum</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="n">world_size</span> <span class="p">):</span>
+            <span class="n">sum_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span>
+            <span class="n">world_comm</span><span class="o">.</span><span class="n">Recv</span><span class="p">(</span> <span class="p">[</span><span class="n">sum_np</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">],</span> <span class="n">source</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="mi">77</span> <span class="p">)</span>
+            <span class="n">world_sum</span> <span class="o">+=</span> <span class="n">sum_np</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">average</span> <span class="o">=</span> <span class="n">world_sum</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sum_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="p">[</span><span class="nb">sum</span><span class="p">]</span> <span class="p">)</span>
+        <span class="n">world_comm</span><span class="o">.</span><span class="n">Send</span><span class="p">(</span> <span class="p">[</span><span class="n">sum_np</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">],</span> <span class="n">dest</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="mi">77</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>MPI provides many <strong>collective communication</strong> functions, which automate many processes that can be complicated to write out using only point-to-point communication.
+In particular, the <code class="docutils literal notranslate"><span class="pre">Reduce</span></code> function allows us to sum a value across all ranks, without all of the above code.
+Replace the above with:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-37" name="sd-tab-set-37" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-37">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="nb">sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="p">[</span><span class="nb">sum</span><span class="p">]</span> <span class="p">)</span>
+    <span class="n">world_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span>
+    <span class="n">world_comm</span><span class="o">.</span><span class="n">Reduce</span><span class="p">(</span> <span class="p">[</span><span class="nb">sum</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">],</span> <span class="p">[</span><span class="n">world_sum</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">],</span> <span class="n">op</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">SUM</span><span class="p">,</span> <span class="n">root</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">)</span>
+    <span class="n">average</span> <span class="o">=</span> <span class="n">world_sum</span> <span class="o">/</span> <span class="n">N</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">op</span></code> argument lets us specify what operation should be performed on all of the data that is reduced.
+Setting this argument to <code class="docutils literal notranslate"><span class="pre">MPI.SUM</span></code>, as we do above, causes all of the values to be summed onto the root process.
+There are many other operations provided by MPI, as you can see here:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p><strong>Operation</strong></p></th>
+<th class="head text-left"><p>Description</p></th>
+<th class="head text-left"><p>Datatype</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.MAX</span></code></p></td>
+<td class="text-left"><p>maximum</p></td>
+<td class="text-left"><p>integer,float</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.MIN</span></code></p></td>
+<td class="text-left"><p>minimum</p></td>
+<td class="text-left"><p>integer,float</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.SUM</span></code></p></td>
+<td class="text-left"><p>sum</p></td>
+<td class="text-left"><p>integer,float</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.PROD</span></code></p></td>
+<td class="text-left"><p>product</p></td>
+<td class="text-left"><p>integer,float</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.LAND</span></code></p></td>
+<td class="text-left"><p>logical AND</p></td>
+<td class="text-left"><p>integer</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.BAND</span></code></p></td>
+<td class="text-left"><p>bit-wise AND</p></td>
+<td class="text-left"><p>integer,MPI_BYTE</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.LOR</span></code></p></td>
+<td class="text-left"><p>logical OR</p></td>
+<td class="text-left"><p>integer</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.BOR</span></code></p></td>
+<td class="text-left"><p>bit-wise OR</p></td>
+<td class="text-left"><p>integer,MPI_BYTE</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.LXOR</span></code></p></td>
+<td class="text-left"><p>logical XOR</p></td>
+<td class="text-left"><p>integer</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.BXOR</span></code></p></td>
+<td class="text-left"><p>bit-wise XOR</p></td>
+<td class="text-left"><p>integer,MPI_BYTE</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.MAXLOC</span></code></p></td>
+<td class="text-left"><p>max value and location</p></td>
+<td class="text-left"><p>float</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MPI.MINLOC</span></code></p></td>
+<td class="text-left"><p>min value and location</p></td>
+<td class="text-left"><p>float</p></td>
+</tr>
+</tbody>
+</table>
+<p>Note that in addition to enabling us to write simpler-looking code, collective communication operations tend to be faster than what we can achieve by trying to write our own communication operations using point-to-point calls.</p>
+</section>
+</section>
+<section id="example-3">
+<h2>Example 3<a class="headerlink" href="#example-3" title="Permalink to this heading">#</a></h2>
+<p>Next, view <a class="reference external" href="https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi4py/example3">example3.py</a> which is a simple Monte-Carlo simulation.
+Run the code now.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-38" name="sd-tab-set-38" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-38">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>example3.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-39" name="sd-tab-set-39" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-39">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">1000 248.52688099543923</span>
+<span class="go">2000 10.588491394826892</span>
+<span class="go">3000 -0.9309007491547571</span>
+<span class="go">4000 -3.8247648102916196</span>
+<span class="go">5000 -4.715929587912762</span>
+<span class="go">6000 -5.362217832200815</span>
+<span class="go">7000 -5.570585267104749</span>
+<span class="go">8000 -5.649439720181915</span>
+<span class="go">9000 -5.65428738463388</span>
+<span class="go">10000 -5.73417919011543</span>
+<span class="go">Total simulation time: 21.389078855514526</span>
+<span class="go">    Energy time:       21.013432502746582</span>
+<span class="go">    Decision time:     0.09333038330078125</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As you can see, the code already has some timings, and the vast majority of time is spent in the calls to ‘get_particle_energy’.
+That is where we will focus our parallelization efforts.</p>
+<p>The function in question is:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-40" name="sd-tab-set-40" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-40">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_particle_energy</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">box_length</span><span class="p">,</span> <span class="n">i_particle</span><span class="p">,</span> <span class="n">cutoff2</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function computes the pairwise Lennard Jones energy of two particles in a periodic box.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r_i: list/array</span>
+<span class="sd">        the potitional vection of the particle i</span>
+<span class="sd">    r_j: list/array</span>
+<span class="sd">        the potitional vection of the particle j</span>
+<span class="sd">    box_length : float/int</span>
+<span class="sd">        length of simulation box</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    rij2: float</span>
+<span class="sd">        the square of the shortest distance between the two particles and their images</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">e_total</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="n">i_position</span> <span class="o">=</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">i_particle</span><span class="p">]</span>
+
+    <span class="n">particle_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">j_particle</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">particle_count</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">i_particle</span> <span class="o">!=</span> <span class="n">j_particle</span><span class="p">:</span>
+
+            <span class="n">j_position</span> <span class="o">=</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">j_particle</span><span class="p">]</span>
+
+            <span class="n">rij2</span> <span class="o">=</span> <span class="n">minimum_image_distance</span><span class="p">(</span><span class="n">i_position</span><span class="p">,</span> <span class="n">j_position</span><span class="p">,</span> <span class="n">box_length</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">rij2</span> <span class="o">&lt;</span> <span class="n">cutoff2</span><span class="p">:</span>
+                <span class="n">e_pair</span> <span class="o">=</span> <span class="n">lennard_jones_potential</span><span class="p">(</span><span class="n">rij2</span><span class="p">)</span>
+                <span class="n">e_total</span> <span class="o">+=</span> <span class="n">e_pair</span>
+
+    <span class="k">return</span> <span class="n">e_total</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This looks like it should be fairly straightforward to parallelize: it consists of a single <code class="docutils literal notranslate"><span class="pre">for</span></code> loop which just sums the interaction energies of particle pairs.
+To parallelize this loop, we need each rank to compute the interaction energies of a subset of these pairs, and then sum the energy across all ranks.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">get_particle_energy</span></code> function is going to need to know some basic information about the MPI communicator, so add the MPI communicator to its parameters:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-41" name="sd-tab-set-41" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-41">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_particle_energy</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">box_length</span><span class="p">,</span> <span class="n">i_particle</span><span class="p">,</span> <span class="n">cutoff2</span><span class="p">,</span> <span class="n">comm</span><span class="p">):</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now update the two times <code class="docutils literal notranslate"><span class="pre">get_particle_energy</span></code> is called by <code class="docutils literal notranslate"><span class="pre">main</span></code>:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-42" name="sd-tab-set-42" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-42">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="n">current_energy</span> <span class="o">=</span> <span class="n">get_particle_energy</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">box_length</span><span class="p">,</span> <span class="n">i_particle</span><span class="p">,</span> <span class="n">simulation_cutoff2</span><span class="p">,</span> <span class="n">world_comm</span><span class="p">)</span>
+        <span class="o">...</span>
+        <span class="n">current_energy</span> <span class="o">=</span> <span class="n">get_particle_energy</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">box_length</span><span class="p">,</span> <span class="n">i_particle</span><span class="p">,</span> <span class="n">simulation_cutoff2</span><span class="p">,</span> <span class="n">world_comm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Place the following at the beginning of <code class="docutils literal notranslate"><span class="pre">get_particle_energy</span></code>:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-43" name="sd-tab-set-43" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-43">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># Get information about the MPI communicator</span>
+    <span class="n">my_rank</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+    <span class="n">world_size</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Change the <code class="docutils literal notranslate"><span class="pre">for</span></code> loop in <code class="docutils literal notranslate"><span class="pre">get_particle_energy</span></code> to the following:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-44" name="sd-tab-set-44" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-44">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">for</span> <span class="n">j_particle</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">my_rank</span><span class="p">,</span> <span class="n">particle_count</span><span class="p">,</span> <span class="n">world_size</span><span class="p">):</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The above code will cause each rank to iterate over particles with a stride of <code class="docutils literal notranslate"><span class="pre">world_size</span></code> and an initial offset of <code class="docutils literal notranslate"><span class="pre">my_rank</span></code>.
+For example, if you run on 4 ranks, rank 0 will iterate over particles 0, 4, 8, 12, etc., while rank 1 will iterate over particles 1, 5, 9, 13, etc.</p>
+<p>We then need to sum the energies across all ranks.
+Replace the line <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">e_total</span></code> with the following:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-45" name="sd-tab-set-45" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-45">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># Sum the energy across all ranks</span>
+    <span class="n">e_single</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="p">[</span><span class="n">e_total</span><span class="p">]</span> <span class="p">)</span>
+    <span class="n">e_summed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span>
+    <span class="n">comm</span><span class="o">.</span><span class="n">Reduce</span><span class="p">(</span> <span class="p">[</span><span class="n">e_single</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">],</span> <span class="p">[</span><span class="n">e_summed</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">],</span> <span class="n">op</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">SUM</span><span class="p">,</span> <span class="n">root</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">e_summed</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Try to run it in parallel now:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-46" name="sd-tab-set-46" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-46">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>python<span class="w"> </span>example3.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-47" name="sd-tab-set-47" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-47">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">1000 -35480909996.566864</span>
+<span class="go">2000 -66252436255523.72</span>
+<span class="go">3000 -86936127660856.08</span>
+<span class="go">4000 -93141042416342.66</span>
+<span class="go">5000 -256171999678073.88</span>
+<span class="go">6000 -3.162015453630529e+21</span>
+<span class="go">7000 -3.1620181302289283e+21</span>
+<span class="go">8000 -3.162018130377518e+21</span>
+<span class="go">9000 -3.1620181324457333e+21</span>
+<span class="go">10000 -3.1620182854716e+21</span>
+<span class="go">Total simulation time: 31.748733043670654</span>
+<span class="go">    Energy time:       31.112581253051758</span>
+<span class="go">    Decision time:     0.21792912483215332</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>That doesn’t seem right at all.
+What went wrong?</p>
+<p>Our call to <code class="docutils literal notranslate"><span class="pre">Reduce</span></code> causes the energies to be summed onto rank 0, but none of the other ranks have the summed energies.
+To have the energies reduced to all of the ranks, replace the <code class="docutils literal notranslate"><span class="pre">Reduce</span></code> call with a call to <code class="docutils literal notranslate"><span class="pre">Allreduce</span></code>:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-48" name="sd-tab-set-48" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-48">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="n">comm</span><span class="o">.</span><span class="n">Allreduce</span><span class="p">(</span> <span class="p">[</span><span class="n">e_single</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">],</span> <span class="p">[</span><span class="n">e_summed</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">],</span> <span class="n">op</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">SUM</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-49" name="sd-tab-set-49" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-49">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>python<span class="w"> </span>example3.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-50" name="sd-tab-set-50" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-50">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">1000 -5402881.246788438</span>
+<span class="go">2000 -5403807.559181325</span>
+<span class="go">3000 -5403898.801044374</span>
+<span class="go">4000 -5403916.261693102</span>
+<span class="go">5000 -5403921.433225453</span>
+<span class="go">6000 -5403923.534017933</span>
+<span class="go">7000 -5403924.646963553</span>
+<span class="go">8000 -5403925.292483066</span>
+<span class="go">9000 -5403925.63053995</span>
+<span class="go">10000 -5403926.272461226</span>
+<span class="go">Total simulation time: 43.26621890068054</span>
+<span class="go">    Energy time:       42.664116621017456</span>
+<span class="go">    Decision time:     0.16298675537109375</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This still isn’t consistent with our previous results.
+The problem is that each iteration, the coordinates are updated by randomly displacing one of the particles.
+Each rank randomly selects a particle to displace and the displacement vector.
+Instead of contributing to the calculation of the same particle’s interaction energies for the same nuclear configuration, each rank ends up calculating some of the interaction energies for different atoms and different coordinates.</p>
+<p>To fix this, we will have rank 0 be the only rank that randomly selects a particle or a displacement vector.
+Rank 0 will then broadcast all necessary information to the other ranks, so that they keep in sync.</p>
+<p>Replace the line where the coordinates are intially generated (where <code class="docutils literal notranslate"><span class="pre">generate_initial_state</span></code> is called) with this:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-51" name="sd-tab-set-51" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-51">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">if</span> <span class="n">my_rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">coordinates</span> <span class="o">=</span> <span class="n">generate_initial_state</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">build_method</span><span class="p">,</span> <span class="n">num_particles</span><span class="o">=</span><span class="n">num_particles</span><span class="p">,</span> <span class="n">box_length</span><span class="o">=</span><span class="n">box_length</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">([</span><span class="n">num_particles</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+    <span class="n">world_comm</span><span class="o">.</span><span class="n">Bcast</span><span class="p">(</span> <span class="p">[</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">],</span> <span class="n">root</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>At the beginning of the <code class="docutils literal notranslate"><span class="pre">for</span></code> loop in <code class="docutils literal notranslate"><span class="pre">main</span></code> you will see the following code:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-52" name="sd-tab-set-52" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-52">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">for</span> <span class="n">i_step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span><span class="p">):</span>
+
+        <span class="n">n_trials</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">i_particle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">num_particles</span><span class="p">)</span>
+
+        <span class="n">random_displacement</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">max_displacement</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Replace the above with the following:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-53" name="sd-tab-set-53" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-53">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">for</span> <span class="n">i_step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">my_rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">n_trials</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="n">i_particle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">num_particles</span><span class="p">)</span>
+            <span class="n">i_particle_buf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="p">[</span><span class="n">i_particle</span><span class="p">],</span> <span class="s1">&#39;i&#39;</span> <span class="p">)</span>
+
+            <span class="n">random_displacement</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">max_displacement</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i_particle_buf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span> <span class="p">)</span>
+            <span class="n">random_displacement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span> <span class="mi">3</span> <span class="p">)</span>
+        <span class="n">world_comm</span><span class="o">.</span><span class="n">Bcast</span><span class="p">(</span> <span class="p">[</span><span class="n">i_particle_buf</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">INT</span><span class="p">],</span> <span class="n">root</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">)</span>
+        <span class="n">i_particle</span> <span class="o">=</span> <span class="n">i_particle_buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">world_comm</span><span class="o">.</span><span class="n">Bcast</span><span class="p">(</span> <span class="p">[</span><span class="n">random_displacement</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">],</span> <span class="n">root</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">)</span>
+        <span class="n">world_comm</span><span class="o">.</span><span class="n">Bcast</span><span class="p">(</span> <span class="p">[</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">],</span> <span class="n">root</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>At the end of the <code class="docutils literal notranslate"><span class="pre">for</span></code> loop in <code class="docutils literal notranslate"><span class="pre">main</span></code> is the following code:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-54" name="sd-tab-set-54" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-54">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="n">start_decision_time</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+
+        <span class="n">delta_e</span> <span class="o">=</span> <span class="n">proposed_energy</span> <span class="o">-</span> <span class="n">current_energy</span>
+
+        <span class="n">accept</span> <span class="o">=</span> <span class="n">accept_or_reject</span><span class="p">(</span><span class="n">delta_e</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">accept</span><span class="p">:</span>
+
+            <span class="n">total_pair_energy</span> <span class="o">+=</span> <span class="n">delta_e</span>
+            <span class="n">n_accept</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">coordinates</span><span class="p">[</span><span class="n">i_particle</span><span class="p">]</span> <span class="o">+=</span> <span class="n">random_displacement</span>
+
+        <span class="n">total_energy</span> <span class="o">=</span> <span class="p">(</span><span class="n">total_pair_energy</span> <span class="o">+</span> <span class="n">tail_correction</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_particles</span>
+
+        <span class="n">energy_array</span><span class="p">[</span><span class="n">i_step</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_energy</span>
+
+	<span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">i_step</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">my_rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+	       <span class="nb">print</span><span class="p">(</span><span class="n">i_step</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">energy_array</span><span class="p">[</span><span class="n">i_step</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">tune_displacement</span><span class="p">:</span>
+                <span class="n">max_displacement</span><span class="p">,</span> <span class="n">n_trials</span><span class="p">,</span> <span class="n">n_accept</span> <span class="o">=</span> <span class="n">adjust_displacement</span><span class="p">(</span><span class="n">n_trials</span><span class="p">,</span> <span class="n">n_accept</span><span class="p">,</span> <span class="n">max_displacement</span><span class="p">)</span>
+
+        <span class="n">total_decision_time</span> <span class="o">+=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_decision_time</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Replace the above with the following:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-55" name="sd-tab-set-55" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-python" for="sd-tab-item-55">
+PYTHON</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="k">if</span> <span class="n">my_rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">start_decision_time</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+
+            <span class="n">delta_e</span> <span class="o">=</span> <span class="n">proposed_energy</span> <span class="o">-</span> <span class="n">current_energy</span>
+
+            <span class="n">accept</span> <span class="o">=</span> <span class="n">accept_or_reject</span><span class="p">(</span><span class="n">delta_e</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">accept</span><span class="p">:</span>
+
+                <span class="n">total_pair_energy</span> <span class="o">+=</span> <span class="n">delta_e</span>
+                <span class="n">n_accept</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">coordinates</span><span class="p">[</span><span class="n">i_particle</span><span class="p">]</span> <span class="o">+=</span> <span class="n">random_displacement</span>
+
+            <span class="n">total_energy</span> <span class="o">=</span> <span class="p">(</span><span class="n">total_pair_energy</span> <span class="o">+</span> <span class="n">tail_correction</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_particles</span>
+
+            <span class="n">energy_array</span><span class="p">[</span><span class="n">i_step</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_energy</span>
+
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">i_step</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="n">i_step</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">energy_array</span><span class="p">[</span><span class="n">i_step</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="n">tune_displacement</span><span class="p">:</span>
+                    <span class="n">max_displacement</span><span class="p">,</span> <span class="n">n_trials</span><span class="p">,</span> <span class="n">n_accept</span> <span class="o">=</span> <span class="n">adjust_displacement</span><span class="p">(</span><span class="n">n_trials</span><span class="p">,</span> <span class="n">n_accept</span><span class="p">,</span> <span class="n">max_displacement</span><span class="p">)</span>
+
+            <span class="n">total_decision_time</span> <span class="o">+=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_decision_time</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Try running the code again:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-56" name="sd-tab-set-56" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-56">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>python<span class="w"> </span>example3.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-57" name="sd-tab-set-57" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-output" for="sd-tab-item-57">
+OUTPUT</label><div class="sd-tab-content docutils">
+<div class="highlight-output notranslate"><div class="highlight"><pre><span></span><span class="go">1000 248.52688099525105</span>
+<span class="go">2000 10.588491394638726</span>
+<span class="go">3000 -0.9309007493429244</span>
+<span class="go">4000 -3.824764810479789</span>
+<span class="go">5000 -4.715929588100931</span>
+<span class="go">6000 -5.3622178323889855</span>
+<span class="go">7000 -5.570585267292914</span>
+<span class="go">8000 -5.649439720370088</span>
+<span class="go">9000 -5.65428738482205</span>
+<span class="go">10000 -5.734179190303595</span>
+<span class="go">Total simulation time: 13.671964883804321</span>
+<span class="go">    Energy time:       12.892877340316772</span>
+<span class="go">    Decision time:     0.15127253532409668</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This time the results are much more consistent with what we expect.</p>
+<div class="key admonition">
+<p class="admonition-title">Key Points</p>
+<ul class="simple">
+<li><p>Where possible, use collective communication operations instead of point-to-point communication for improved efficiency and simplicity.</p></li>
+<li><p>Intelligent design choices can help you reduce the memory footprint required by MPI-parallelized codes</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="02-distribution-intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Introduction to Distributed-Memory Parallelization</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="04-distributed-examples.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">MPI Hands-On - C++</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1">1. Example 1</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#writing-hello-world">Writing Hello World</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started-with-mpi">Getting Started with MPI</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2">Example 2</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-infrastructure">Basic Infrastructure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#point-to-point-communication">Point-to-Point Communication</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reducing-the-memory-footprint">Reducing the Memory Footprint</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collective-communication">Collective Communication</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3">Example 3</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="_sources/03-distributed-examples-mpi4py.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            <div class="bd-footer-content__inner"></div>
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+
+<div class="row h-10">
+    <div class="col-2">
+        <a href="https://molssi.org/" target="_blank" title="Go to MolSSI in a new tab">
+            <img src="_static/molssi_main_logo.png" class="logo__image only-light footer_logo" alt="Logo image">
+            <img src="_static/molssi_main_logo_inverted_white.png" class="logo__image only-dark footer_logo" alt="Logo image">
+        </a>
+    </div>
+    <div class="col-8">
+        <p> &copy; Copyright 2019-2023 <a href="https://molssi.org/">The Molecular Sciences Software Institute</a></p>
+        <p>Funded by the National Science Foundation 
+          <a href="https://nsf.gov/awardsearch/showAward?AWD_ID=1547580">OAC-1547580</a> and 
+          <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2136142">CHE-2136142.</a></p>
+ 
+        
+        <p class="sphinx-version">
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+        </p>
+        
+
+        <p class="theme-version">
+        Built with a customized <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.1.
+        </p>
+
+    </div>
+    <div class="col-2">
+        <a href="https://nsf.gov/" target="_blank" title="Go to the NSF in a new tab">
+            <img src="_static/nsf.png" class="footer_logo" alt="The NSF">
+          </a>
+    </div>
+</div></div>
+      
+    </div>
+  
+  
+</div>
+
+  </footer>
+  </body>
+</html>
