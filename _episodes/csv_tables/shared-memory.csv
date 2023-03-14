@@ -1,0 +1,6 @@
+﻿Lesson Title,Questions,Objectives
+`Introduction to Shared-Memory Parallelization <05-shared-intro.html>`_,What is shared-memory parallelization?,Understand the advantages and limitations of shared-memory parallelization.
+`OpenMP Hands-On <03-distributed-examples-mpi4py.html>`_,How can I use OpenMP to parallelize a code?,"* Use OpenMP to implement shared-memory parallelization.
+* Learn how to identify and fix race conditions.
+* Optimize the performance of an OpenMP code."
+,,

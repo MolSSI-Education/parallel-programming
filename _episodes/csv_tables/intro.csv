@@ -1,0 +1,4 @@
+﻿Lesson Title,Questions,Objectives
+`Introduction to Parallel Programing <01-introduction.html>`_,What is parallelization and how does it work?,"* Understand the motivation for parallelizing code.
+* Understand how machine architecture affects the ability to parallelize code. 
+* Be aware of the types of parallelization common in computational chemistry."
