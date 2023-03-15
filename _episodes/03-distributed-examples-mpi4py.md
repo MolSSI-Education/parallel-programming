@@ -56,13 +56,11 @@ This is done using the `mpiexec` command.
 Many environments also provide an `mpirun` command, which usually - but not always - works the same way.
 Whenever possible, you should use `mpiexec` and not `mpirun`, in order to guarantee more consistent results.
 
-````{admonition} MPI - `mpiexec` vs `mpirun`
-:class: attention
-
-MPI stands for **'message passing interface'** and is a message passing standard which is designed to work on a variety of parallel computing architectures. The [MPI standard](https://www.mpi-forum.org/docs/drafts/mpi-2018-draft-report.pdf) defines how syntax and semantics of a library of routines. There are a number of implementations of this standard including OpenMPI, MPICH, and MS MPI.
-
-The primary difference between `mpiexec` and `mpirun` is that `mpiexec` is defined as part of the MPI standard, while `mpirun` is not.  Different implementations of MPI (i.e. OpenMPI, MPICH, MS MPI, etc.) are not guaranteed to implement `mpirun`, or might implement different options for `mpirun`.  Technically, the MPI standard doesn't actually require that MPI implementations implement `mpiexec` either, but the standard does at least describe guidelines for how `mpiexec` should work.  Because of this, `mpiexec` is generally the preferred command.
-````
+> ## MPI - `mpiexec` vs `mpirun`
+> MPI stands for **'message passing interface'** and is a message passing standard which is designed to work on a variety of parallel computing architectures. The [MPI standard](https://www.mpi-forum.org/docs/drafts/mpi-2018-draft-report.pdf) defines how syntax and semantics of a library of routines. There are a number of implementations of this standard including OpenMPI, MPICH, and MS MPI.
+>
+>  The primary difference between `mpiexec` and `mpirun` is that `mpiexec` is defined as part of the MPI standard, while `mpirun` is not.  Different implementations of MPI (i.e. OpenMPI, MPICH, MS MPI, etc.) are not guaranteed to implement `mpirun`, or might implement different options for `mpirun`.  Technically, the MPI standard doesn't actually require that MPI implementations implement `mpiexec` either, but the standard does at least describe guidelines for how `mpiexec` should work.  Because of this, `mpiexec` is generally the preferred command.
+>
 
 The general format for lanching a code on multiple processes is:
 
