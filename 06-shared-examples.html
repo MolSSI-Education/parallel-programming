@@ -1,0 +1,1255 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>OpenMP Hands-On &#8212; molssi_best_practices  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/design-tabs.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '06-shared-examples';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Introduction to Shared-Memory Parallelization" href="05-shared-intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/molssi_main_logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/molssi_main_logo_inverted_white.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+    <p class="title logo__title">Parallel Programming</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="setup.html">
+                        Set Up
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="01-introduction.html">
+                        Introduction to Parallelization
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="00-distributed-memory.html">
+                        Distributed Memory Parallelization
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="00-shared-memory.html">
+                        Shared Memory Parallelization
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                <li class="nav-item">
+                  <a class="nav-link nav-external" href="https://molssi.org">
+                    MolSSI
+                  </a>
+                </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/jchen0506/molssi_doc_theme" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-twitter"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="setup.html">
+                        Set Up
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="01-introduction.html">
+                        Introduction to Parallelization
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="00-distributed-memory.html">
+                        Distributed Memory Parallelization
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="00-shared-memory.html">
+                        Shared Memory Parallelization
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                <li class="nav-item">
+                  <a class="nav-link nav-external" href="https://molssi.org">
+                    MolSSI
+                  </a>
+                </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/jchen0506/molssi_doc_theme" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-twitter"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="05-shared-intro.html">Introduction to Shared-Memory Parallelization</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">OpenMP Hands-On</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="00-shared-memory.html" class="nav-link">Shared Memory Parallelization</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">OpenMP Hands-On</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="openmp-hands-on">
+<h1>OpenMP Hands-On<a class="headerlink" href="#openmp-hands-on" title="Permalink to this heading">#</a></h1>
+<div class="overview admonition">
+<p class="admonition-title">Overview</p>
+<p>Questions:</p>
+<ul class="simple">
+<li><p>How can I use OpenMP to parallelize a code?</p></li>
+</ul>
+<p>Objectives:</p>
+<ul class="simple">
+<li><p>Use OpenMP to implement shared-memory parallelization.</p></li>
+<li><p>Learn how to identify and fix race conditions.</p></li>
+<li><p>Optimize the performance of an OpenMP code.</p></li>
+</ul>
+</div>
+<section id="example-1">
+<h2>Example 1<a class="headerlink" href="#example-1" title="Permalink to this heading">#</a></h2>
+<p>From the top-level directory of the GitHub repository, do:</p>
+<p><strong>$ cd examples/omp/example1</strong></p>
+<p>If you open <a class="reference external" href="https://github.com/MolSSI-Education/parallel-programming/blob/gh-pages/examples/omp/example1/example1.cpp">example1.cpp</a> with a text editor, you will see that it is a simple Hello World code.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello World</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Go ahead and build the code.</p>
+<p><strong>$ cmake .<br />
+$ make</strong></p>
+<p>You could run the code just by typing <code class="docutils literal notranslate"><span class="pre">./example1</span></code> into the command line, but there is also a simple script that does the same thing.
+Run the script now.</p>
+<p><strong>$ ./run.sh</strong></p>
+<blockquote>
+<div><p>Hello World!</p>
+</div></blockquote>
+<p>We will now turn this into a multi-threaded code.
+To use OpenMP, you will need to add <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;omp.h&gt;</span></code> to the beginning of your code.</p>
+<p>Then, you can add OpenMP parallelization through the use of a compiler directive, which is any line that begins with <code class="docutils literal notranslate"><span class="pre">#pragma</span></code> (short for “pragmatic information”).
+The directive <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span></code> tells the compiler that the next block of code should be parallelized using OpenMP.
+We are going to parallelize the line with the <code class="docutils literal notranslate"><span class="pre">printf</span></code>, so put curly brackets around that line in order to make it a distinct block of text, then put <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span></code> before the block.
+Your code should look like:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;omp.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="cp">#pragma omp parallel</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello World</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Go ahead and rebuild the code.</p>
+<p><strong>$ cmake .<br />
+$ make</strong></p>
+<p>Before running the code, we should also specify how many OpenMP threads we want to run on.
+This is something that you decide at run-time, by setting a special system variable called <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS</span></code>.
+Add a line to <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> so that it sets <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS</span></code> to 4:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">OMP_NUM_THREADS</span><span class="o">=</span><span class="mi">4</span>
+<span class="o">./</span><span class="n">example1</span>
+</pre></div>
+</div>
+<p>Now let’s run the code:</p>
+<p><strong>$ ./run.sh</strong></p>
+<blockquote>
+<div><p>Hello World!<br />
+Hello World!<br />
+Hello World!<br />
+Hello World!</p>
+</div></blockquote>
+<p>The code prints <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">World!</span></code> four times, but obviously this isn’t because of any <code class="docutils literal notranslate"><span class="pre">for</span></code> loop.
+Each of the four OpenMP threads that we specified with <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS</span></code> executes the <code class="docutils literal notranslate"><span class="pre">printf</span></code> call independently.</p>
+<p>We will now edit the code so that each time <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">World!</span></code> is printed we are told which of the threads is responsible.
+Open <code class="docutils literal notranslate"><span class="pre">example1.cpp</span></code> and edit code to read:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;omp.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="cp">#pragma omp parallel</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">thread_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello World! (%i)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">thread_id</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Compile and run the code:</p>
+<p><strong>$ cmake .<br />
+$ make<br />
+$ ./run.sh</strong></p>
+<blockquote>
+<div><p>Hello World! (2)<br />
+Hello World! (3)<br />
+Hello World! (1)<br />
+Hello World! (0)</p>
+</div></blockquote>
+<p>Run the code a few more times, and you will find that the order in which the threads print their message isn’t always the same.
+This is because all of the threads run simultaneously, and depending on largely random factors some will finish slightly before others.
+The order in which the threads finish determines the order in which the messages are printed.</p>
+<p>Let’s play around with these threads some more.
+We will add another <code class="docutils literal notranslate"><span class="pre">printf</span></code> after the OpenMP-parallelized block, followed by a third <code class="docutils literal notranslate"><span class="pre">printf</span></code> inside a new OpenMP-parallelized block.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;omp.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="cp">#pragma omp parallel</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">thread_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello World! (%i)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">thread_id</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">thread_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;This is another message! (%i)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">thread_id</span><span class="p">);</span>
+
+<span class="cp">#pragma omp parallel num_threads(3)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">thread_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Goodbye World! (%i)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">thread_id</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you compile and run this code, you should get something like</p>
+<blockquote>
+<div><p>Hello World! (2)<br />
+Hello World! (0)<br />
+Hello World! (1)<br />
+Hello World! (3)<br />
+This is another message! (0)<br />
+Goodbye World! (0)<br />
+Goodbye World! (1)<br />
+Goodbye World! (2)</p>
+</div></blockquote>
+<p>The following happens when the code is run:</p>
+<ol class="arabic simple">
+<li><p>The code begins executing sequentially, with only the “master thread” running.</p></li>
+<li><p>When the master thread encounters an OpenMP-parallelized block, it <code class="docutils literal notranslate"><span class="pre">forks</span></code>, causing a number of threads equal to OMP_NUM_THREADS to begin executing.</p></li>
+<li><p>At the end of the OpenMP-parallelized block, the threads are all <code class="docutils literal notranslate"><span class="pre">joined</span></code> to the master thread, and sequential execution is resumed.</p></li>
+<li><p>The second <code class="docutils literal notranslate"><span class="pre">printf</span></code> is executed by only the master thread.</p></li>
+<li><p>The master thread again forks, but only creates a total of three threads.</p></li>
+<li><p>All of the threads print a new line, and then are joined again.</p></li>
+</ol>
+<p>https://en.wikipedia.org/wiki/Fork%E2%80%93join_model#/media/File:Fork_join.svg</p>
+</section>
+<section id="example-2">
+<h2>Example 2<a class="headerlink" href="#example-2" title="Permalink to this heading">#</a></h2>
+<p>We will now work on Example 2.</p>
+<p><strong>$ cd ../example2</strong></p>
+<p>In this directory is a code that does some simple math on some arrays, and then prints the average of the result:</p>
+<p><strong>$ cmake.<br />
+$ make<br />
+$ ./run.sh</strong></p>
+<blockquote>
+<div><p>Average: 500000001.500000</p>
+</div></blockquote>
+<p>We would like to improve the speed of this calculation through parallelization.
+Before doing any sort of optimizations on a code, we should learn about which parts of the calculation are the most expensive - otherwise, we might waste our time parallelizing a part of the code that already doesn’t take long to run, while ignoring much more costly parts of the code.
+The most basic information we need is the time it takes to run each different part of the code.
+To learn this, we will add some extra code to time each calculation.</p>
+<p>Open <code class="docutils literal notranslate"><span class="pre">example2.cpp</span></code> using a text editor, and add the following to the beginning of <code class="docutils literal notranslate"><span class="pre">main</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">start_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_wtime</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Now add the following to the end of main:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Total time: %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">omp_get_wtime</span><span class="p">()</span><span class="o">-</span><span class="n">start_time</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The code should now output the total about of time required to run:</p>
+<blockquote>
+<div><p>Average: 500000001.500000<br />
+Total time: 6.816225</p>
+</div></blockquote>
+<p>Add similar timing statements around each of the <code class="docutils literal notranslate"><span class="pre">for</span></code> loops.
+This should produce output similar to the following:</p>
+<blockquote>
+<div><p>Initialize a time: 1.402934<br />
+Initialize b time: 4.077723<br />
+Add arrays time: 0.900899<br />
+Average result time: 0.381398</p>
+<p>Average: 500000001.500000<br />
+Total time: 6.781963</p>
+</div></blockquote>
+<p>Let’s start by parallelizing the loop that adds arrays <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Parallelize this loop in the following way:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma omp parallel</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">nthreads</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">istart</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">iend</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">Nthr</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="w">  </span><span class="n">nthreads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_num_threads</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">Nthr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">nthreads</span><span class="p">;</span>
+<span class="w">  </span><span class="n">istart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Nthr</span><span class="p">;</span>
+<span class="w">  </span><span class="n">iend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Nthr</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nthreads</span><span class="mi">-1</span><span class="p">)</span><span class="w"> </span><span class="n">iend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">istart</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">iend</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>Add arrays time: 0.348737</p>
+</div></blockquote>
+<p>A much easier way to parallelize this loop is to say:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma	omp parallel for</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>Add arrays time: 0.328928</p>
+</div></blockquote>
+<p>Now we will parallelize the loop that averages the result.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma omp parallel for</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">average</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">average</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">average</span><span class="o">/</span><span class="kt">double</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>Initialize a time: 1.397873<br />
+Initialize b time: 4.076062<br />
+Add arrays time: 0.342933<br />
+Average result time: 0.123558</p>
+<p>Average: 156250000.375000<br />
+Total time: 5.960761</p>
+</div></blockquote>
+<p>This made the loop finish more quickly, but it also changed the final result.
+What happened?
+A strong hint comes from the fact that this result is the same thing we would get if we summed only the first 1/4 of the elements in array <code class="docutils literal notranslate"><span class="pre">a</span></code>.
+The problem is that each thread works on its own copy of the <code class="docutils literal notranslate"><span class="pre">average</span></code> variable.
+We want the loop to calculate the total value of <code class="docutils literal notranslate"><span class="pre">average</span></code>, summed across all threads.
+This is known as a reduction operation, and we can tell the compiler that this is what we want by adding a <code class="docutils literal notranslate"><span class="pre">reduction</span></code> clause to the <code class="docutils literal notranslate"><span class="pre">pragma</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma omp parallel for reduction(+:average)</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">average</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">average</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">average</span><span class="o">/</span><span class="kt">double</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>Initialize a time: 1.383079<br />
+Initialize b time: 4.074402<br />
+Add arrays time: 0.346857<br />
+Average result time: 0.123527</p>
+<p>Average: 500000001.500000<br />
+Total time: 5.948352</p>
+</div></blockquote>
+<p>We’ve made some nice improvements to a couple of the loops, but the real bottlenect happens when <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are initialized.
+We will now work on the loop that initializes <code class="docutils literal notranslate"><span class="pre">a</span></code>.
+Start by adding an OpenMP pragma:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma	omp parallel for</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>Initialize a time: 0.391194<br />
+Initialize b time: 4.439494<br />
+Add arrays time: 0.296057<br />
+Average result time: 0.105363</p>
+<p>Average: 500000001.500000<br />
+Total time: 5.252643</p>
+</div></blockquote>
+<p>Now do the same thing to b:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma	omp parallel for</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>Initialize a time: 0.344843<br />
+Initialize b time: 0.350311<br />
+Add arrays time: 0.188084<br />
+Average result time: 0.085440</p>
+<p>Average: 500000001.500000<br />
+Total time: 0.987741</p>
+</div></blockquote>
+<p>Notice that now even the last two loops are faster.
+This is because of the principle of <code class="docutils literal notranslate"><span class="pre">first</span> <span class="pre">touch</span></code>.</p>
+</section>
+<section id="example-3">
+<h2>Example 3<a class="headerlink" href="#example-3" title="Permalink to this heading">#</a></h2>
+<p>Now we will look at Example 3.</p>
+<p><strong>$ cd ../example3</strong></p>
+<p>Compiling and running this code should produce something like the following:</p>
+<p><strong>$ cmake .<br />
+$ make<br />
+$ ./run.sh</strong></p>
+<blockquote>
+<div><p>Iteration: 999      Energy: 92079.129718      PE: 16253.127101</p>
+<p>Timings:<br />
+Force Zero:      0.000707<br />
+Force Calc:      15.992926<br />
+Velocity Update: 0.014128<br />
+Coords Update:   0.001717<br />
+Total:           16.014781</p>
+</div></blockquote>
+<p>Clearly, the most expensive part of the code is the region where the forces are calculated, which consists of a double loop over all particles.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">start_loop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_wtime</span><span class="p">();</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">natoms</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">natoms</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">dx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">coords</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">dy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">coords</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">dr2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dx</span><span class="o">*</span><span class="n">dx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dy</span><span class="o">*</span><span class="n">dy</span><span class="p">;</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">dr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sqrt</span><span class="p">(</span><span class="n">dr2</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">fx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">dx</span><span class="o">/</span><span class="n">dr</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">dr2</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">fy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">dy</span><span class="o">/</span><span class="n">dr</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">dr2</span><span class="p">);</span>
+<span class="w">      </span><span class="n">forces</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">fx</span><span class="p">;</span>
+<span class="w">      </span><span class="n">forces</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">fy</span><span class="p">;</span>
+<span class="w">      </span><span class="n">forces</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">fx</span><span class="p">;</span>
+<span class="w">      </span><span class="n">forces</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">fy</span><span class="p">;</span>
+<span class="w">      </span><span class="n">v</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mf">1.0</span><span class="o">/</span><span class="n">dr</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="o">*</span><span class="n">potential</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>One approach to speeding this code up would be to add OpenMP parallelization to the inner loop, like this:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">natoms</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="cp">#pragma omp parallel for reduction(+:v)</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">natoms</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">       </span><span class="p">...</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>Iteration: 999      Energy: 286004.735108      PE: 18173.082058</p>
+<p>Timings:<br />
+Force Zero:      0.001293<br />
+Force Calc:      14.219656<br />
+Velocity Update: 0.014499<br />
+Coords Update:   0.005649<br />
+Total:           14.246469</p>
+</div></blockquote>
+<p>Unfortunately, this change causes the simulation to no longer produce the same results!</p>
+<p>To understand why the results are different, look closely at how this loop updates the forces.
+In the innermost loop is the line <code class="docutils literal notranslate"><span class="pre">forces[i][0]</span> <span class="pre">-=</span> <span class="pre">fx;</span></code>, which tells the computer “Copy the value of <code class="docutils literal notranslate"><span class="pre">forces[j][0]</span></code> from memory and store it in cache, then subtract <code class="docutils literal notranslate"><span class="pre">fx</span></code> from it, then replace the value of <code class="docutils literal notranslate"><span class="pre">forces[i][0]</span></code> in memory with the result.
+When we run with multiple threads, different threads may be attempting to update ‘forces[i][0]’ at the same time.
+If one thread copies the value of <code class="docutils literal notranslate"><span class="pre">forces[i][0]</span></code> into cache, then another thread updates it while the first thread is doing the subtration operation, the outcome will be that the first thread overwrites the update.
+This scenario is known as a <code class="docutils literal notranslate"><span class="pre">race</span> <span class="pre">condition</span></code>, and happens any time two threads try to edit the same data at the same time.
+If you run this calculation several times, you will get slightly different results each time depending on the order in which the threads “race” to update the forces.</p>
+<p>One way to eliminate the race condition is to switch from looping over “unique pairs” to looping over “all pairs.”
+This way, we don’t need to update <code class="docutils literal notranslate"><span class="pre">forces[i][0]</span></code> at all, only <code class="docutils literal notranslate"><span class="pre">forces[j][0]</span></code>.
+The modified code looks like:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">natoms</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="cp">#pragma omp parallel for reduction(+:v)</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">natoms</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">dx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">coords</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">dy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">coords</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">dr2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dx</span><span class="o">*</span><span class="n">dx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dy</span><span class="o">*</span><span class="n">dy</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">dr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sqrt</span><span class="p">(</span><span class="n">dr2</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">fx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">dx</span><span class="o">/</span><span class="n">dr</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">dr2</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">fy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">dy</span><span class="o">/</span><span class="n">dr</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">dr2</span><span class="p">);</span>
+<span class="w">	</span><span class="c1">//forces[i][0] -= fx;</span>
+<span class="w">	</span><span class="c1">//forces[i][1] -= fy;</span>
+<span class="w">        </span><span class="n">forces</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">fx</span><span class="p">;</span>
+<span class="w">        </span><span class="n">forces</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">fy</span><span class="p">;</span>
+<span class="w">        </span><span class="n">v</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mf">0.5</span><span class="o">/</span><span class="n">dr</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="o">*</span><span class="n">potential</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The main differences here are: (1) we changed the starting value of <code class="docutils literal notranslate"><span class="pre">j</span></code> from <code class="docutils literal notranslate"><span class="pre">i+1</span></code> to <code class="docutils literal notranslate"><span class="pre">0</span></code>, (2) we commented out the updates to <code class="docutils literal notranslate"><span class="pre">forces[i]</span></code>, (3) we multiple all contributions to <code class="docutils literal notranslate"><span class="pre">v</span></code> by <code class="docutils literal notranslate"><span class="pre">0.5</span></code> to avoid a double-counting error, and (4) we add an <code class="docutils literal notranslate"><span class="pre">if</span></code> check to avoid the <code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">==</span> <span class="pre">j</span></code> case.
+This code produces the correct result while also being substantially faster.</p>
+<blockquote>
+<div><p>Iteration: 999      Energy: 92079.129718      PE: 16253.127101</p>
+<p>Timings:<br />
+Force Zero:      0.000792<br />
+Force Calc:      7.954821<br />
+Velocity Update: 0.003412<br />
+Coords Update:   0.005082<br />
+Total:           7.969381</p>
+</div></blockquote>
+<p>That having been said, we can probably do somewhat better.
+Every time the code enters an OpenMP-threaded region, the master thread must perform a <code class="docutils literal notranslate"><span class="pre">fork</span></code> (and later a <code class="docutils literal notranslate"><span class="pre">join</span></code>).
+Because of this, there is an overhead cost every time the code encounters an OpenMP-parallelized region; the exact amount of overhead can vary, but it is usually on the order of 1 microsecond.
+Think for a moment about how much time the code spends each time it enters our OpenMP region.
+The total amount of time our code spends calculating the forces is 8.0 seconds, and the code enters the OpenMP region a number of times equal to the number of atoms times the number of iterations.
+This works out to approximately 5 microseconds spent inside the OpenMP region each time it is called.
+That isn’t ideal - it is likely that a decent amount of that time is just <code class="docutils literal notranslate"><span class="pre">fork</span></code>/<code class="docutils literal notranslate"><span class="pre">join</span></code> overhead.</p>
+<p>We can improve things by moving the parallelization to the outer loop over <code class="docutils literal notranslate"><span class="pre">i</span></code>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma omp parallel for reduction(+:v)</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">natoms</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">natoms</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">dx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">coords</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">dy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">coords</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">dr2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dx</span><span class="o">*</span><span class="n">dx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dy</span><span class="o">*</span><span class="n">dy</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">dr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sqrt</span><span class="p">(</span><span class="n">dr2</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">fx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">dx</span><span class="o">/</span><span class="n">dr</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">dr2</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">fy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">dy</span><span class="o">/</span><span class="n">dr</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">dr2</span><span class="p">);</span>
+<span class="w">        </span><span class="n">forces</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">fx</span><span class="p">;</span>
+<span class="w">        </span><span class="n">forces</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">fy</span><span class="p">;</span>
+<span class="w">	</span><span class="c1">//forces[j][0] += fx;</span>
+<span class="w">	</span><span class="c1">//forces[j][1] += fy;</span>
+<span class="w">        </span><span class="n">v</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mf">0.5</span><span class="o">/</span><span class="n">dr</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>Iteration: 999      Energy: 92079.129718      PE: 16253.127101</p>
+<p>Timings:<br />
+Force Zero:      0.000737<br />
+Force Calc:      4.770037<br />
+Velocity Update: 0.002868<br />
+Coords Update:   0.005819<br />
+Total:           4.784812</p>
+</div></blockquote>
+<p>That definitely helped - apparently the code was spending nearly half the time doing OpenMP overhead work.</p>
+</section>
+<section id="example-4">
+<h2>Example 4<a class="headerlink" href="#example-4" title="Permalink to this heading">#</a></h2>
+<p>Now we will work on a somewhat more realistic example of an MD code.</p>
+<p><strong>$ cd ../example4<br />
+$ cmake .<br />
+$ make<br />
+$ ./run.sh</strong></p>
+<blockquote>
+<div><p>Time step 0.03<br />
+optim: 1.84389e+17 0.1<br />
+optim: 11479.9 0.1<br />
+optim: -10384.3 0.1<br />
+optim: -14405.6 0.1<br />
+optim: -16274.2 0.1<br />
+optim: -17473.3 0.1<br />
+optim: -18386.3 0.1<br />
+optim: -19046.1 0.1<br />
+optim: -19516.6 0.1<br />
+optim: -19881.7 0.1<br />
+optim: -20184.1 0.1<br />
+optim: -20445.1 0.1</p>
+<p>time         ke            pe             e            T          P</p>
+<hr class="docutils" />
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>3.00     2937.72894   -18197.02586  -15259.29692    0.371   0.04086690    
+6.00     3426.85950   -18452.47277  -15025.61327    0.408   0.04039200    
+9.00     3603.35315   -18693.26130  -15089.90815    0.441   0.03943282    
+</pre></div>
+</div>
+<p>12.00     3615.37003   -19040.76407  -15425.39404    0.436   0.03848593<br />
+15.00     3686.47202   -19111.90579  -15425.43377    0.453   0.03809054<br />
+18.00     3702.65533   -19128.06154  -15425.40621    0.465   0.03778621<br />
+21.00     3812.43640   -19237.88713  -15425.45072    0.472   0.03758076<br />
+24.00     3849.80094   -19275.24791  -15425.44697    0.480   0.03741216<br />
+27.00     3962.65623   -19388.13553  -15425.47930    0.492   0.03713681<br />
+30.00     3973.40391   -19398.90927  -15425.50536    0.495   0.03703538<br />
+times:  force=14.85s  neigh=17.29s  total=32.24s</p>
+</div></blockquote>
+<p>The code primarily consists of three sections: (1) The <code class="docutils literal notranslate"><span class="pre">neighbor_list</span></code> function, which generates a list of atom pairs that are close enough to be considered interacting, (2) a <code class="docutils literal notranslate"><span class="pre">forces</span></code> function, which calculates all contributions to the forces from the pairs in the neighbor list, and (3) the <code class="docutils literal notranslate"><span class="pre">md</span></code> function, which runs the calculation by calling <code class="docutils literal notranslate"><span class="pre">neighbor_list</span></code> and <code class="docutils literal notranslate"><span class="pre">forces</span></code> and then updating the atomic coordinates each timestep.</p>
+<p>Note that the force evaluation is handled via an iterator over the neighbor list:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">neighT</span><span class="o">::</span><span class="n">const_iterator</span><span class="w"> </span><span class="n">ij</span><span class="o">=</span><span class="n">neigh</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span><span class="w"> </span><span class="n">ij</span><span class="o">!=</span><span class="n">neigh</span><span class="p">.</span><span class="n">end</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">ij</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">       </span><span class="p">...</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Loops with iterators are a little awkward to parallelize with OpenMP.
+The approach we will take is to create a separate neighborlist for each thread.
+First, define a <code class="docutils literal notranslate"><span class="pre">thrneighT</span></code> type, which will be a vector of neighborlists (add this near the beginning of <code class="docutils literal notranslate"><span class="pre">md.cc</span></code>, with the other typdefs).</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">neighT</span><span class="o">&gt;</span><span class="w"> </span><span class="n">thrneighT</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Then create a <code class="docutils literal notranslate"><span class="pre">thrneighT</span></code> which will contain all of the neighborlists for all of the threads.
+Where appropriate, change <code class="docutils literal notranslate"><span class="pre">neighT</span></code> and <code class="docutils literal notranslate"><span class="pre">neigh</span></code> to <code class="docutils literal notranslate"><span class="pre">thrneighT</span></code> and <code class="docutils literal notranslate"><span class="pre">thrneigh</span></code>, respectively.
+Here are the locations where these changes need to be made:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">neighbor_list</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">coordT</span><span class="o">&amp;</span><span class="w"> </span><span class="n">coords</span><span class="p">,</span><span class="w"> </span><span class="n">thrneighT</span><span class="o">&amp;</span><span class="w"> </span><span class="n">thrneigh</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_wtime</span><span class="p">();</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">ithr</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">ithr</span><span class="o">&lt;</span><span class="n">thrneigh</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">ithr</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">neighT</span><span class="o">&amp;</span><span class="w"> </span><span class="n">neigh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thrneigh</span><span class="p">[</span><span class="n">ithr</span><span class="p">];</span>
+<span class="w">        </span><span class="n">neigh</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">ithr</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">natom</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">+=</span><span class="n">thrneigh</span><span class="p">.</span><span class="n">size</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	  </span><span class="p">...</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">...</span>
+<span class="n">coordT</span><span class="w"> </span><span class="n">forces</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">thrneighT</span><span class="o">&amp;</span><span class="w"> </span><span class="n">thrneigh</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">coordT</span><span class="o">&amp;</span><span class="w"> </span><span class="n">coords</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&amp;</span><span class="w"> </span><span class="n">virial</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&amp;</span><span class="w"> </span><span class="n">pe</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="p">...</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">ithr</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">ithr</span><span class="o">&lt;</span><span class="n">thrneigh</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">ithr</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="n">neighT</span><span class="o">&amp;</span><span class="w"> </span><span class="n">neigh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thrneigh</span><span class="p">[</span><span class="n">ithr</span><span class="p">];</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">neighT</span><span class="o">::</span><span class="n">const_iterator</span><span class="w"> </span><span class="n">ij</span><span class="o">=</span><span class="n">neigh</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span><span class="w"> </span><span class="n">ij</span><span class="o">!=</span><span class="n">neigh</span><span class="p">.</span><span class="n">end</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">ij</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="p">...</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">optimize</span><span class="p">(</span><span class="n">coordT</span><span class="o">&amp;</span><span class="w"> </span><span class="n">coords</span><span class="p">,</span><span class="w"> </span><span class="n">thrneighT</span><span class="o">&amp;</span><span class="w"> </span><span class="n">thrneigh</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1e99</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">step</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">step</span><span class="o">&lt;</span><span class="mi">600</span><span class="p">;</span><span class="w"> </span><span class="n">step</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">step</span><span class="o">%</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">nneigh</span><span class="p">))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">step</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="n">neighbor_list</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span><span class="w"> </span><span class="n">thrneigh</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">virial</span><span class="p">,</span><span class="n">pe</span><span class="p">;</span>
+<span class="w">        </span><span class="n">coordT</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">forces</span><span class="p">(</span><span class="n">thrneigh</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">virial</span><span class="p">,</span><span class="n">pe</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="w">    </span><span class="c1">// Relax the initial random guess</span>
+<span class="w">    </span><span class="kt">int</span><span class="w">	</span><span class="n">nthreads</span><span class="p">;</span>
+<span class="cp">#pragma	omp parallel</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="n">nthreads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_num_threads</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">thrneighT</span><span class="w"> </span><span class="n">thrneigh</span><span class="p">(</span><span class="n">nthreads</span><span class="p">);</span>
+<span class="w">    </span><span class="n">optimize</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span><span class="w"> </span><span class="n">thrneigh</span><span class="p">);</span>
+<span class="w">    </span><span class="n">neighbor_list</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span><span class="w"> </span><span class="n">thrneigh</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="w">    </span><span class="n">coordT</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">forces</span><span class="p">(</span><span class="n">thrneigh</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">virial</span><span class="p">,</span><span class="n">potential_energy</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="w">        </span><span class="c1">// make the forces at time t+dt</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">step</span><span class="o">%</span><span class="n">nneigh</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">neighbor_list</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span><span class="w"> </span><span class="n">thrneigh</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">virial_step</span><span class="p">;</span>
+<span class="w">        </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">forces</span><span class="p">(</span><span class="n">thrneigh</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">virial_step</span><span class="p">,</span><span class="n">potential_energy</span><span class="p">);</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>30.00     3973.40320   -19398.90856  -15425.50536    0.495   0.03703538<br />
+times:  force=14.50s  neigh=18.06s  total=32.67s</p>
+</div></blockquote>
+<p>We are finally ready to work on parallelization of the <code class="docutils literal notranslate"><span class="pre">forces</span></code> subroutine.
+Replacing the outer <code class="docutils literal notranslate"><span class="pre">for</span></code> loop in <code class="docutils literal notranslate"><span class="pre">forces</span></code> is easy enough:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma	omp parallel default(none) shared(f, thrneigh, coords, virial, pe)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">       </span><span class="kt">int</span><span class="w"> </span><span class="n">ithr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="w">       </span><span class="k">const</span><span class="w"> </span><span class="n">neighT</span><span class="o">&amp;</span><span class="w"> </span><span class="n">neigh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thrneigh</span><span class="p">[</span><span class="n">ithr</span><span class="p">];</span>
+<span class="w">       </span><span class="p">...</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Unfortunately, there is one significant problem: the forces are incremented in a way that introduces a race condition.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">          </span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">dfx</span><span class="p">;</span>
+<span class="w">          </span><span class="n">f</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">first</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">dfx</span><span class="p">;</span>
+<span class="w">          </span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">dfy</span><span class="p">;</span>
+<span class="w">          </span><span class="n">f</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">second</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">dfy</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Unlike the case with <code class="docutils literal notranslate"><span class="pre">Example</span> <span class="pre">3</span></code>, it isn’t straightforward to restructure the force evaluation in such a way that the forces on each atom are calculated by only one thread.
+Instead, we will have each thread calculate some portion of the forces on all of the atoms, then perform a <code class="docutils literal notranslate"><span class="pre">reduction</span></code> operation on the forces.
+The OpenMP <code class="docutils literal notranslate"><span class="pre">reduction</span></code> clause only works for for basic data types; it won’t work for our defined type <code class="docutils literal notranslate"><span class="pre">coordT</span></code>.
+As a result, we must perform the reduction manually.</p>
+<p>To reduce the forces, first declare an array that will store the forces for a single thread.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma	omp parallel default(none) shared(f, thrneigh, coords, virial, pe)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="n">coordT</span><span class="w"> </span><span class="nf">f_thread</span><span class="p">(</span><span class="n">natom</span><span class="p">,</span><span class="n">xyT</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">));</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">virial_thread</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">pe_thread</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">      </span><span class="p">...</span>
+<span class="w">          </span><span class="n">f_thread</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">dfx</span><span class="p">;</span>
+<span class="w">          </span><span class="n">f_thread</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">first</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">dfx</span><span class="p">;</span>
+<span class="w">          </span><span class="n">f_thread</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">dfy</span><span class="p">;</span>
+<span class="w">          </span><span class="n">f_thread</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">second</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">dfy</span><span class="p">;</span>
+
+<span class="w">          </span><span class="n">pe_thread</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">vij</span><span class="p">;</span>
+<span class="w">          </span><span class="n">virial_thread</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">dfx</span><span class="o">*</span><span class="n">dx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dfy</span><span class="o">*</span><span class="n">dy</span><span class="p">;</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Then, <code class="docutils literal notranslate"><span class="pre">just</span> <span class="pre">before</span></code> the end of the OpenMP block, write the following:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma omp critical</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">natom</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">f_thread</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">;</span>
+<span class="w">          </span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">f_thread</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">	</span><span class="n">pe</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">pe_thread</span><span class="p">;</span>
+<span class="w">	</span><span class="n">virial</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">virial_thread</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Running on four threads, this gives improved performance for the forces:</p>
+<blockquote>
+<div><p>30.00     3973.40314   -19398.90851  -15425.50536    0.495   0.03703538<br />
+times:  force=7.03s  neigh=18.99s  total=26.23s</p>
+</div></blockquote>
+<p>Now let’s work on the <code class="docutils literal notranslate"><span class="pre">neighbor_list</span></code> function.
+Once again, we will convert the <code class="docutils literal notranslate"><span class="pre">for</span></code> loop over <code class="docutils literal notranslate"><span class="pre">thrneigh</span></code> into an OpenMP parallelized region.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma omp parallel default(none) shared(thrneigh, coords)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ithr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">nthread</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_num_threads</span><span class="p">();</span>
+<span class="w">	</span><span class="p">...</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>This improves the neighborlist creation time substantially:</p>
+<blockquote>
+<div><p>times:  force=3.67s  neigh=6.65s  total=10.49s</p>
+</div></blockquote>
+<p>Running on 16 threads, we get this:</p>
+<blockquote>
+<div><p>times:  force=1.58s  neigh=2.26s  total=4.03s</p>
+</div></blockquote>
+<p>One issue that limits our performance at high thread counts is the fact that we are not doing anything to <code class="docutils literal notranslate"><span class="pre">load</span> <span class="pre">balance</span></code> the neighborlist across threads.
+We can improve the load balancing by adding some code to ensure that each thread has a neighborlist of similar length.
+Add the following just before the end of the OpenMP parallelized block in <code class="docutils literal notranslate"><span class="pre">neighbor_list</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma omp barrier</span>
+<span class="cp">#pragma omp single</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="c1">//get the target number of pairs per thread                                                                                                   </span>
+<span class="w">          </span><span class="kt">int</span><span class="w"> </span><span class="n">npair</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="w">          </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">nthread</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">npair</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">thrneigh</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">size</span><span class="p">();</span>
+<span class="w">          </span><span class="n">npair</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">npair</span><span class="mi">-1</span><span class="p">)</span><span class="o">/</span><span class="n">nthread</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">          </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">thrneigh</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="mi">-1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">while</span><span class="p">(</span><span class="n">thrneigh</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">npair</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="c1">//steal pairs from the next thread                                                                                                        </span>
+<span class="w">              </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">thrneigh</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">              </span><span class="n">thrneigh</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">thrneigh</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">back</span><span class="p">());</span>
+<span class="w">              </span><span class="n">thrneigh</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">pop_back</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">while</span><span class="p">(</span><span class="n">thrneigh</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">npair</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="c1">//donate pairs from the next thread                                                                                                       </span>
+<span class="w">              </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">thrneigh</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">              </span><span class="n">thrneigh</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">thrneigh</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">back</span><span class="p">());</span>
+<span class="w">              </span><span class="n">thrneigh</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">pop_back</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Unfortunately, this really doesn’t help our timings:</p>
+<blockquote>
+<div><p>times:  force=1.59s  neigh=2.37s  total=4.15s</p>
+</div></blockquote>
+<p>The problem is that the added code does lots of operations that resize the neighborlists, which is a slow operation on a C++ <code class="docutils literal notranslate"><span class="pre">list</span></code> type.
+To fix this, change the <code class="docutils literal notranslate"><span class="pre">neighT</span></code> type to be a vector:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pairT</span><span class="o">&gt;</span><span class="w"> </span><span class="n">neighT</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Then, add the following to the <code class="docutils literal notranslate"><span class="pre">neighbor_list</span></code> function, just after the <code class="docutils literal notranslate"><span class="pre">neigh.clear();</span></code> line:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">        </span><span class="n">neigh</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">natom</span><span class="o">/</span><span class="n">nthread</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>These changes allow us to get our best timings yet:</p>
+<blockquote>
+<div><p>times:  force=1.55s  neigh=1.54s  total=3.27s</p>
+</div></blockquote>
+<p>{% include links.md %}</p>
+<div class="key admonition">
+<p class="admonition-title">Key Points</p>
+<ul class="simple">
+<li><p>It is extremely important to carefully avoid race conditions.</p></li>
+<li><p>Achieving good performance with OpenMP often requires larger code refactoring.</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="05-shared-intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Introduction to Shared-Memory Parallelization</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1">Example 1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2">Example 2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3">Example 3</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-4">Example 4</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="_sources/06-shared-examples.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            <div class="bd-footer-content__inner"></div>
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+
+<div class="row h-10">
+    <div class="col-2">
+        <a href="https://molssi.org/" target="_blank" title="Go to MolSSI in a new tab">
+            <img src="_static/molssi_main_logo.png" class="logo__image only-light footer_logo" alt="Logo image">
+            <img src="_static/molssi_main_logo_inverted_white.png" class="logo__image only-dark footer_logo" alt="Logo image">
+        </a>
+    </div>
+    <div class="col-8">
+        <p> &copy; Copyright 2019-2023 <a href="https://molssi.org/">The Molecular Sciences Software Institute</a></p>
+        <p>Funded by the National Science Foundation 
+          <a href="https://nsf.gov/awardsearch/showAward?AWD_ID=1547580">OAC-1547580</a> and 
+          <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2136142">CHE-2136142.</a></p>
+ 
+        
+        <p class="sphinx-version">
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+        </p>
+        
+
+        <p class="theme-version">
+        Built with a customized <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.1.
+        </p>
+
+    </div>
+    <div class="col-2">
+        <a href="https://nsf.gov/" target="_blank" title="Go to the NSF in a new tab">
+            <img src="_static/nsf.png" class="footer_logo" alt="The NSF">
+          </a>
+    </div>
+</div></div>
+      
+    </div>
+  
+  
+</div>
+
+  </footer>
+  </body>
+</html>
