@@ -45,7 +45,9 @@ In some respects, you can think of each node as an independent computer, connect
 Each node has a group of “cores,” which are the microprocessors responsible for doing computational work.
 In the earlier days of computing, all CPUs had a single core; today, nearly all CPUs are multi-core, including those used in desktops and laptops.
 
-<img src = '_static/fig/hpc_architecture.png'>
+```{image} _static/fig/hpc_architecture.png
+:align: center
+```
 
 The cores within a node share access to the node’s memory (RAM), but do not access the RAM directly.
 Instead two or three levels of memory “cache” (e.g., the L1 cache, the L2 cache, etc.) exist between the cores and the RAM.

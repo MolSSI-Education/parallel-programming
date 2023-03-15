@@ -51,7 +51,9 @@ $ jupyter notebook --no-browser
 
 Your window should look similar to this after the command. Copy the URL outlined in red, and paste it into a browser.
 
-<img src = '_static./fig/jupyter.png'>
+```{image} _static/fig/jupyter.png
+:align: center
+```
 
 After verifying your Jupyter notebook works, you will also need to install a compiler. Use this command
 
