@@ -230,7 +230,7 @@ document.write(`
           
           
           
-          <a href="https://github.com/jchen0506/molssi_doc_theme" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+          <a href="https://github.com/MolSSI-Education/parallel-programming" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
             <label class="sr-only">GitHub</label></a>
         </li>
         <li class="nav-item">
@@ -366,7 +366,7 @@ document.write(`
           
           
           
-          <a href="https://github.com/jchen0506/molssi_doc_theme" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+          <a href="https://github.com/MolSSI-Education/parallel-programming" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
             <label class="sr-only">GitHub</label></a>
         </li>
         <li class="nav-item">
@@ -469,7 +469,15 @@ document.write(`
 <section id="example-1">
 <h2>Example 1<a class="headerlink" href="#example-1" title="Permalink to this heading">#</a></h2>
 <p>From the top-level directory of the GitHub repository, do:</p>
-<p><strong>$ cd examples/omp/example1</strong></p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-0">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>examples/omp/example1
+</pre></div>
+</div>
+</div>
+</div>
 <p>If you open <a class="reference external" href="https://github.com/MolSSI-Education/parallel-programming/blob/gh-pages/examples/omp/example1/example1.cpp">example1.cpp</a> with a text editor, you will see that it is a simple Hello World code.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
 
@@ -482,11 +490,27 @@ document.write(`
 </pre></div>
 </div>
 <p>Go ahead and build the code.</p>
-<p><strong>$ cmake .<br />
-$ make</strong></p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-1" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-1">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>.<span class="w">  </span>
+$<span class="w"> </span>make
+</pre></div>
+</div>
+</div>
+</div>
 <p>You could run the code just by typing <code class="docutils literal notranslate"><span class="pre">./example1</span></code> into the command line, but there is also a simple script that does the same thing.
 Run the script now.</p>
-<p><strong>$ ./run.sh</strong></p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-2">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./run.sh
+</pre></div>
+</div>
+</div>
+</div>
 <blockquote>
 <div><p>Hello World!</p>
 </div></blockquote>
@@ -511,8 +535,16 @@ Your code should look like:</p>
 </pre></div>
 </div>
 <p>Go ahead and rebuild the code.</p>
-<p><strong>$ cmake .<br />
-$ make</strong></p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-3">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>.<span class="w">  </span>
+$<span class="w"> </span>make
+</pre></div>
+</div>
+</div>
+</div>
 <p>Before running the code, we should also specify how many OpenMP threads we want to run on.
 This is something that you decide at run-time, by setting a special system variable called <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS</span></code>.
 Add a line to <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> so that it sets <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS</span></code> to 4:</p>
@@ -521,7 +553,15 @@ Add a line to <code class="docutils literal notranslate"><span class="pre">run.s
 </pre></div>
 </div>
 <p>Now let’s run the code:</p>
-<p><strong>$ ./run.sh</strong></p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-4">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./run.sh
+</pre></div>
+</div>
+</div>
+</div>
 <blockquote>
 <div><p>Hello World!<br />
 Hello World!<br />
@@ -548,9 +588,17 @@ Open <code class="docutils literal notranslate"><span class="pre">example1.cpp</
 </pre></div>
 </div>
 <p>Compile and run the code:</p>
-<p><strong>$ cmake .<br />
-$ make<br />
-$ ./run.sh</strong></p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-5" name="sd-tab-set-5" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-5">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>.<span class="w">  </span>
+$<span class="w"> </span>make<span class="w">  </span>
+$<span class="w"> </span>./run.sh
+</pre></div>
+</div>
+</div>
+</div>
 <blockquote>
 <div><p>Hello World! (2)<br />
 Hello World! (3)<br />
@@ -611,11 +659,27 @@ Goodbye World! (2)</p>
 <section id="example-2">
 <h2>Example 2<a class="headerlink" href="#example-2" title="Permalink to this heading">#</a></h2>
 <p>We will now work on Example 2.</p>
-<p><strong>$ cd ../example2</strong></p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-6" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-6">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../example2
+</pre></div>
+</div>
+</div>
+</div>
 <p>In this directory is a code that does some simple math on some arrays, and then prints the average of the result:</p>
-<p><strong>$ cmake.<br />
-$ make<br />
-$ ./run.sh</strong></p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-7" name="sd-tab-set-7" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-7">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake.<span class="w">  </span>
+$<span class="w"> </span>make<span class="w">  </span>
+$<span class="w"> </span>./run.sh
+</pre></div>
+</div>
+</div>
+</div>
 <blockquote>
 <div><p>Average: 500000001.500000</p>
 </div></blockquote>
@@ -764,11 +828,27 @@ This is because of the principle of <code class="docutils literal notranslate"><
 <section id="example-3">
 <h2>Example 3<a class="headerlink" href="#example-3" title="Permalink to this heading">#</a></h2>
 <p>Now we will look at Example 3.</p>
-<p><strong>$ cd ../example3</strong></p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-8" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-8">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../example3
+</pre></div>
+</div>
+</div>
+</div>
 <p>Compiling and running this code should produce something like the following:</p>
-<p><strong>$ cmake .<br />
-$ make<br />
-$ ./run.sh</strong></p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-9" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-9">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>.<span class="w">  </span>
+$<span class="w"> </span>make<span class="w">  </span>
+$<span class="w"> </span>./run.sh
+</pre></div>
+</div>
+</div>
+</div>
 <blockquote>
 <div><p>Iteration: 999      Energy: 92079.129718      PE: 16253.127101</p>
 <p>Timings:<br />
@@ -900,10 +980,18 @@ Total:           4.784812</p>
 <section id="example-4">
 <h2>Example 4<a class="headerlink" href="#example-4" title="Permalink to this heading">#</a></h2>
 <p>Now we will work on a somewhat more realistic example of an MD code.</p>
-<p><strong>$ cd ../example4<br />
-$ cmake .<br />
-$ make<br />
-$ ./run.sh</strong></p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-10" name="sd-tab-set-10" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-10">
+SHELL</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../example4<span class="w">  </span>
+$<span class="w"> </span>cmake<span class="w"> </span>.<span class="w">  </span>
+$<span class="w"> </span>make<span class="w">  </span>
+$<span class="w"> </span>./run.sh
+</pre></div>
+</div>
+</div>
+</div>
 <blockquote>
 <div><p>Time step 0.03<br />
 optim: 1.84389e+17 0.1<br />
