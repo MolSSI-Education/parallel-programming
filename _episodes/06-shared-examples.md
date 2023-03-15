@@ -17,7 +17,12 @@ Objectives:
 
 From the top-level directory of the GitHub repository, do:
 
-**$ cd examples/omp/example1**
+````{tab-set-code} 
+
+```{code-block} shell
+$ cd examples/omp/example1
+```
+````
 
 If you open [example1.cpp](https://github.com/MolSSI-Education/parallel-programming/blob/gh-pages/examples/omp/example1/example1.cpp) with a text editor, you will see that it is a simple Hello World code.
 
@@ -34,13 +39,23 @@ int main()
 
 Go ahead and build the code.
 
-**$ cmake .  
-$ make**
+````{tab-set-code} 
+
+```{code-block} shell
+$ cmake .  
+$ make
+```
+````
 
 You could run the code just by typing `./example1` into the command line, but there is also a simple script that does the same thing.
 Run the script now.
 
-**$ ./run.sh**
+````{tab-set-code} 
+
+```{code-block} shell
+$ ./run.sh
+```
+````
 
 > Hello World!
 
@@ -69,8 +84,13 @@ int main()
 
 Go ahead and rebuild the code.
 
-**$ cmake .  
-$ make**
+````{tab-set-code} 
+
+```{code-block} shell
+$ cmake .  
+$ make
+```
+````
 
 Before running the code, we should also specify how many OpenMP threads we want to run on.
 This is something that you decide at run-time, by setting a special system variable called `OMP_NUM_THREADS`.
@@ -83,7 +103,12 @@ export OMP_NUM_THREADS=4
 
 Now let's run the code:
 
-**$ ./run.sh**
+````{tab-set-code} 
+
+```{code-block} shell
+$ ./run.sh
+```
+````
 
 >Hello World!  
 >Hello World!  
@@ -114,9 +139,14 @@ int main()
 
 Compile and run the code:
 
-**$ cmake .  
+````{tab-set-code} 
+
+```{code-block} shell
+$ cmake .  
 $ make  
-$ ./run.sh**
+$ ./run.sh
+```
+````
 
 >Hello World! (2)  
 >Hello World! (3)  
@@ -181,13 +211,23 @@ https://en.wikipedia.org/wiki/Fork%E2%80%93join_model#/media/File:Fork_join.svg
 
 We will now work on Example 2.
 
-**$ cd ../example2**
+````{tab-set-code} 
+
+```{code-block} shell
+$ cd ../example2
+```
+````
 
 In this directory is a code that does some simple math on some arrays, and then prints the average of the result:
 
-**$ cmake.  
+````{tab-set-code} 
+
+```{code-block} shell
+$ cmake.  
 $ make  
-$ ./run.sh**
+$ ./run.sh
+```
+````
 
 >Average: 500000001.500000
 
@@ -355,13 +395,23 @@ This is because of the principle of `first touch`.
 
 Now we will look at Example 3.
 
-**$ cd ../example3**
+````{tab-set-code} 
+
+```{code-block} shell
+$ cd ../example3
+```
+````
 
 Compiling and running this code should produce something like the following:
 
-**$ cmake .  
+````{tab-set-code} 
+
+```{code-block} shell
+$ cmake .  
 $ make  
-$ ./run.sh**
+$ ./run.sh
+```
+````
 
 >Iteration: 999      Energy: 92079.129718      PE: 16253.127101  
 >  
@@ -507,10 +557,15 @@ That definitely helped - apparently the code was spending nearly half the time d
 
 Now we will work on a somewhat more realistic example of an MD code.
 
-**$ cd ../example4  
+````{tab-set-code} 
+
+```{code-block} shell
+$ cd ../example4  
 $ cmake .  
 $ make  
-$ ./run.sh**
+$ ./run.sh
+```
+````
 
 >Time step 0.03  
 >optim: 1.84389e+17 0.1  
