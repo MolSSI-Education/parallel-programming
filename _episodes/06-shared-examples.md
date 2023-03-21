@@ -792,21 +792,26 @@ Unfortunately, this really doesn't help our timings:
 The problem is that the added code does lots of operations that resize the neighborlists, which is a slow operation on a C++ `list` type.
 To fix this, change the `neighT` type to be a vector:
 
-``` cpp
+````{tab-set-code}
+
+```{code-block} c++
 typedef std::vector<pairT> neighT;
 ```
+````
 
 Then, add the following to the `neighbor_list` function, just after the `neigh.clear();` line:
 
-``` cpp
-        neigh.reserve(100*natom/nthread);
+````{tab-set-code}
+
+```{code-block} c++
+neigh.reserve(100*natom/nthread);
 ```
+````
 
 These changes allow us to get our best timings yet:
 
 >times:  force=1.55s  neigh=1.54s  total=3.27s
 
-{% include links.md %}
 ````{admonition} Key Points
 :class: key
 

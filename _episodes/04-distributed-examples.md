@@ -69,7 +69,6 @@ Whenever possible, you should use `mpiexec` and not `mpirun`, in order to guaran
 >
 >  The primary difference between `mpiexec` and `mpirun` is that `mpiexec` is defined as part of the MPI standard, while `mpirun` is not.  Different implementations of MPI (i.e. OpenMPI, MPICH, MS MPI, etc.) are not guaranteed to implement `mpirun`, or might implement different options for `mpirun`.  Technically, the MPI standard doesn't actually require that MPI implementations implement `mpiexec` either, but the standard does at least describe guidelines for how `mpiexec` should work.  Because of this, `mpiexec` is generally the preferred command.
 >
-{: .callout}
 
 The general format for lanching a code on multiple processes is:
 
@@ -1298,7 +1297,7 @@ Total simulation time: 22.2873
 
 Now we can clearly see a speedup when running in parallel.
 
-{% include links.md %}
+
 ````{admonition} Key Points
 :class: key
 

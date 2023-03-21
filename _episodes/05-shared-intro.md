@@ -31,7 +31,6 @@ Whereas with distributed-memory parallelization the each process might have its 
 
 One particularly popular approach to shared-memory parallelization is OpenMP, which we will explore during the hands-on tutorial in the next section.
 
-{% include links.md %}
 
 ````{admonition} Key Points
 :class: key

@@ -80,7 +80,6 @@ These tutorials focus on distributed-memory and shared-memory parallelization.
 In the next section, we will introduce distributed-memory parallelization, which is also the subject of the hands-on activities in episodes 3 and 4.
 Shared-memory parallelization will be covered in episodes 5 and 6.
 
-{% include links.md %}
 ````{admonition} Key Points
 :class: key
 
