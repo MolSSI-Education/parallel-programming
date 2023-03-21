@@ -113,7 +113,7 @@ html_theme = "pydata_sphinx_theme"
 
 # Project logo option
 html_logo = "_static/molssi_main_logo.png"
-# html_favicon = "_static/molssi_square.png"
+html_favicon = "_static/molssi_square.png"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
