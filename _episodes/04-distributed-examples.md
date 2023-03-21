@@ -18,7 +18,7 @@ Objectives:
 
 ### Writing Hello World
 
-We'll start with the first example in [mpi/hello](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/mpi/hello/hello.cpp), which is a simple Hello World code:
+We'll start with the first example in [mpi/hello](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/mpi/hello), which is a simple Hello World code:
 
 ````{tab-set-code} 
 
