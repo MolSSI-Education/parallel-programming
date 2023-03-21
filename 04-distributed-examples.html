@@ -532,7 +532,6 @@ Whenever possible, you should use <code class="docutils literal notranslate"><sp
 <p>MPI stands for <strong>‘message passing interface’</strong> and is a message passing standard which is designed to work on a variety of parallel computing architectures. The <a class="reference external" href="https://www.mpi-forum.org/docs/drafts/mpi-2018-draft-report.pdf">MPI standard</a> defines how syntax and semantics of a library of routines. There are a number of implementations of this standard including OpenMPI, MPICH, and MS MPI.</p>
 <p>The primary difference between <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> and <code class="docutils literal notranslate"><span class="pre">mpirun</span></code> is that <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> is defined as part of the MPI standard, while <code class="docutils literal notranslate"><span class="pre">mpirun</span></code> is not.  Different implementations of MPI (i.e. OpenMPI, MPICH, MS MPI, etc.) are not guaranteed to implement <code class="docutils literal notranslate"><span class="pre">mpirun</span></code>, or might implement different options for <code class="docutils literal notranslate"><span class="pre">mpirun</span></code>.  Technically, the MPI standard doesn’t actually require that MPI implementations implement <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> either, but the standard does at least describe guidelines for how <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> should work.  Because of this, <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> is generally the preferred command.</p>
 </div></blockquote>
-<p>{: .callout}</p>
 <p>The general format for lanching a code on multiple processes is:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
@@ -1827,7 +1826,6 @@ OUTPUT</label><div class="sd-tab-content docutils">
 </div>
 </div>
 <p>Now we can clearly see a speedup when running in parallel.</p>
-<p>{% include links.md %}</p>
 <div class="key admonition">
 <p class="admonition-title">Key Points</p>
 <ul class="simple">

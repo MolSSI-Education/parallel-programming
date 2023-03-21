@@ -1205,18 +1205,29 @@ Add the following just before the end of the OpenMP parallelized block in <code 
 </div></blockquote>
 <p>The problem is that the added code does lots of operations that resize the neighborlists, which is a slow operation on a C++ <code class="docutils literal notranslate"><span class="pre">list</span></code> type.
 To fix this, change the <code class="docutils literal notranslate"><span class="pre">neighT</span></code> type to be a vector:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pairT</span><span class="o">&gt;</span><span class="w"> </span><span class="n">neighT</span><span class="p">;</span>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-11" name="sd-tab-set-11" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-c++" for="sd-tab-item-11">
+C++</label><div class="sd-tab-content docutils">
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pairT</span><span class="o">&gt;</span><span class="w"> </span><span class="n">neighT</span><span class="p">;</span>
 </pre></div>
 </div>
+</div>
+</div>
 <p>Then, add the following to the <code class="docutils literal notranslate"><span class="pre">neighbor_list</span></code> function, just after the <code class="docutils literal notranslate"><span class="pre">neigh.clear();</span></code> line:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">        </span><span class="n">neigh</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">natom</span><span class="o">/</span><span class="n">nthread</span><span class="p">);</span>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-12" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-c++" for="sd-tab-item-12">
+C++</label><div class="sd-tab-content docutils">
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">neigh</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">natom</span><span class="o">/</span><span class="n">nthread</span><span class="p">);</span>
 </pre></div>
+</div>
+</div>
 </div>
 <p>These changes allow us to get our best timings yet:</p>
 <blockquote>
 <div><p>times:  force=1.55s  neigh=1.54s  total=3.27s</p>
 </div></blockquote>
-<p>{% include links.md %}</p>
 <div class="key admonition">
 <p class="admonition-title">Key Points</p>
 <ul class="simple">

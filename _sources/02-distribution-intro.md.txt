@@ -43,7 +43,6 @@ In the [next episode](http://education.molssi.org/parallel-programming/03-distri
 In the [episode following that](http://education.molssi.org/parallel-programming/04-distributed-examples/index.html), we will demonstrate the use of MPI to parallelize C++ codes.
 It is not necessary to do both of these lessons; you may do whichever is most relevant to your needs.
 
-{% include links.md %}
 
 ````{admonition} Key Points
 :class: key
