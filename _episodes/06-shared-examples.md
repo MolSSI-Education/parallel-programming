@@ -15,7 +15,7 @@ Objectives:
 
 ## Example 1
 
-Download the exmaples folder for this section [here](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/omp/)
+Download the examples folder for this section [here](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/omp/)
 
 If you open [example1.cpp](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/omp/example1/example1.cpp) with a text editor, you will see that it is a simple Hello World code.
 
