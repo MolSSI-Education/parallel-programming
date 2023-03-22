@@ -18,7 +18,7 @@ Objectives:
 
 ### Writing Hello World
 
-We'll start with the first example in [mpi/hello](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/hello), which is a simple Hello World code:
+We'll start with the first example in [mpi/hello](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/mpi/hello), which is a simple Hello World code:
 
 ````{tab-set-code} 
 
@@ -253,7 +253,7 @@ if (MPI_Init(&argc,&argv) != MPI_SUCCESS) MPI_Abort(MPI_COMM_WORLD, 1);
 
 ### Basic Infrastructure
 
-We will now do some work with the the example in [examples/mpi/average](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/average), which does some simple math.
+We will now do some work with the the example in [examples/mpi/average](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/mpi/average), which does some simple math.
 Run the code now.
 
 ````{tab-set-code} 
@@ -801,7 +801,7 @@ Note that in addition to enabling us to write simpler-looking code, collective c
 
 ## Example 3
 
-Next, view [examples/mc](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi/mc) which is a simple Monte-Carlo simulation.
+Next, view [examples/mc](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/mpi/mc) which is a simple Monte-Carlo simulation.
 Compile and run the code now.
 
 ````{tab-set-code} 

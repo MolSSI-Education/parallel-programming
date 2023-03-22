@@ -17,7 +17,7 @@ Objectives:
 
 ### Writing Hello World
 
-We'll start with the first example in [mpi/example1](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi4py/example1), which is a simple Hello World code:
+We'll start with the first example in [mpi/example1](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/mpi4py/example1), which is a simple Hello World code:
 
 ````{tab-set-code} 
 
@@ -194,7 +194,7 @@ World Size: 2   Rank: 1
 
 ### Basic Infrastructure
 
-We will now do some work with the script in [example2.py](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi4py/example2), which does some simple math with NumPy arrays.
+We will now do some work with the script in [example2.py](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/mpi4py/example2), which does some simple math with NumPy arrays.
 Run the code now.
 
 ````{tab-set-code} 
@@ -633,7 +633,7 @@ Note that in addition to enabling us to write simpler-looking code, collective c
 
 ## Example 3
 
-Next, view [example3.py](https://github.com/MolSSI-Education/parallel-programming/tree/gh-pages/examples/mpi4py/example3) which is a simple Monte-Carlo simulation.
+Next, view [example3.py](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/mpi4py/example3) which is a simple Monte-Carlo simulation.
 Run the code now.
 
 ````{tab-set-code} 

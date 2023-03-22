@@ -39,8 +39,8 @@ Instead, each process could store only the array elements it needs for its part 
 Real-world situations are often far more complex, and optimizing the memory usage of a parallel code can easily involve more effort than optimizing its runtime.
 
 The most commonly used approach to distributed-memory parallelization is the [Message Passing Interface (MPI)](https://www.mpi-forum.org/).
-In the [next episode](http://education.molssi.org/parallel-programming/03-distributed-examples-mpi4py/index.html), we will demonstrate how to use MPI to parallelize Python codes.
-In the [episode following that](http://education.molssi.org/parallel-programming/04-distributed-examples/index.html), we will demonstrate the use of MPI to parallelize C++ codes.
+In the {ref}`next epsisode <03-distributed-examples-mpi4py:MPI Hands-On - mpi4py>`, we will demonstrate how to use MPI to parallelize Python codes.
+In the {ref}`episode following that <04-distributed-examples:MPI Hands-On - C++>`, we will demonstrate the use of MPI to parallelize C++ codes.
 It is not necessary to do both of these lessons; you may do whichever is most relevant to your needs.
 
 

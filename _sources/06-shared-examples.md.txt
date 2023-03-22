@@ -15,16 +15,9 @@ Objectives:
 
 ## Example 1
 
-From the top-level directory of the GitHub repository, do:
+Download the examples folder for this section [here](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/omp/)
 
-````{tab-set-code} 
-
-```{code-block} shell
-$ cd examples/omp/example1
-```
-````
-
-If you open [example1.cpp](https://github.com/MolSSI-Education/parallel-programming/blob/gh-pages/examples/omp/example1/example1.cpp) with a text editor, you will see that it is a simple Hello World code.
+If you open [example1.cpp](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/omp/example1/example1.cpp) with a text editor, you will see that it is a simple Hello World code.
 
 ``` cpp
 #include <stdio.h>
@@ -209,7 +202,7 @@ https://en.wikipedia.org/wiki/Fork%E2%80%93join_model#/media/File:Fork_join.svg
 
 ## Example 2
 
-We will now work on Example 2.
+We will now work on [Example 2](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/omp/example2).
 
 ````{tab-set-code} 
 
@@ -393,7 +386,7 @@ This is because of the principle of `first touch`.
 
 ## Example 3
 
-Now we will look at Example 3.
+Now we will look at [Example 3](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/omp/example3).
 
 ````{tab-set-code} 
 
@@ -555,7 +548,7 @@ That definitely helped - apparently the code was spending nearly half the time d
 
 ## Example 4
 
-Now we will work on a somewhat more realistic example of an MD code.
+Now we will work on a somewhat more realistic [example](https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/omp/example4) of an MD code.
 
 ````{tab-set-code} 
 

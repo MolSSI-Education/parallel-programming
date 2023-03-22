@@ -61,6 +61,7 @@
                 gtag('config', 'G-FHKVGE8HKZ');
             </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '06-shared-examples';</script>
+    <link rel="shortcut icon" href="_static/molssi_square.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Introduction to Shared-Memory Parallelization" href="05-shared-intro.html" />
@@ -475,17 +476,8 @@ document.write(`
 </div>
 <section id="example-1">
 <h2>Example 1<a class="headerlink" href="#example-1" title="Permalink to this heading">#</a></h2>
-<p>From the top-level directory of the GitHub repository, do:</p>
-<div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
-</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-0">
-SHELL</label><div class="sd-tab-content docutils">
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>examples/omp/example1
-</pre></div>
-</div>
-</div>
-</div>
-<p>If you open <a class="reference external" href="https://github.com/MolSSI-Education/parallel-programming/blob/gh-pages/examples/omp/example1/example1.cpp">example1.cpp</a> with a text editor, you will see that it is a simple Hello World code.</p>
+<p>Download the examples folder for this section <a class="reference external" href="https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/omp/">here</a></p>
+<p>If you open <a class="reference external" href="https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/omp/example1/example1.cpp">example1.cpp</a> with a text editor, you will see that it is a simple Hello World code.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
 
 <span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
@@ -498,8 +490,8 @@ SHELL</label><div class="sd-tab-content docutils">
 </div>
 <p>Go ahead and build the code.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-1" name="sd-tab-set-1" type="radio">
-</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-1">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-0">
 SHELL</label><div class="sd-tab-content docutils">
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>.<span class="w">  </span>
 $<span class="w"> </span>make
@@ -510,8 +502,8 @@ $<span class="w"> </span>make
 <p>You could run the code just by typing <code class="docutils literal notranslate"><span class="pre">./example1</span></code> into the command line, but there is also a simple script that does the same thing.
 Run the script now.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-2" type="radio">
-</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-2">
+<input checked="checked" id="sd-tab-item-1" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-1">
 SHELL</label><div class="sd-tab-content docutils">
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./run.sh
 </pre></div>
@@ -543,8 +535,8 @@ Your code should look like:</p>
 </div>
 <p>Go ahead and rebuild the code.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
-</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-3">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-2">
 SHELL</label><div class="sd-tab-content docutils">
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>.<span class="w">  </span>
 $<span class="w"> </span>make
@@ -561,8 +553,8 @@ Add a line to <code class="docutils literal notranslate"><span class="pre">run.s
 </div>
 <p>Now let’s run the code:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-4" type="radio">
-</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-4">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-3">
 SHELL</label><div class="sd-tab-content docutils">
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./run.sh
 </pre></div>
@@ -596,8 +588,8 @@ Open <code class="docutils literal notranslate"><span class="pre">example1.cpp</
 </div>
 <p>Compile and run the code:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-5" name="sd-tab-set-5" type="radio">
-</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-5">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-4">
 SHELL</label><div class="sd-tab-content docutils">
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>.<span class="w">  </span>
 $<span class="w"> </span>make<span class="w">  </span>
@@ -665,10 +657,10 @@ Goodbye World! (2)</p>
 </section>
 <section id="example-2">
 <h2>Example 2<a class="headerlink" href="#example-2" title="Permalink to this heading">#</a></h2>
-<p>We will now work on Example 2.</p>
+<p>We will now work on <a class="reference external" href="https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/omp/example2">Example 2</a>.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-6" type="radio">
-</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-6">
+<input checked="checked" id="sd-tab-item-5" name="sd-tab-set-5" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-5">
 SHELL</label><div class="sd-tab-content docutils">
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../example2
 </pre></div>
@@ -677,8 +669,8 @@ SHELL</label><div class="sd-tab-content docutils">
 </div>
 <p>In this directory is a code that does some simple math on some arrays, and then prints the average of the result:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-7" name="sd-tab-set-7" type="radio">
-</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-7">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-6" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-6">
 SHELL</label><div class="sd-tab-content docutils">
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake.<span class="w">  </span>
 $<span class="w"> </span>make<span class="w">  </span>
@@ -834,10 +826,10 @@ This is because of the principle of <code class="docutils literal notranslate"><
 </section>
 <section id="example-3">
 <h2>Example 3<a class="headerlink" href="#example-3" title="Permalink to this heading">#</a></h2>
-<p>Now we will look at Example 3.</p>
+<p>Now we will look at <a class="reference external" href="https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/omp/example3">Example 3</a>.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-8" type="radio">
-</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-8">
+<input checked="checked" id="sd-tab-item-7" name="sd-tab-set-7" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-7">
 SHELL</label><div class="sd-tab-content docutils">
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../example3
 </pre></div>
@@ -846,8 +838,8 @@ SHELL</label><div class="sd-tab-content docutils">
 </div>
 <p>Compiling and running this code should produce something like the following:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-9" type="radio">
-</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-9">
+<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-8" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-8">
 SHELL</label><div class="sd-tab-content docutils">
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>.<span class="w">  </span>
 $<span class="w"> </span>make<span class="w">  </span>
@@ -986,10 +978,10 @@ Total:           4.784812</p>
 </section>
 <section id="example-4">
 <h2>Example 4<a class="headerlink" href="#example-4" title="Permalink to this heading">#</a></h2>
-<p>Now we will work on a somewhat more realistic example of an MD code.</p>
+<p>Now we will work on a somewhat more realistic <a class="reference external" href="https://github.com/MolSSI-Education/parallel-programming/tree/main/examples/omp/example4">example</a> of an MD code.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-10" name="sd-tab-set-10" type="radio">
-</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-10">
+<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-9" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-shell" for="sd-tab-item-9">
 SHELL</label><div class="sd-tab-content docutils">
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../example4<span class="w">  </span>
 $<span class="w"> </span>cmake<span class="w"> </span>.<span class="w">  </span>
@@ -1206,8 +1198,8 @@ Add the following just before the end of the OpenMP parallelized block in <code 
 <p>The problem is that the added code does lots of operations that resize the neighborlists, which is a slow operation on a C++ <code class="docutils literal notranslate"><span class="pre">list</span></code> type.
 To fix this, change the <code class="docutils literal notranslate"><span class="pre">neighT</span></code> type to be a vector:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-11" name="sd-tab-set-11" type="radio">
-</input><label class="sd-tab-label" data-sync-id="tabcode-c++" for="sd-tab-item-11">
+<input checked="checked" id="sd-tab-item-10" name="sd-tab-set-10" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-c++" for="sd-tab-item-10">
 C++</label><div class="sd-tab-content docutils">
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pairT</span><span class="o">&gt;</span><span class="w"> </span><span class="n">neighT</span><span class="p">;</span>
 </pre></div>
@@ -1216,8 +1208,8 @@ C++</label><div class="sd-tab-content docutils">
 </div>
 <p>Then, add the following to the <code class="docutils literal notranslate"><span class="pre">neighbor_list</span></code> function, just after the <code class="docutils literal notranslate"><span class="pre">neigh.clear();</span></code> line:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-12" type="radio">
-</input><label class="sd-tab-label" data-sync-id="tabcode-c++" for="sd-tab-item-12">
+<input checked="checked" id="sd-tab-item-11" name="sd-tab-set-11" type="radio">
+</input><label class="sd-tab-label" data-sync-id="tabcode-c++" for="sd-tab-item-11">
 C++</label><div class="sd-tab-content docutils">
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">neigh</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">natom</span><span class="o">/</span><span class="n">nthread</span><span class="p">);</span>
 </pre></div>
