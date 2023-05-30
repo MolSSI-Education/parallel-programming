@@ -1,5 +1,5 @@
 ﻿Lesson Title,Questions,Objectives
-`Introduction to Distributed-Memoery Parallelization <02-distribution-intro.html>`_,What is distributed-memory parallelization?,Understand the advantages and limitations of distributed-memory parallelization.
+`Introduction to Distributed-Memory Parallelization <02-distribution-intro.html>`_,What is distributed-memory parallelization?,Understand the advantages and limitations of distributed-memory parallelization.
 `MPI Hands-On - mpi4py <03-distributed-examples-mpi4py.html>`_,How can I use MPI to parallelize a Python code?,"* Learn how to prepare an environment that includes mpi4py.
 * Learn the basics of writing an MPI-parallelized code.
 * Explore point-to-point and collective MPI operations"

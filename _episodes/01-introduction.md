@@ -1,3 +1,10 @@
+---
+html_meta:
+  "description lang=en": "Learn about parallelization and its benefits in improving code performance. Understand different types of parallelization and their relevance in computational chemistry. Get insights into HPC architecture and the principles of efficient parallelization."
+  "keywords": "Parallelization, code performance, computational chemistry, HPC architecture, types of parallelization, distributed-memory parallelization, shared-memory parallelization, vectorization, heterogeneous computing, code optimization, performance optimization"
+  "property=og:locale": "en_US"
+---
+
 # Introduction to Parallelization
 
 ````{admonition} Overview
@@ -47,6 +54,7 @@ In the earlier days of computing, all CPUs had a single core; today, nearly all 
 
 ```{image} _static/fig/hpc_architecture.png
 :align: center
+:alt: A diagram of the general architecture of a supercomputer. In this image, the supercomputer has four nodes and four cores per node. The diagram shows how the cores, memory, cache, and network are connected and their relative speed and size.
 ```
 
 The cores within a node share access to the node’s memory (RAM), but do not access the RAM directly.

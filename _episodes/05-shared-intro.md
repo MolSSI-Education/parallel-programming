@@ -1,3 +1,9 @@
+---
+html_meta:
+  "description lang=en": "Learn about shared-memory parallelization in this comprehensive guide. Understand its advantages, challenges, and its contrast with distributed-memory parallelization. Get a grasp of the shared-memory approach that involves running multiple threads on a single process. Also, explore the popular method of shared-memory parallelization using OpenMP."
+  "keywords": "Shared-memory parallelization, Advantages of shared-memory parallelization, Limitations of shared-memory parallelization, Comparison with distributed-memory parallelization, Multi-threading, OpenMP, Concurrent access bugs, Memory efficiency"
+  "property=og:locale": "en_US"
+---
 # Introduction to Shared-Memory Parallelization
 
 ````{admonition} Overview
