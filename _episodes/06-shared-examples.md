@@ -1,3 +1,9 @@
+---
+html_meta:
+  "description lang=en": "This hands-on tutorial on OpenMP provides an overview of using OpenMP to parallelize code. It covers topics such as implementing shared-memory parallelization, identifying and fixing race conditions, and optimizing the performance of OpenMP code. The tutorial includes examples demonstrating the parallelization process step-by-step."
+  "keywords": "OpenMP, parallelization, shared-memory, race condition, optimization, performance, code parallelization, compiler directive, pragma, threads, thread synchronization, fork-join model, parallel for loop, reduction operation, first touch"
+  "property=og:locale": "en_US"
+---
 # OpenMP Hands-On
 
 ````{admonition} Overview

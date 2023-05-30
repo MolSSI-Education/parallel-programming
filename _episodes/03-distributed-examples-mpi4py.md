@@ -1,3 +1,9 @@
+---
+html_meta:
+  "description lang=en": "This comprehensive tutorial covers the fundamentals of parallel programming with MPI in Python using mpi4py. It includes practical examples that explore point-to-point and collective MPI operations. Ideal for beginners looking to parallelize their Python code. Three hands-on examples including paralleization of a Monte Carlo simulation code."
+  "keywords": "Parallel Programming, MPI, Python, mpi4py, MPI-parallelized code, Message Passing Interface, MPI Standard, MPI operations, NumPy, MPI Timer, MPI Communicator, MPI Ranks, OpenMPI, MPICH, MS MPI, mpiexec, mpirun"
+  "property=og:locale": "en_US"
+---
 # MPI Hands-On - mpi4py
 
 ````{admonition} Overview
@@ -322,8 +328,6 @@ Average result time: 2.609341859817505
 Average: 5000001.5
 ```
 ````
-
-
 
 ### Point-to-Point Communication
 

@@ -26,7 +26,7 @@ import os
 import sys
 # -- Project information -----------------------------------------------------
 
-project = 'molssi_best_practices'
+project = 'Parallel Programming | MolSSI Education'
 author = 'The Molecular Sciences Software Institute'
 
 # The short X.Y version
@@ -126,7 +126,7 @@ html_theme_options = {
 	"logo": {
       "image_light": "_static/molssi_main_logo.png",
       "image_dark": "_static/molssi_main_logo_inverted_white.png",
-      "text": "Parallel Programming",
+      "text": "Fundamentals of Parallel Programming",
       "molssi_light": "molssi_main_logo.png",
       "molssi_dark": "molssi_main_logo_inverted_white.png",
     },
@@ -144,6 +144,13 @@ html_theme_options = {
 
 html_theme_options["analytics"] = {
     "google_analytics_id": "G-FHKVGE8HKZ",
+}
+
+language = "en"
+myst_html_meta = {
+    "description lang=en": "Introduction to parallel programming using MPI and OpenMP.",
+    "keywords": "parallelization, computational chemistry, MPI, OpenMP",
+    "property=og:locale":  "en_US"
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
