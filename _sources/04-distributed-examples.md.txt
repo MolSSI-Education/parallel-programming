@@ -1,3 +1,10 @@
+---
+html_meta:
+  "description lang=en": "A detailed guide on how to use MPI in C++ for parallelizing code, handling errors, using non-blocking communication methods, and debugging parallelized code. Ideal for developers and programmers involved in high-performance computing. Three hands-on examples including parallelization of a Monte Carlo simulation code."
+  "keywords": "Parallel Programming, MPI, Python, mpi4py, MPI-parallelized code, Message Passing Interface, MPI Standard, MPI operations, NumPy, MPI Timer, MPI Communicator, MPI Ranks, OpenMPI, MPICH, MS MPI, mpiexec, mpirun, monte carlo simulation"
+  "property=og:locale": "en_US"
+---
+
 # MPI Hands-On - C++
 
 ````{admonition} Overview

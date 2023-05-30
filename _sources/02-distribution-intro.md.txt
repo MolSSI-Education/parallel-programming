@@ -1,3 +1,10 @@
+---
+html_meta:
+  "description lang=en": "Understand the fundamentals of distributed-memory parallelization, including its advantages and limitations, along with methods to optimize memory usage. Learn how to use the Message Passing Interface (MPI) to parallelize Python and C++ codes for enhanced computational efficiency."
+  "keywords": "distributed-memory parallelization, parallelization, computational efficiency, Message Passing Interface, MPI, Python parallelization, C++ parallelization, computational chemistry, memory usage optimization, dot product computation, parallel code optimization"
+  "property=og:locale": "en_US"
+---
+
 # Introduction to Distributed-Memory Parallelization
 
 ````{admonition} Overview
@@ -18,7 +25,10 @@ Other than their rank numbers, each process is an exact duplicate of the others.
 If you write a code without any thought to parallelization and then run that code with many processes, each process will simply run the exact same calculation in serial.
 In order to benefit from distributed-memory parallelization, you must write additional code that assigns different parts of the calculation to different processes based on their rank.
 
-<img src = '_static/fig/distributed.png' width="600">
+```{image} _static/fig/distributed.png
+:align: center
+:alt: A diagram of a distributed computing system showing how processes are distributed acorss multiple cores for paralell computation.
+```
 
 For example, suppose you write a code that computes the dot product of two vectors, called `a` and `b`.
 The figure below shows what this computation might look like in serial: specifically, the code multiples the first element of the two vectors together, then multiplies the second element of the two vectors together and adds this to the previous result, and so on.
@@ -28,7 +38,10 @@ This strategy reduces the amount of work each process must do, but it introduces
 Somehow, we also need to perform an operation in which all the processes add together their individual pieces of the dot product.
 We won’t get into the details of how to accomplish this operation until the next lesson, but you can already begin to see that two of the key challenges of implementing distributed-memory parallelization are (1) dividing the work of a problem into smaller pieces, and (2) stitching the individual pieces back together into a complete result.
 
-<img src = '_static/fig/dot_product.png' width="600">
+```{image} _static/fig/dot_product.png
+:align: center
+:alt: A diagram of a dot product computation in serial (top) and parallel (bottom). It shows two vectors A and B and how their dot product is computed. The diagram also shows how the dot product is computed in parallel using multiple cores. When the dot product is performed in parallel, there is a final step of gathering and combining the results
+```
 
 A third major challenge to distributed-memory parallelization is keeping memory usage within acceptable limits.
 Because each process allocates its own memory, distributed-memory parallelization tends to store a large amount of redundant information in memory.
