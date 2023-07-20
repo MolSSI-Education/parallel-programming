@@ -1,28 +1,10 @@
-# FIXME Lesson title
+# Parallel Programming
 
-[![Create a Slack Account with us](https://img.shields.io/badge/Create_Slack_Account-The_Carpentries-071159.svg)](https://swc-slack-invite.herokuapp.com/)
+This course by [The Molecular Sciences Software Institute](https://molssi.org/>) (MolSSI) teaches the fundamentals of parallel programming techniques, with an emphasis on MPI and OpenMP parallelization.
+It assumes basic familiarity with Python programming, which is the subject of the MolSSI [Python Scripting for Computational Molecular Science](https://education.molssi.org/python_scripting_cms/) lessons.
+Episodes 4 and 6 assume basic familiarity with C++.
 
-This is the repo for the MolSSI education lesson for parallel programming.
+This lesson is under continual development, please report issues to the 
+workshop repository.
 
-To participate in the lesson, see https://molssi-education.github.io/parallel-programming/.
-
-## Contributing
-
-We welcome all contributions to improve the lesson! Maintainers will do their best to help you if you have any
-questions, concerns, or experience any difficulties along the way.
-
-We'd like to ask you to familiarize yourself with our [Contribution Guide](CONTRIBUTING.md) and have a look at
-the [more detailed guidelines][lesson-example] on proper formatting, ways to render the lesson locally, and even
-how to write new episodes.
-
-## Maintainer(s)
-
-* FIXME
-
-## Authors
-
-A list of contributors to the lesson can be found in [AUTHORS](AUTHORS)
-
-## Citation
-
-To cite this lesson, please consult with [CITATION](CITATION)
+If you see a subject you would like to contribute to, submit a pull request!
