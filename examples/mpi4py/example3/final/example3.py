@@ -40,12 +40,12 @@ def generate_initial_state(method='random', file_name=None, num_particles=None, 
     """
 
 
-    if method is 'random':
+    if method == 'random':
 
         np.random.seed(seed=1)
         coordinates = (0.5 - np.random.rand(num_particles, 3)) * box_length
 
-    elif method is 'file':
+    elif method == 'file':
 
         coordinates = np.loadtxt(file_name, skiprows=2, usecols=(1,2,3))
 
@@ -342,7 +342,7 @@ def main():
 
             total_energy = (total_pair_energy + tail_correction) / num_particles
 
-            energy_array[i_step] = total_energy
+            energy_array[i_step] = total_energy.item()
 
             if np.mod(i_step + 1, freq) == 0:
 
